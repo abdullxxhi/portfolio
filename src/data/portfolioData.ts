@@ -9,6 +9,7 @@ import projectUfcImg from '../assets/images/project_ufc_analys_1785604336953.jpg
 import projectTransportImg from '../assets/images/project_transport_a_1785604349850.jpg';
 import projectSeleemImg from '../assets/images/project_seleem_bakery_1785607080040.jpg';
 import projectSeleemVideo from '../assets/images/project_seleem_bakery.mp4';
+import projectN8nImg from '../assets/images/project_n8n_event_registration_1785965226341.jpg';
 import certAlxImg from '../assets/images/cert_alx_data_analytics_1785607635646.jpg';
 
 export const personalInfo: PersonalInfo = {
@@ -245,6 +246,25 @@ export const projectsData: Project[] = [
       "Fully responsive modern UI layout built with Google Studio for desktop, tablet, and mobile.",
       "AI-powered customer support chatbot powered by n8n workflows and Gemini API.",
       "Interactive menu ordering, special requests customization, and real-time order bag status."
+    ]
+  },
+  {
+    id: "proj-7",
+    title: "Smart Event Registration & Capacity Management Automation",
+    category: "AI Automation",
+    featured: false,
+    description: "Built an end-to-end event registration workflow in n8n that automates attendee management using Google Forms, Google Sheets, Gmail, and JavaScript. The workflow automatically generates unique registration IDs, validates event capacity, routes attendees based on their location, and sends personalized confirmation or waitlist emails.",
+    tags: ["n8n", "Google Forms", "Google Sheets", "Gmail", "JavaScript", "Workflow Automation", "AI Automation"],
+    mediaUrl: projectN8nImg,
+    githubUrl: "https://github.com/abdullxxhi",
+    demoUrl: "",
+    keyHighlights: [
+      "Automatically generates unique registration IDs for every submission.",
+      "Validates maximum event capacity before confirming attendance.",
+      "Sends physical event confirmations for attendees in Nigeria.",
+      "Sends virtual attendance details for international attendees.",
+      "Automatically sends waitlist emails once capacity is reached.",
+      "Uses Google Forms, Google Sheets, Gmail, JavaScript, and n8n."
     ]
   }
 ];
