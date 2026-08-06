@@ -1,6 +1,6 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, ExternalLink, Github, Sparkles, CheckCircle2, Workflow } from 'lucide-react';
+import { X, ExternalLink, Github, CheckCircle2, Workflow, Maximize2 } from 'lucide-react';
 import { Project, Certification } from '../types';
 
 interface LightboxModalProps {
@@ -10,15 +10,21 @@ interface LightboxModalProps {
 }
 
 export default function LightboxModal({ item, type, onClose }: LightboxModalProps) {
+  const [activeZoomImage, setActiveZoomImage] = useState<{ src: string; title: string } | null>(null);
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        onClose();
+        if (activeZoomImage) {
+          setActiveZoomImage(null);
+        } else {
+          onClose();
+        }
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [onClose]);
+  }, [onClose, activeZoomImage]);
 
   if (!item) return null;
 
@@ -38,6 +44,16 @@ export default function LightboxModal({ item, type, onClose }: LightboxModalProp
           className="fixed inset-0"
         />
 
+        {/* Floating Fixed Close Button - ALWAYS visible top-right above all images and content */}
+        <button
+          onClick={onClose}
+          className="fixed top-4 right-4 sm:top-6 sm:right-6 p-3 sm:p-3.5 rounded-full bg-[#1D2A26]/90 text-white hover:bg-[#2F5D50] hover:scale-105 active:scale-95 transition-all z-[10020] shadow-2xl backdrop-blur-md border border-white/20 cursor-pointer flex items-center justify-center"
+          aria-label="Close modal"
+          title="Close (Esc)"
+        >
+          <X className="w-5 h-5 sm:w-6 sm:h-6" />
+        </button>
+
         {/* Modal Window */}
         <motion.div
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
@@ -46,19 +62,17 @@ export default function LightboxModal({ item, type, onClose }: LightboxModalProp
           transition={{ type: 'spring', damping: 25, stiffness: 300 }}
           className="relative w-full max-w-4xl bg-[#FCFAF6] rounded-[24px] border border-[#DDD6C8] shadow-2xl overflow-hidden z-10 my-8"
         >
-          {/* Close Button */}
-          <button
-            onClick={onClose}
-            className="absolute top-4 right-4 p-3 rounded-full bg-[#F5F1E8]/90 text-[#1D2A26] hover:bg-[#2F5D50] hover:text-white transition-colors z-20 shadow-sm"
-            aria-label="Close modal"
-          >
-            <X className="w-5 h-5" />
-          </button>
-
           {isProject ? (
             <div>
               {/* Media Preview Header */}
-              <div className="relative aspect-[16/9] max-h-[420px] bg-[#F5F1E8] overflow-hidden">
+              <div
+                className="relative aspect-[16/9] max-h-[420px] bg-[#F5F1E8] overflow-hidden group/header cursor-pointer"
+                onClick={() => {
+                  if (!projectItem.isVideo) {
+                    setActiveZoomImage({ src: projectItem.mediaUrl, title: projectItem.title });
+                  }
+                }}
+              >
                 {projectItem.isVideo && projectItem.videoUrl ? (
                   <video
                     src={projectItem.videoUrl}
@@ -67,14 +81,21 @@ export default function LightboxModal({ item, type, onClose }: LightboxModalProp
                     autoPlay
                     playsInline
                     className="w-full h-full object-cover object-center"
+                    onClick={(e) => e.stopPropagation()}
                   />
                 ) : (
-                  <img
-                    src={projectItem.mediaUrl}
-                    alt={projectItem.title}
-                    referrerPolicy="no-referrer"
-                    className="w-full h-full object-cover object-center"
-                  />
+                  <>
+                    <img
+                      src={projectItem.mediaUrl}
+                      alt={projectItem.title}
+                      referrerPolicy="no-referrer"
+                      className="w-full h-full object-cover object-center transition-transform duration-500 group-hover/header:scale-105"
+                    />
+                    <div className="absolute top-4 left-4 sm:top-6 sm:left-6 px-3 py-1.5 rounded-xl bg-black/60 text-white text-xs font-semibold backdrop-blur-md opacity-0 group-hover/header:opacity-100 transition-opacity flex items-center space-x-1.5 z-10">
+                      <Maximize2 className="w-3.5 h-3.5" />
+                      <span>Click to expand image</span>
+                    </div>
+                  </>
                 )}
                 <div className="absolute inset-0 bg-gradient-to-t from-[#FCFAF6] via-transparent to-transparent opacity-90 pointer-events-none" />
 
@@ -146,7 +167,8 @@ export default function LightboxModal({ item, type, onClose }: LightboxModalProp
                       {projectItem.automationScreenshots.map((shot, index) => (
                         <div
                           key={index}
-                          className="group flex flex-col bg-[#F5F1E8] border border-[#DDD6C8] rounded-2xl overflow-hidden shadow-sm hover:border-[#2F5D50] transition-all duration-300"
+                          onClick={() => setActiveZoomImage({ src: shot.image, title: shot.title })}
+                          className="group flex flex-col bg-[#F5F1E8] border border-[#DDD6C8] rounded-2xl overflow-hidden shadow-sm hover:border-[#2F5D50] cursor-pointer transition-all duration-300"
                         >
                           <div className="relative aspect-[16/9] w-full bg-[#1D2A26] overflow-hidden">
                             <img
@@ -155,6 +177,12 @@ export default function LightboxModal({ item, type, onClose }: LightboxModalProp
                               referrerPolicy="no-referrer"
                               className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
                             />
+                            <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                              <span className="px-3 py-1.5 rounded-xl bg-black/70 text-white text-xs font-semibold backdrop-blur-md flex items-center space-x-1.5">
+                                <Maximize2 className="w-3.5 h-3.5" />
+                                <span>Expand Image</span>
+                              </span>
+                            </div>
                           </div>
                           <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-2">
                             <h4 className="text-sm font-bold font-display text-[#1D2A26] flex items-center space-x-2">
@@ -202,13 +230,20 @@ export default function LightboxModal({ item, type, onClose }: LightboxModalProp
             /* Certification Modal View */
             <div className="flex flex-col">
               {certItem.image && (
-                <div className="relative bg-[#0F172A] aspect-[16/10] max-h-[500px] w-full flex items-center justify-center p-3 border-b border-[#DDD6C8] shadow-inner overflow-hidden">
+                <div
+                  className="relative bg-[#0F172A] aspect-[16/10] max-h-[500px] w-full flex items-center justify-center p-3 border-b border-[#DDD6C8] shadow-inner overflow-hidden group/cert cursor-pointer"
+                  onClick={() => setActiveZoomImage({ src: certItem.image!, title: certItem.title })}
+                >
                   <img
                     src={certItem.image}
                     alt={certItem.title}
                     referrerPolicy="no-referrer"
-                    className="w-full h-full object-contain rounded-lg"
+                    className="w-full h-full object-contain rounded-lg transition-transform duration-500 group-hover/cert:scale-102"
                   />
+                  <div className="absolute top-4 left-4 px-3 py-1.5 rounded-xl bg-black/60 text-white text-xs font-semibold backdrop-blur-md opacity-0 group-hover/cert:opacity-100 transition-opacity flex items-center space-x-1.5 z-10">
+                    <Maximize2 className="w-3.5 h-3.5" />
+                    <span>Click to view full certificate</span>
+                  </div>
                 </div>
               )}
 
@@ -271,6 +306,53 @@ export default function LightboxModal({ item, type, onClose }: LightboxModalProp
             </div>
           )}
         </motion.div>
+
+        {/* Dedicated Fullscreen Image Zoom Overlay */}
+        <AnimatePresence>
+          {activeZoomImage && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-[20000] flex flex-col items-center justify-center p-4 sm:p-8 bg-black/95 backdrop-blur-2xl cursor-zoom-out"
+              onClick={() => setActiveZoomImage(null)}
+            >
+              {/* Fullscreen Close Button - ALWAYS visible top-right above zoomed image */}
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setActiveZoomImage(null);
+                }}
+                className="fixed top-4 right-4 sm:top-6 sm:right-6 p-3 sm:p-3.5 rounded-full bg-white/15 hover:bg-white/30 text-white transition-all z-[20020] border border-white/30 shadow-2xl backdrop-blur-md cursor-pointer flex items-center justify-center"
+                aria-label="Close image preview"
+                title="Close Image View (Esc)"
+              >
+                <X className="w-6 h-6" />
+              </button>
+
+              <div
+                className="relative max-w-6xl max-h-[85vh] w-full h-full flex items-center justify-center p-2 cursor-default"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <img
+                  src={activeZoomImage.src}
+                  alt={activeZoomImage.title}
+                  referrerPolicy="no-referrer"
+                  className="max-w-full max-h-full object-contain rounded-xl shadow-2xl border border-white/10"
+                />
+              </div>
+
+              <div className="mt-4 text-center z-[20010] pointer-events-none">
+                <h3 className="text-sm sm:text-base font-semibold text-white/90">
+                  {activeZoomImage.title}
+                </h3>
+                <p className="text-xs text-white/50 mt-1">
+                  Click background or press Esc to close image view
+                </p>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </AnimatePresence>
   );
