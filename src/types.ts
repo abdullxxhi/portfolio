@@ -32,6 +32,12 @@ export interface SkillCategory {
   skills: string[];
 }
 
+export interface AutomationScreenshot {
+  image: string;
+  title: string;
+  caption: string;
+}
+
 export interface Project {
   id: string;
   title: string;
@@ -45,6 +51,7 @@ export interface Project {
   demoUrl?: string;
   githubUrl?: string;
   keyHighlights?: string[];
+  automationScreenshots?: AutomationScreenshot[];
 }
 
 export interface Certification {

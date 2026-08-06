@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, ExternalLink, Github, Sparkles, CheckCircle2 } from 'lucide-react';
+import { X, ExternalLink, Github, Sparkles, CheckCircle2, Workflow } from 'lucide-react';
 import { Project, Certification } from '../types';
 
 interface LightboxModalProps {
@@ -124,6 +124,52 @@ export default function LightboxModal({ item, type, onClose }: LightboxModalProp
                     ))}
                   </div>
                 </div>
+
+                {/* Automation in Action Section */}
+                {projectItem.automationScreenshots && projectItem.automationScreenshots.length > 0 && (
+                  <div className="pt-6 border-t border-[#DDD6C8] space-y-6">
+                    <div className="flex items-center space-x-2.5">
+                      <div className="p-2.5 rounded-xl bg-[#2F5D50]/10 text-[#2F5D50]">
+                        <Workflow className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-bold font-display text-[#1D2A26]">
+                          Automation in Action
+                        </h3>
+                        <p className="text-xs text-[#6B7280]">
+                          Demonstrating the completed end-to-end automation workflow and real-time execution
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {projectItem.automationScreenshots.map((shot, index) => (
+                        <div
+                          key={index}
+                          className="group flex flex-col bg-[#F5F1E8] border border-[#DDD6C8] rounded-2xl overflow-hidden shadow-sm hover:border-[#2F5D50] transition-all duration-300"
+                        >
+                          <div className="relative aspect-[16/9] w-full bg-[#1D2A26] overflow-hidden">
+                            <img
+                              src={shot.image}
+                              alt={shot.title}
+                              referrerPolicy="no-referrer"
+                              className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                            />
+                          </div>
+                          <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-2">
+                            <h4 className="text-sm font-bold font-display text-[#1D2A26] flex items-center space-x-2">
+                              <span className="w-2 h-2 rounded-full bg-[#2F5D50]" />
+                              <span>{shot.title}</span>
+                            </h4>
+                            <p className="text-xs text-[#4B5563] leading-relaxed">
+                              {shot.caption}
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
                 {/* Footer Buttons */}
                 <div className="pt-4 border-t border-[#DDD6C8] flex items-center justify-end space-x-3">

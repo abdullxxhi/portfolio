@@ -10,6 +10,8 @@ import projectTransportImg from '../assets/images/project_transport_a_1785604349
 import projectSeleemImg from '../assets/images/project_seleem_bakery_1785607080040.jpg';
 import projectSeleemVideo from '../assets/images/project_seleem_bakery.mp4';
 import projectN8nImg from '../assets/images/project_n8n_event_registration_1785965226341.jpg';
+import projectClinicWorkflowImg from '../assets/images/project_clinic_workflow_1786043557943.jpg';
+import projectClinicWhatsappImg from '../assets/images/project_clinic_whatsapp_1786043570240.jpg';
 import certAlxImg from '../assets/images/cert_alx_data_analytics_1785607635646.jpg';
 
 export const personalInfo: PersonalInfo = {
@@ -152,18 +154,30 @@ export const skillCategories: SkillCategory[] = [
 export const projectsData: Project[] = [
   {
     id: "proj-1",
-    title: "AI Event Ticket Automation",
+    title: "Clinic Appointment Automation",
     category: "AI Automation",
     featured: true,
-    description: "End-to-end Google Workspace automation that generates personalized event tickets from Google Forms submissions. The system automatically replaces placeholders in Google Slides templates, generates PDF tickets, emails attendees, stores copies in Google Drive, and records ticket IDs in Google Sheets while preventing duplicates.",
-    tags: ["AI Automation", "Google Apps Script", "Google Forms", "Google Sheets", "Google Slides", "Gmail", "PDF Automation"],
-    mediaUrl: projectTicketImg,
+    description: "Automated clinic booking and appointment management system. The complete n8n workflow automatically detects new Google Form submissions, creates a Google Calendar event, sends a confirmation email via Gmail, and delivers an instant personalized WhatsApp confirmation message to patients without manual intervention.",
+    tags: ["n8n", "Google Sheets", "Google Calendar", "Gmail", "WhatsApp Automation", "Healthcare Tech", "Workflow Automation"],
+    mediaUrl: projectClinicWorkflowImg,
     demoUrl: "https://github.com/abdullxxhi",
     githubUrl: "https://github.com/abdullxxhi",
     keyHighlights: [
-      "Eliminates 100% of manual ticket creation effort for large-scale events.",
-      "Instant PDF generation & instant Gmail delivery upon form submission.",
-      "Unique encrypted ticket ID validation in Google Sheets to prevent duplicates."
+      "Automated detection of Google Form submissions & Google Sheets row triggers.",
+      "Instant calendar scheduling via Google Calendar API.",
+      "Dual notification via automated Gmail email & direct personalized WhatsApp message."
+    ],
+    automationScreenshots: [
+      {
+        image: projectClinicWorkflowImg,
+        title: "n8n Automation Workflow",
+        caption: "The complete n8n workflow automatically detects new Google Form submissions, creates a Google Calendar event, sends a confirmation email via Gmail, and delivers a WhatsApp confirmation message without manual intervention."
+      },
+      {
+        image: projectClinicWhatsappImg,
+        title: "Automated WhatsApp Confirmation",
+        caption: "Patients instantly receive a personalized WhatsApp confirmation containing their appointment date, time, and reason for visit immediately after booking."
+      }
     ]
   },
   {
