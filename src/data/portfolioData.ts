@@ -12,6 +12,11 @@ import projectSeleemVideo from '../assets/images/project_seleem_bakery.mp4';
 import projectN8nImg from '../assets/images/project_n8n_event_registration_1785965226341.jpg';
 import projectClinicWorkflowImg from '../assets/images/project_clinic_workflow_1786043557943.jpg';
 import projectClinicWhatsappImg from '../assets/images/project_clinic_whatsapp_1786043570240.jpg';
+import projectSupportWorkflowImg from '../assets/images/project_support_workflow_1786298617869.jpg';
+import projectRagImg from '../assets/images/project_rag_knowledgebase_1786298635021.jpg';
+import projectHumanEscalationImg from '../assets/images/project_human_escalation_1786298651451.jpg';
+import projectConfirmedOrderImg from '../assets/images/project_confirmed_order_1786298671056.jpg';
+import projectTelegramAlertsImg from '../assets/images/project_telegram_alerts_1786298686572.jpg';
 import certAlxImg from '../assets/images/cert_alx_data_analytics_1785607635646.jpg';
 
 export const personalInfo: PersonalInfo = {
@@ -279,6 +284,52 @@ export const projectsData: Project[] = [
       "Sends virtual attendance details for international attendees.",
       "Automatically sends waitlist emails once capacity is reached.",
       "Uses Google Forms, Google Sheets, Gmail, JavaScript, and n8n."
+    ]
+  },
+  {
+    id: "proj-8",
+    title: "AI Customer Support Bot",
+    category: "AI Automation",
+    featured: true,
+    description: "An AI-powered customer support and order management system built with n8n, Google Gemini, RAG, and Telegram. The bot answers customer questions using a company-specific knowledge base, maintains conversation context, identifies requests requiring human intervention, extracts confirmed order details, and sends important business notifications through Telegram.",
+    tags: ["n8n", "Google Gemini", "RAG", "Vector Store", "Telegram", "AI Automation", "Workflow Automation"],
+    mediaUrl: projectSupportWorkflowImg,
+    demoUrl: "https://github.com/abdullxxhi",
+    githubUrl: "https://github.com/abdullxxhi",
+    keyHighlights: [
+      "AI-powered customer support using Google Gemini",
+      "Company-specific knowledge retrieval using RAG and a vector store",
+      "Conversation memory for maintaining customer context",
+      "Automated human escalation for requests requiring staff intervention",
+      "Automatic extraction of confirmed order details",
+      "Telegram notifications for human escalations and confirmed orders"
+    ],
+    automationScreenshots: [
+      {
+        image: projectSupportWorkflowImg,
+        title: "AI Customer Support Workflow",
+        caption: "Shows the main n8n AI customer support workflow connecting the chat trigger, AI Agent, Google Gemini, memory, and knowledge base."
+      },
+      {
+        image: projectRagImg,
+        title: "Knowledge Base & RAG Ingestion",
+        caption: "Shows the knowledge base workflow used to provide the AI agent with company-specific information."
+      },
+      {
+        image: projectHumanEscalationImg,
+        title: "Human Escalation via Telegram",
+        caption: "Shows the workflow that identifies requests requiring human intervention and sends a Telegram notification."
+      },
+      {
+        image: projectConfirmedOrderImg,
+        title: "Confirmed Order Automation",
+        caption: "Shows the workflow that detects confirmed orders and extracts important order information."
+      },
+      {
+        image: projectTelegramAlertsImg,
+        title: "Telegram Business Notifications",
+        caption: "Shows the Telegram notifications received by the business for important customer events."
+      }
     ]
   }
 ];

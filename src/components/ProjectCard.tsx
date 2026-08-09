@@ -103,7 +103,7 @@ export default function ProjectCard({ project, onOpenLightbox }: ProjectCardProp
                 key={tag}
                 className="px-2.5 py-1 rounded-lg bg-[#F5F1E8] border border-[#DDD6C8] text-[11px] font-mono text-[#6B7280]"
               >
-                #{tag}
+                #{tag.replace(/^#/, '')}
               </span>
             ))}
           </div>

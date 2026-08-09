@@ -140,7 +140,7 @@ export default function LightboxModal({ item, type, onClose }: LightboxModalProp
                         key={t}
                         className="px-3 py-1 rounded-xl bg-[#F5F1E8] border border-[#DDD6C8] text-xs font-mono text-[#2F5D50] font-medium"
                       >
-                        #{t}
+                        #{t.replace(/^#/, '')}
                       </span>
                     ))}
                   </div>
