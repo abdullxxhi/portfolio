@@ -165,7 +165,7 @@ export const projectsData: Project[] = [
     featured: true,
     description: "Automated clinic booking and appointment management system. The complete n8n workflow automatically detects new Google Form submissions, creates a Google Calendar event, sends a confirmation email via Gmail, and delivers an instant personalized WhatsApp confirmation message to patients without manual intervention.",
     tags: ["n8n", "Google Sheets", "Google Calendar", "Gmail", "WhatsApp Automation", "Healthcare Tech", "Workflow Automation"],
-    mediaUrl: n8nDBImg,
+    mediaUrl: n8nDB,
     demoUrl: "https://github.com/abdullxxhi",
     githubUrl: "https://github.com/abdullxxhi",
     keyHighlights: [
@@ -175,7 +175,7 @@ export const projectsData: Project[] = [
     ],
     automationScreenshots: [
       {
-        image: n8nDBImg,
+        image: n8nDB,
         title: "n8n Automation Workflow",
         caption: "The complete n8n workflow automatically detects new Google Form submissions, creates a Google Calendar event, sends a confirmation email via Gmail, and delivers a WhatsApp confirmation message without manual intervention."
       },
