@@ -18,7 +18,7 @@ import projectUfcImg from '../assets/images/project_ufc_analys_1785604336953.jpg
 import projectTransportImg from '../assets/images/project_transport_a_1785604349850.jpg';
 import projectSeleemImg from '../assets/images/project_seleem_bakery_1785607080040.jpg';
 import projectSeleemVideo from '../assets/images/project_seleem_bakery.mp4';
-import projectN8nImg from '../assets/images/project_n8n_event_registration_1785965226341.jpg';
+
 import eventRegistrationImg from '../assets/images/event-registration.png';
 
 import n8nDB from '../assets/images/n8nDB.png';
@@ -341,7 +341,7 @@ export const projectsData: Project[] = [
       "Workflow Automation",
       "AI Automation"
     ],
-    mediaUrl: projectN8nImg,
+    mediaUrl: eventRegistrationImg,
     githubUrl: "https://github.com/abdullxxhi",
     demoUrl: "",
     keyHighlights: [
