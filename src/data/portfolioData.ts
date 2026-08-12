@@ -10,9 +10,9 @@ import projectTransportImg from '../assets/images/project_transport_a_1785604349
 import projectSeleemImg from '../assets/images/project_seleem_bakery_1785607080040.jpg';
 import projectSeleemVideo from '../assets/images/project_seleem_bakery.mp4';
 import projectN8nImg from '../assets/images/project_n8n_event_registration_1785965226341.jpg';
-import projectClinicWorkflowImg from '../assets/images/n8nDB.png‎';
-import projectClinicWhatsappImg from '../assets/images/clinic-whatsapp.png';
-import projectClinicMailImg from '../assets/images/clinic-mail.png‎';
+import projectClinicWorkflowImg from 'src/assets/images/n8nDB.png‎';
+import projectClinicWhatsappImg from 'src/assets/images/clinic-whatsapp.png';
+import projectClinicMailImg from 'src/assets/images/clinic-mail.png‎';
 import projectSupportWorkflowImg from '../assets/images/project_support_workflow_1786298617869.jpg';
 import projectRagImg from '../assets/images/project_rag_knowledgebase_1786298635021.jpg';
 import projectHumanEscalationImg from '../assets/images/project_human_escalation_1786298651451.jpg';
