@@ -1,7 +1,16 @@
-import { PersonalInfo, StatItem, SkillCategory, Project, Certification, EducationItem, ExperienceItem } from '../types';
+import {
+  PersonalInfo,
+  StatItem,
+  SkillCategory,
+  Project,
+  Certification,
+  EducationItem,
+  ExperienceItem
+} from '../types';
 
-// Profile picture generated
+// Profile picture
 import profilePic from '../assets/images/profile_portrait_1785602306698.jpg';
+
 import projectTicketImg from '../assets/images/project_ticket_auto_1785604298687.jpg';
 import projectSalesImg from '../assets/images/project_sales_dash_1785604311537.jpg';
 import projectPowerBiImg from '../assets/images/project_powerbi_dash_1785604325124.jpg';
@@ -10,14 +19,17 @@ import projectTransportImg from '../assets/images/project_transport_a_1785604349
 import projectSeleemImg from '../assets/images/project_seleem_bakery_1785607080040.jpg';
 import projectSeleemVideo from '../assets/images/project_seleem_bakery.mp4';
 import projectN8nImg from '../assets/images/project_n8n_event_registration_1785965226341.jpg';
-import n8nDB from '../assets/images/n8nDB.png‎';
+
+import n8nDB from '../assets/images/n8nDB.png';
 import projectClinicWhatsappImg from '../assets/images/clinic-whatsapp.png';
-import projectClinicMailImg from '../assets/images/clinic-mail.png‎';
+import projectClinicMailImg from '../assets/images/clinic-mail.png';
+
 import projectSupportWorkflowImg from '../assets/images/project_support_workflow_1786298617869.jpg';
 import projectRagImg from '../assets/images/project_rag_knowledgebase_1786298635021.jpg';
 import projectHumanEscalationImg from '../assets/images/project_human_escalation_1786298651451.jpg';
 import projectConfirmedOrderImg from '../assets/images/project_confirmed_order_1786298671056.jpg';
 import projectTelegramAlertsImg from '../assets/images/project_telegram_alerts_1786298686572.jpg';
+
 import certAlxImg from '../assets/images/cert_alx_data_analytics_1785607635646.jpg';
 
 export const personalInfo: PersonalInfo = {
@@ -164,7 +176,15 @@ export const projectsData: Project[] = [
     category: "AI Automation",
     featured: true,
     description: "Automated clinic booking and appointment management system. The complete n8n workflow automatically detects new Google Form submissions, creates a Google Calendar event, sends a confirmation email via Gmail, and delivers an instant personalized WhatsApp confirmation message to patients without manual intervention.",
-    tags: ["n8n", "Google Sheets", "Google Calendar", "Gmail", "WhatsApp Automation", "Healthcare Tech", "Workflow Automation"],
+    tags: [
+      "n8n",
+      "Google Sheets",
+      "Google Calendar",
+      "Gmail",
+      "WhatsApp Automation",
+      "Healthcare Tech",
+      "Workflow Automation"
+    ],
     mediaUrl: n8nDB,
     demoUrl: "https://github.com/abdullxxhi",
     githubUrl: "https://github.com/abdullxxhi",
@@ -180,19 +200,26 @@ export const projectsData: Project[] = [
         caption: "The complete n8n workflow automatically detects new Google Form submissions, creates a Google Calendar event, sends a confirmation email via Gmail, and delivers a WhatsApp confirmation message without manual intervention."
       },
       {
-        image: clinic-whatsapp,
+        image: projectClinicWhatsappImg,
         title: "Automated WhatsApp Confirmation",
         caption: "Patients instantly receive a personalized WhatsApp confirmation containing their appointment date, time, and reason for visit immediately after booking."
       }
     ]
   },
+
   {
     id: "proj-2",
     title: "Sales Performance Dashboard",
     category: "Excel",
     featured: false,
     description: "Designed an interactive Excel dashboard for sales performance analysis using Pivot Tables, Pivot Charts, KPIs, dynamic slicers, and advanced Excel functions to provide actionable business intelligence.",
-    tags: ["Excel", "Dashboard", "Analytics", "Reporting", "Pivot Tables"],
+    tags: [
+      "Excel",
+      "Dashboard",
+      "Analytics",
+      "Reporting",
+      "Pivot Tables"
+    ],
     mediaUrl: projectSalesImg,
     demoUrl: "https://github.com/abdullxxhi",
     githubUrl: "https://github.com/abdullxxhi",
@@ -202,13 +229,19 @@ export const projectsData: Project[] = [
       "Executive visual representation designed for clear stakeholder decision-making."
     ]
   },
+
   {
     id: "proj-3",
     title: "Company Performance Dashboard",
     category: "Data Analysis",
     featured: false,
     description: "Built a Power BI dashboard that visualizes business performance metrics, enabling users to monitor cross-departmental KPIs and make informed strategic decisions through interactive reports.",
-    tags: ["Power BI", "Business Intelligence", "Data Visualization", "DAX"],
+    tags: [
+      "Power BI",
+      "Business Intelligence",
+      "Data Visualization",
+      "DAX"
+    ],
     mediaUrl: projectPowerBiImg,
     demoUrl: "https://github.com/abdullxxhi",
     githubUrl: "https://github.com/abdullxxhi",
@@ -218,13 +251,20 @@ export const projectsData: Project[] = [
       "Real-time visual monitoring with intuitive warm theme."
     ]
   },
+
   {
     id: "proj-4",
     title: "UFC Fighter Data Analysis (Islam Makhachev)",
     category: "Data Analysis",
     featured: false,
     description: "Performed exploratory data analysis on UFC Lightweight Champion Islam Makhachev's fight statistics, analyzing striking accuracy, takedown efficiency, control time metrics, and fight outcomes using SQL and Excel.",
-    tags: ["Islam Makhachev", "UFC Analytics", "SQL", "Excel", "Data Analysis"],
+    tags: [
+      "Islam Makhachev",
+      "UFC Analytics",
+      "SQL",
+      "Excel",
+      "Data Analysis"
+    ],
     mediaUrl: projectUfcImg,
     demoUrl: "https://github.com/abdullxxhi",
     githubUrl: "https://github.com/abdullxxhi",
@@ -234,13 +274,20 @@ export const projectsData: Project[] = [
       "Comprehensive performance breakdown report highlighting career victory trajectories."
     ]
   },
+
   {
     id: "proj-5",
     title: "Transportation Cost Analysis in Nigeria",
     category: "Statistics",
     featured: false,
     description: "Conducted a Two-Way ANOVA statistical study using the National Bureau of Statistics (NBS) Transport FareWatch dataset to examine the significant effects of transportation mode and geopolitical zones on transportation costs in Nigeria.",
-    tags: ["Statistics", "ANOVA", "Research", "Data Analysis", "NBS Dataset"],
+    tags: [
+      "Statistics",
+      "ANOVA",
+      "Research",
+      "Data Analysis",
+      "NBS Dataset"
+    ],
     mediaUrl: projectTransportImg,
     demoUrl: "https://github.com/abdullxxhi",
     githubUrl: "https://github.com/abdullxxhi",
@@ -250,13 +297,22 @@ export const projectsData: Project[] = [
       "Academic statistical paper & visual zone heatmap presentation."
     ]
   },
+
   {
     id: "proj-6",
     title: "Seleem Bakery Website",
     category: "WEB DEVELOPMENT",
     featured: false,
     description: "A fully responsive, interactive bakery website built with Google Studio. The website features a modern user interface, responsive layouts for desktop, tablet, and mobile devices, and an AI-powered customer support chatbot. The chatbot is integrated using n8n workflows and responds intelligently through the Gemini API, providing customers with real-time assistance and an engaging user experience.",
-    tags: ["Google Studio", "n8n", "Gemini AI", "Responsive Design", "AI Chatbot", "Workflow Automation", "Frontend Development"],
+    tags: [
+      "Google Studio",
+      "n8n",
+      "Gemini AI",
+      "Responsive Design",
+      "AI Chatbot",
+      "Workflow Automation",
+      "Frontend Development"
+    ],
     mediaUrl: projectSeleemImg,
     videoUrl: projectSeleemVideo,
     isVideo: true,
@@ -268,13 +324,22 @@ export const projectsData: Project[] = [
       "Interactive menu ordering, special requests customization, and real-time order bag status."
     ]
   },
+
   {
     id: "proj-7",
     title: "Smart Event Registration & Capacity Management Automation",
     category: "AI Automation",
     featured: false,
     description: "Built an end-to-end event registration workflow in n8n that automates attendee management using Google Forms, Google Sheets, Gmail, and JavaScript. The workflow automatically generates unique registration IDs, validates event capacity, routes attendees based on their location, and sends personalized confirmation or waitlist emails.",
-    tags: ["n8n", "Google Forms", "Google Sheets", "Gmail", "JavaScript", "Workflow Automation", "AI Automation"],
+    tags: [
+      "n8n",
+      "Google Forms",
+      "Google Sheets",
+      "Gmail",
+      "JavaScript",
+      "Workflow Automation",
+      "AI Automation"
+    ],
     mediaUrl: projectN8nImg,
     githubUrl: "https://github.com/abdullxxhi",
     demoUrl: "",
@@ -287,13 +352,22 @@ export const projectsData: Project[] = [
       "Uses Google Forms, Google Sheets, Gmail, JavaScript, and n8n."
     ]
   },
+
   {
     id: "proj-8",
     title: "AI Customer Support Bot",
     category: "AI Automation",
     featured: true,
     description: "An AI-powered customer support and order management system built with n8n, Google Gemini, RAG, and Telegram. The bot answers customer questions using a company-specific knowledge base, maintains conversation context, identifies requests requiring human intervention, extracts confirmed order details, and sends important business notifications through Telegram.",
-    tags: ["n8n", "Google Gemini", "RAG", "Vector Store", "Telegram", "AI Automation", "Workflow Automation"],
+    tags: [
+      "n8n",
+      "Google Gemini",
+      "RAG",
+      "Vector Store",
+      "Telegram",
+      "AI Automation",
+      "Workflow Automation"
+    ],
     mediaUrl: projectSupportWorkflowImg,
     demoUrl: "https://github.com/abdullxxhi",
     githubUrl: "https://github.com/abdullxxhi",
@@ -344,7 +418,13 @@ export const certificationsData: Certification[] = [
     status: "Completed",
     image: certAlxImg,
     credentialUrl: "https://savanna.alxafrica.com/certificates/59TRPhyBSL",
-    skillsLearned: ["SQL", "Data Analytics", "Power BI", "Exploratory Data Analysis", "Problem Solving"]
+    skillsLearned: [
+      "SQL",
+      "Data Analytics",
+      "Power BI",
+      "Exploratory Data Analysis",
+      "Problem Solving"
+    ]
   },
   {
     id: "cert-2",
@@ -352,7 +432,13 @@ export const certificationsData: Certification[] = [
     issuer: "AI Automation Institute",
     date: "2026",
     status: "Completed",
-    skillsLearned: ["AI Workflow Automation", "Google Apps Script", "AI Agents", "Prompt Engineering", "Process Optimization"]
+    skillsLearned: [
+      "AI Workflow Automation",
+      "Google Apps Script",
+      "AI Agents",
+      "Prompt Engineering",
+      "Process Optimization"
+    ]
   }
 ];
 
@@ -381,7 +467,7 @@ export const experienceData: ExperienceItem[] = [
     achievements: [
       "Learning and building advanced AI workflow automations using modern AI tools and agents.",
       "Architecting end-to-end automation systems with Google Apps Script and Google Workspace ecosystem.",
-      "Developing automated document generation, custom PDF rendering, email notification flows, and spreadsheet synching.",
+      "Developing automated document generation, custom PDF rendering, email notification flows, and spreadsheet syncing.",
       "Building real-world scalable automation projects to streamline complex business operations."
     ]
   },
