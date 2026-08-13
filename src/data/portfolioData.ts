@@ -31,6 +31,7 @@ import projectHumanEscalationImg from '../assets/images/project_human_escalation
 import projectConfirmedOrderImg from '../assets/images/project_confirmed_order_1786298671056.jpg';
 import projectTelegramAlertsImg from '../assets/images/project_telegram_alerts_1786298686572.jpg';
 import alxCertificateIMG from '../assets/images/alx-certificate.png';
+import fadaqaImg from '../assets/images/fadaqa.png';
 
 
 
@@ -434,6 +435,7 @@ export const certificationsData: Certification[] = [
     issuer: "AI Automation Institute",
     date: "2026",
     status: "Completed",
+    image: fadaqaImg,
     skillsLearned: [
       "AI Workflow Automation",
       "Google Apps Script",
