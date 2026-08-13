@@ -198,7 +198,7 @@ export const projectsData: Project[] = [
       "Workflow Automation"
     ],
     mediaUrl: n8nDB,
-    demoUrl: "https://github.com/abdullxxhi",
+    demoUrl: "https://github.com/abdullxxhi/clinic-booking-automation",
     githubUrl: "https://github.com/abdullxxhi",
     keyHighlights: [
       "Automated detection of Google Form submissions & Google Sheets row triggers.",
@@ -354,7 +354,7 @@ export const projectsData: Project[] = [
     ],
     mediaUrl: eventRegistrationImg,
     githubUrl: "https://github.com/abdullxxhi",
-    demoUrl: "",
+    demoUrl: "https://github.com/abdullxxhi/ai-event-registration-automation",
     keyHighlights: [
       "Automatically generates unique registration IDs for every submission.",
       "Validates maximum event capacity before confirming attendance.",
@@ -381,7 +381,7 @@ export const projectsData: Project[] = [
       "Workflow Automation"
     ],
     mediaUrl: projectSupportWorkflowImg,
-    demoUrl: "https://github.com/abdullxxhi",
+    demoUrl: "https://github.com/abdullxxhi/AI-Customer-Support-Bot",
     githubUrl: "https://github.com/abdullxxhi",
     keyHighlights: [
       "AI-powered customer support using Google Gemini",
@@ -438,7 +438,7 @@ export const projectsData: Project[] = [
       "Order Management"
     ],
     mediaUrl: projectOrderDeliveryImg,
-    demoUrl: "",
+    demoUrl: "https://github.com/abdullxxhi/AI-Order-Management-Fulfillment-Automation",
     githubUrl: "https://github.com/abdullxxhi",
     keyHighlights: [
       "Uses AI to understand natural-language customer orders and extract structured order details.",
