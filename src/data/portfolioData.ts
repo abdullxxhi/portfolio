@@ -17,7 +17,7 @@ import projectPowerBiImg from '../assets/images/project_powerbi_dash_17856043251
 import projectUfcImg from '../assets/images/project_ufc_analys_1785604336953.jpg';
 import projectTransportImg from '../assets/images/project_transport_a_1785604349850.jpg';
 import projectSeleemImg from '../assets/images/project_seleem_bakery_1785607080040.jpg';
-import projectSeleemVideo from '../assets/images/pseleem-bakery-1.mp4';
+import projectSeleemVideo from '../assets/images/seleem-bakery-1.mp4';
 
 import eventRegistrationImg from '../assets/images/event-registration.png';
 
