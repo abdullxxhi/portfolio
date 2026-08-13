@@ -25,7 +25,7 @@ import n8nDB from '../assets/images/n8nDB.png';
 import projectClinicWhatsappImg from '../assets/images/clinic-whatsapp.png';
 import projectClinicMailImg from '../assets/images/clinic-mail.png';
 
-import projectSupportWorkflowImg from '../assets/images/project_support_workflow_1786298617869.jpg';
+import projectSupportWorkflowImg from '../assets/images/01-ai-customer-support-workflow.png';
 import projectRagImg from '../assets/images/project_rag_knowledgebase_1786298635021.jpg';
 import projectHumanEscalationImg from '../assets/images/project_human_escalation_1786298651451.jpg';
 import projectConfirmedOrderImg from '../assets/images/project_confirmed_order_1786298671056.jpg';
