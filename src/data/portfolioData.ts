@@ -30,8 +30,9 @@ import projectRagImg from '../assets/images/project_rag_knowledgebase_1786298635
 import projectHumanEscalationImg from '../assets/images/project_human_escalation_1786298651451.jpg';
 import projectConfirmedOrderImg from '../assets/images/project_confirmed_order_1786298671056.jpg';
 import projectTelegramAlertsImg from '../assets/images/project_telegram_alerts_1786298686572.jpg';
+import alxCertificateIMG from '../assets/images/alx-certificate.png';
 
-import certAlxImg from '../assets/images/cert_alx_data_analytics_1785607635646.jpg';
+
 
 export const personalInfo: PersonalInfo = {
   name: "Abdullahi Damilola Abdulsalam",
@@ -417,7 +418,7 @@ export const certificationsData: Certification[] = [
     issuer: "ALX Africa",
     date: "2026",
     status: "Completed",
-    image: certAlxImg,
+    image: alxCertificateIMG,
     credentialUrl: "https://savanna.alxafrica.com/certificates/59TRPhyBSL",
     skillsLearned: [
       "SQL",
