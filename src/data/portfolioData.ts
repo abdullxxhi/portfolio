@@ -26,10 +26,10 @@ import projectClinicWhatsappImg from '../assets/images/clinic-whatsapp.png';
 import projectClinicMailImg from '../assets/images/clinic-mail.png';
 
 import projectSupportWorkflowImg from '../assets/images/01-ai-customer-support-workflow.png';
-import projectRagImg from '../assets/images/project_rag_knowledgebase_1786298635021.jpg';
-import projectHumanEscalationImg from '../assets/images/project_human_escalation_1786298651451.jpg';
-import projectConfirmedOrderImg from '../assets/images/project_confirmed_order_1786298671056.jpg';
-import projectTelegramAlertsImg from '../assets/images/project_telegram_alerts_1786298686572.jpg';
+import projectRagImg from '../assets/images/02-knowledge-base-rag-ingestion.png';
+import projectHumanEscalationImg from '../assets/images/03-human-escalation-telegram.png';
+import projectConfirmedOrderImg from '../assets/images/04-confirmed-order-automation.png';
+import projectTelegramAlertsImg from '../assets/images/05-telegram-business-notifications.png';
 import alxCertificateIMG from '../assets/images/alx-certificate.png';
 import fadaqaImg from '../assets/images/fadaqa.png';
 
