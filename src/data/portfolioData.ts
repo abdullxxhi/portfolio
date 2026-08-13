@@ -32,6 +32,15 @@ import projectConfirmedOrderImg from '../assets/images/04-confirmed-order-automa
 import projectTelegramAlertsImg from '../assets/images/05-telegram-business-notifications.png';
 import alxCertificateIMG from '../assets/images/alx-certificate.png';
 import fadaqaImg from '../assets/images/fadaqa.png';
+import projectOrderDeliveryImg from '../assets/images/01-delivery-order-workflow.png';
+import projectOrderPickupImg from '../assets/images/02-pickup-order-workflow.png';
+import projectOrderOtherImg from '../assets/images/03-other-order-workflow.png';
+import projectOrderIncompleteImg from '../assets/images/04-incomplete-order-workflow.png';
+import projectOrderSheetImg from '../assets/images/05-order-management-sheet.png';
+import projectOrderTelegramDeliveryImg from '../assets/images/06-telegram-delivery-notification.png';
+import projectOrderTelegramPickupImg from '../assets/images/07-telegram-pickup-notification.png';
+import projectOrderTelegramHumanImg from '../assets/images/08-telegram-human-intervention.png';
+import projectOrderTelegramClarificationImg from '../assets/images/09-telegram-order-clarification.png';
 
 
 
@@ -407,6 +416,84 @@ export const projectsData: Project[] = [
         image: projectTelegramAlertsImg,
         title: "Telegram Business Notifications",
         caption: "Shows the Telegram notifications received by the business for important customer events."
+      }
+  
+      ]
+  },
+
+  {
+    id: "proj-9",
+    title: "AI Natural Language Order Management Automation",
+    category: "AI Automation",
+    featured: false,
+    description: "Built a real-world AI-powered order management automation that allows customers to describe their orders naturally instead of filling out multiple fields. The workflow uses AI to understand and extract order details, validates the required information, routes Delivery, Pickup, and Other orders using a Switch node, stores orders in Google Sheets, sends the appropriate team Telegram notifications, escalates incomplete or unusual orders for human intervention, and sends customers an acknowledgement.",
+    tags: [
+      "n8n",
+      "AI Automation",
+      "AI Agent",
+      "Google Sheets",
+      "Telegram",
+      "Natural Language Processing",
+      "Workflow Automation",
+      "Order Management"
+    ],
+    mediaUrl: projectOrderDeliveryImg,
+    demoUrl: "",
+    githubUrl: "https://github.com/abdullxxhi",
+    keyHighlights: [
+      "Uses AI to understand natural-language customer orders and extract structured order details.",
+      "Validates required information before processing the order.",
+      "Uses a Switch node to route Delivery, Pickup, and Other order types.",
+      "Stores customer and order information in a Google Sheets order management system.",
+      "Sends route-specific Telegram notifications to the appropriate team.",
+      "Escalates incomplete or unusual orders for human intervention.",
+      "Sends customers an acknowledgement after processing their request."
+    ],
+    automationScreenshots: [
+      {
+        image: projectOrderDeliveryImg,
+        title: "Delivery Order Workflow",
+        caption: "Shows the workflow path used to process customer delivery orders after AI extracts and validates the order details."
+      },
+      {
+        image: projectOrderPickupImg,
+        title: "Pickup Order Workflow",
+        caption: "Shows the workflow path used to process customer pickup orders and route them to the appropriate handling process."
+      },
+      {
+        image: projectOrderOtherImg,
+        title: "Other Order Workflow",
+        caption: "Shows how orders that do not match the standard Delivery or Pickup routes are handled by the automation."
+      },
+      {
+        image: projectOrderIncompleteImg,
+        title: "Incomplete Order Workflow",
+        caption: "Shows the workflow path used when the customer's message does not contain all the information required to process the order."
+      },
+      {
+        image: projectOrderSheetImg,
+        title: "Order Management Sheet",
+        caption: "Shows the Google Sheets order management system where processed customer orders and their details are stored."
+      },
+      {
+        image: projectOrderTelegramDeliveryImg,
+        title: "Telegram Delivery Notification",
+        caption: "Shows the Telegram notification sent to the delivery team when a customer places a delivery order."
+      },
+      {
+        image: projectOrderTelegramPickupImg,
+        title: "Telegram Pickup Notification",
+        caption: "Shows the Telegram notification sent to the appropriate team when a customer places a pickup order."
+      },
+      {
+        image: projectOrderTelegramHumanImg,
+        title: "Telegram Human Intervention",
+        caption: "Shows the Telegram notification used to alert a human team member when an order requires manual intervention."
+      },
+      {
+        image: projectOrderTelegramClarificationImg,
+        title: "Telegram Order Clarification",
+        caption: "Shows the Telegram notification used when additional information or clarification is required before an order can be processed."
       }
     ]
   }
