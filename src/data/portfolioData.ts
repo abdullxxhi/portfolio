@@ -30,8 +30,10 @@ import projectRagImg from '../assets/images/02-knowledge-base-rag-ingestion.png'
 import projectHumanEscalationImg from '../assets/images/03-human-escalation-telegram.png';
 import projectConfirmedOrderImg from '../assets/images/04-confirmed-order-automation.png';
 import projectTelegramAlertsImg from '../assets/images/05-telegram-business-notifications.png';
+
 import alxCertificateIMG from '../assets/images/alx-certificate.png';
 import fadaqaImg from '../assets/images/fadaqa.png';
+
 import projectOrderDeliveryImg from '../assets/images/01-delivery-order-workflow.png';
 import projectOrderPickupImg from '../assets/images/02-pickup-order-workflow.png';
 import projectOrderOtherImg from '../assets/images/03-other-order-workflow.png';
@@ -42,6 +44,13 @@ import projectOrderTelegramPickupImg from '../assets/images/07-telegram-pickup-n
 import projectOrderTelegramHumanImg from '../assets/images/08-telegram-human-intervention.png';
 import projectOrderTelegramClarificationImg from '../assets/images/09-telegram-order-clarification.png';
 
+// AI Email Triage & Response System images
+import projectEmailTriageOverviewImg from '../assets/images/01-workflow-overview.png';
+import projectEmailSalesRoutingImg from '../assets/images/02-sales-email-routing.png';
+import projectEmailSupportRoutingImg from '../assets/images/03-support-email-routing.png';
+import projectEmailUrgentRoutingImg from '../assets/images/04-urgent-email-routing.png';
+import projectEmailGeneralRoutingImg from '../assets/images/05-general-email-routing.png';
+import projectEmailUrgentLabelImg from '../assets/images/06-ai-urgent-label.png';
 
 
 export const personalInfo: PersonalInfo = {
@@ -417,8 +426,7 @@ export const projectsData: Project[] = [
         title: "Telegram Business Notifications",
         caption: "Shows the Telegram notifications received by the business for important customer events."
       }
-  
-      ]
+    ]
   },
 
   {
@@ -494,6 +502,70 @@ export const projectsData: Project[] = [
         image: projectOrderTelegramClarificationImg,
         title: "Telegram Order Clarification",
         caption: "Shows the Telegram notification used when additional information or clarification is required before an order can be processed."
+      }
+    ]
+  },
+
+  {
+    id: "proj-10",
+    title: "AI Email Triage & Response System",
+    category: "AI Automation",
+    featured: true,
+    description: "Built an AI-powered email triage and response system in n8n that automatically retrieves unread Gmail messages, analyzes their content using Google Gemini, classifies emails as Sales, Support, Urgent, or General, determines priority and intent, routes each email based on the AI classification, generates appropriate responses, flags urgent emails for human attention, and marks processed emails as read.",
+    tags: [
+      "n8n",
+      "Gmail",
+      "Google Gemini",
+      "AI Automation",
+      "Email Automation",
+      "AI Agent",
+      "Workflow Automation",
+      "Email Triage",
+      "Human-in-the-Loop"
+    ],
+    mediaUrl: projectEmailTriageOverviewImg,
+    demoUrl: "https://github.com/abdullxxhi/AI-Email-Triage-Response-Automation",
+    githubUrl: "https://github.com/abdullxxhi",
+    keyHighlights: [
+      "Automatically retrieves and processes unread Gmail messages.",
+      "Uses Google Gemini to analyze email content and determine category, priority, and intent.",
+      "Classifies emails into Sales, Support, Urgent, and General categories.",
+      "Routes emails automatically based on the AI classification.",
+      "Generates appropriate responses based on the email category and intent.",
+      "Flags urgent emails for human attention.",
+      "Marks successfully processed emails as read.",
+      "Tested all four classification branches to verify that the routing logic works as expected."
+    ],
+    automationScreenshots: [
+      {
+        image: projectEmailTriageOverviewImg,
+        title: "AI Email Triage Workflow Overview",
+        caption: "Shows the complete n8n workflow connecting Gmail, Google Gemini, AI classification, routing logic, response generation, and email processing."
+      },
+      {
+        image: projectEmailSalesRoutingImg,
+        title: "Sales Email Routing",
+        caption: "Shows an email classified as Sales and routed through the appropriate automation branch for sales-related messages."
+      },
+      {
+        image: projectEmailSupportRoutingImg,
+        title: "Support Email Routing",
+        caption: "Shows an email classified as Support and routed through the support-specific automation branch."
+      },
+      {
+        image: projectEmailUrgentRoutingImg,
+        title: "Urgent Email Routing",
+        caption: "Shows an email classified as Urgent and routed through the urgent handling branch for messages requiring immediate attention."
+      },
+      {
+        image: projectEmailGeneralRoutingImg,
+        title: "General Email Routing",
+        caption: "Shows an email classified as General and routed through the general email handling branch."
+      },
+      {
+        image: projectEmailUrgentLabelImg,
+        title: "AI Urgent Email Classification",
+        caption: "Shows Google Gemini identifying an urgent email and applying the urgent classification so the workflow can flag it for human attention."
       }
     ]
   }
