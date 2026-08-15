@@ -524,7 +524,7 @@ export const projectsData: Project[] = [
       "Human-in-the-Loop"
     ],
     mediaUrl: projectEmailTriageOverviewImg,
-    demoUrl: "hhttps://github.com/abdullxxhi/AI-Email-Triage-Response",
+    demoUrl: "https://github.com/abdullxxhi/AI-Email-Triage-Response",
     githubUrl: "https://github.com/abdullxxhi",
     keyHighlights: [
       "Automatically retrieves and processes unread Gmail messages.",
