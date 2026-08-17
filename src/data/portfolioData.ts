@@ -52,6 +52,12 @@ import projectEmailUrgentRoutingImg from '../assets/images/04-urgent-email-routi
 import projectEmailGeneralRoutingImg from '../assets/images/05-general-email-routing.png';
 import projectEmailUrgentLabelImg from '../assets/images/06-ai-urgent-label.png';
 
+// Product Quality Control Data Cleaning & Validation images
+import projectQualityControlWorkflowImg from '../assets/images/01-workflow-canvas.png';
+import projectQualityControlSourceImg from '../assets/images/02-source-data-quality.png';
+import projectQualityControlCleanedImg from '../assets/images/03-cleaned-data.png';
+import projectQualityControlReportImg from '../assets/images/04-quality-report.png';
+
 
 export const personalInfo: PersonalInfo = {
   name: "Abdullahi Damilola Abdulsalam",
@@ -74,8 +80,8 @@ export const statsData: StatItem[] = [
   {
     id: "stat-1",
     label: "Projects Completed",
-    value: "5+",
-    numericValue: 5,
+    value: "10+",
+    numericValue: 10,
     suffix: "+",
     iconName: "FolderGit2",
     subtext: "Automations & Analytics Dashboards"
@@ -566,6 +572,58 @@ export const projectsData: Project[] = [
         image: projectEmailUrgentLabelImg,
         title: "AI Urgent Email Classification",
         caption: "Shows Google Gemini identifying an urgent email and applying the urgent classification so the workflow can flag it for human attention."
+      }
+    ]
+  },
+
+  {
+    id: "proj-11",
+    title: "Product Quality Control Data Cleaning & Validation",
+    category: "Data Automation",
+    featured: true,
+    description: "Built an n8n automation workflow designed to validate, clean, standardize, and quality-check a Product Quality Control dataset. The workflow processes a messy source CSV, identifies structural and data-quality issues, applies safe corrections, flags records that require human review, generates a quality summary and report, and saves a cleaned CSV.",
+    tags: [
+      "n8n",
+      "JavaScript",
+      "CSV",
+      "Data Cleaning",
+      "Data Validation",
+      "Data Quality",
+      "Automation",
+      "Human-in-the-Loop"
+    ],
+    mediaUrl: projectQualityControlWorkflowImg,
+    demoUrl: "https://github.com/abdullxxhi/Product-Quality-Control-Data-Cleaning-Validation",
+    githubUrl: "https://github.com/abdullxxhi",
+    keyHighlights: [
+      "Validates CSV structure and prepares valid records for processing.",
+      "Detects invalid dates, numeric values, production counts, QC results, and defect information.",
+      "Standardizes QC results and corrects defect types where the intended value can be determined safely.",
+      "Preserves questionable production values instead of inventing corrections and flags them for human review.",
+      "Processes 943 valid records, with 525 records cleaned and 320 records flagged for review.",
+      "Generates a quality summary and report showing the changes, issues, and validation results.",
+      "Creates and saves a cleaned CSV while maintaining an audit trail of data-quality corrections."
+    ],
+    automationScreenshots: [
+      {
+        image: projectQualityControlWorkflowImg,
+        title: "Data Cleaning & Validation Workflow",
+        caption: "Shows the complete n8n workflow used to validate the source CSV, detect data-quality issues, clean records, generate a quality summary, create the cleaned dataset, and save the resulting files."
+      },
+      {
+        image: projectQualityControlSourceImg,
+        title: "Source Data Quality",
+        caption: "Shows the original messy Product Quality Control dataset and its data-quality issues, including missing data identified during the quality assessment."
+      },
+      {
+        image: projectQualityControlCleanedImg,
+        title: "Cleaned Product Quality Dataset",
+        caption: "Shows the cleaned dataset produced after validation, standardization, and safe data-quality corrections."
+      },
+      {
+        image: projectQualityControlReportImg,
+        title: "Data Quality Report",
+        caption: "Shows the generated quality report summarizing records processed, corrections made, data-quality issues identified, and records requiring human review."
       }
     ]
   }
