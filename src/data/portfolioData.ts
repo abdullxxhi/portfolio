@@ -58,12 +58,12 @@ import projectQualityControlSourceImg from '../assets/images/02-source-data-qual
 import projectQualityControlCleanedImg from '../assets/images/03-cleaned-data.png';
 import projectQualityControlReportImg from '../assets/images/04-quality-report.png';
 
-// Sales Performance Analysis images
-import projectSalesAnalysisDatasetImg from '../assets/images/01-dataset.png';
-import projectSalesAnalysisPivotImg from '../assets/images/02-pivot-tables.png';
-import projectSalesAnalysisStatsImg from '../assets/images/03-summary-statistics.png';
-import projectSalesAnalysisVisualsImg from '../assets/images/04-visuals.png';
-import projectSalesAnalysisResidualsImg from '../assets/images/05-residuals.png';
+// Customer Churn Analysis images
+import projectChurnDataImg from '../assets/images/01-data.png';
+import projectChurnValidationImg from '../assets/images/02-validation-summary.png';
+import projectChurnPivotTableImg from '../assets/images/03-pivotTable.png';
+import projectChurnStatisticalTestImg from '../assets/images/04-statistical-test.png';
+import projectChurnBusinessInsightsImg from '../assets/images/05-business-insights.png';
 
 
 export const personalInfo: PersonalInfo = {
@@ -206,6 +206,62 @@ export const skillCategories: SkillCategory[] = [
 export const projectsData: Project[] = [
   {
     id: "proj-1",
+    title: "Customer Churn Analysis",
+    category: "Data Analysis",
+    featured: true,
+    description: "Conducted an end-to-end customer churn analysis in Microsoft Excel 2025 for a telecommunications dataset. The project covered data validation, exploratory analysis, customer segmentation, churn-rate analysis, and a Chi-Square test examining the relationship between contract type and customer churn. The analysis identified key high-risk customer groups and translated the findings into practical retention recommendations.",
+    tags: [
+      "Excel",
+      "Data Analysis",
+      "Customer Churn",
+      "PivotTables",
+      "Data Validation",
+      "Statistical Analysis",
+      "Chi-Square",
+      "Customer Segmentation",
+      "Business Intelligence"
+    ],
+    mediaUrl: projectChurnDataImg,
+    demoUrl: "",
+    githubUrl: "https://github.com/abdullxxhi/Customer-Churn-Analysis",
+    keyHighlights: [
+      "Calculated an overall 36.4% customer churn rate and identified high-risk customer segments.",
+      "Analyzed churn across contract type, tenure, satisfaction, monthly charges, support tickets, internet service, and Auto Pay.",
+      "Applied a Chi-Square Test of Independence, finding a statistically significant association between contract type and customer churn (χ² = 24.461, p = 0.0000049).",
+      "Identified month-to-month customers and newer customers as particularly high-risk groups.",
+      "Translated analytical findings into practical recommendations around onboarding, retention, satisfaction, support, pricing, and Auto Pay adoption."
+    ],
+    automationScreenshots: [
+      {
+        image: projectChurnDataImg,
+        title: "Customer Churn Dataset",
+        caption: "Shows the customer churn dataset used for the Excel analysis."
+      },
+      {
+        image: projectChurnValidationImg,
+        title: "Data Validation Summary",
+        caption: "Shows the validation checks performed to identify duplicate records, missing values, invalid ranges, categorical issues, and business-logic problems before analysis."
+      },
+      {
+        image: projectChurnPivotTableImg,
+        title: "Churn Analysis PivotTables",
+        caption: "Shows PivotTables used to explore customer churn patterns across contract type, tenure, satisfaction, charges, support tickets, internet service, and Auto Pay."
+      },
+      {
+        image: projectChurnStatisticalTestImg,
+        title: "Chi-Square Statistical Test",
+        caption: "Shows the Chi-Square Test of Independence examining the relationship between contract type and customer churn."
+      },
+      {
+        image: projectChurnBusinessInsightsImg,
+        title: "Business Insights & Recommendations",
+        caption: "Shows the key customer churn findings and practical recommendations derived from the analysis."
+      }
+    ]
+  },
+
+  {
+    id: "proj-2",
     title: "Clinic Appointment Automation",
     category: "AI Automation",
     featured: true,
@@ -242,65 +298,43 @@ export const projectsData: Project[] = [
   },
 
   {
-    id: "proj-12",
+    id: "proj-3",
     title: "Sales Performance Analysis",
     category: "Data Analysis",
     featured: false,
-    description: "Performed an end-to-end sales performance analysis in Excel 2025, moving from transactional data validation and business metric creation through descriptive statistics, regional and product analysis, correlation, regression, and model diagnostics. The analysis identified key revenue patterns, compared regional and product performance, evaluated relationships between variables, and critically assessed the limitations of the regression model.",
+    description: "Conducted an end-to-end sales performance analysis in Microsoft Excel 2025, moving from transactional data validation through business metric creation, descriptive analysis, regional and product comparisons, correlation analysis, regression modeling, and model diagnostics. The analysis translated statistical findings into business insights while critically evaluating model limitations.",
     tags: [
-      "Excel 2025",
+      "Excel",
       "Data Analysis",
-      "PivotTables",
       "Data Validation",
+      "PivotTables",
       "Descriptive Statistics",
       "Correlation Analysis",
       "Regression Analysis",
-      "Model Diagnostics"
+      "Business Analysis"
     ],
-    mediaUrl: projectSalesAnalysisDatasetImg,
+    mediaUrl: projectSalesImg,
     demoUrl: "",
     githubUrl: "",
     keyHighlights: [
-      "Validated 30 sales transactions using duplicate checks, numerical validation, business-logic checks, and dataset-level control totals.",
-      "Created revenue and discount metrics, with total revenue of ₦16,086,500 and total discount of ₦1,138,500.",
-      "Compared regional and product performance, showing that higher sales volume does not necessarily result in higher revenue.",
-      "Used descriptive statistics and the 1.5 × IQR rule to assess revenue distribution and potential outliers.",
-      "Analyzed relationships between units sold, unit price, discount, and revenue using CORREL(), scatterplots, and trendlines.",
-      "Built a simple linear regression model showing R² = 0.5501 and a statistically significant Unit Price coefficient.",
-      "Evaluated predicted values, residuals, and diagnostic plots and identified a modeling limitation because Unit Price is a component of the revenue calculation.",
-      "Demonstrated critical statistical judgment by distinguishing statistical significance from appropriate business or predictive modeling."
+      "Validated 30 sales transactions using duplicate checks, missing-value checks, numerical validation, business-logic checks, and dataset control totals.",
+      "Created revenue and discount metrics and analyzed regional and product performance using PivotTables and descriptive statistics.",
+      "Found that Lagos generated the highest total revenue, Abuja had the highest average transaction revenue, and Laptop generated the highest total revenue.",
+      "Analyzed correlations between revenue and units sold, unit price, and discount while avoiding unsupported causal conclusions.",
+      "Built a Unit Price to Revenue regression model with R² = 0.5501 and evaluated residuals and model diagnostics.",
+      "Identified model-design limitations because Unit Price is directly used to calculate Revenue, demonstrating critical evaluation of statistical models."
     ],
     automationScreenshots: [
       {
-        image: projectSalesAnalysisDatasetImg,
-        title: "Sales Dataset Validation",
-        caption: "Shows the transactional sales dataset used for the analysis, including validation checks for duplicate IDs, missing values, numerical consistency, and business-logic integrity."
-      },
-      {
-        image: projectSalesAnalysisPivotImg,
-        title: "Sales PivotTable Analysis",
-        caption: "Shows Excel PivotTables used to compare revenue, units sold, regional performance, and product performance."
-      },
-      {
-        image: projectSalesAnalysisStatsImg,
-        title: "Summary Statistics & Regression Results",
-        caption: "Shows the summary statistics, regression output, observations, ANOVA results, and model statistics used to evaluate the sales analysis."
-      },
-      {
-        image: projectSalesAnalysisVisualsImg,
-        title: "Correlation Analysis Visuals",
-        caption: "Shows correlation visuals and interpretations used to examine relationships between sales variables while avoiding unsupported causal conclusions."
-      },
-      {
-        image: projectSalesAnalysisResidualsImg,
-        title: "Residual Analysis & Model Diagnostics",
-        caption: "Shows predicted values, residuals, and diagnostic plots used to evaluate the regression model and identify limitations in its construction."
+        image: projectSalesImg,
+        title: "Sales Dataset",
+        caption: "Shows the transactional sales dataset used for validation and analysis."
       }
     ]
   },
 
   {
-    id: "proj-2",
+    id: "proj-4",
     title: "Sales Performance Dashboard",
     category: "Excel",
     featured: false,
@@ -323,7 +357,7 @@ export const projectsData: Project[] = [
   },
 
   {
-    id: "proj-3",
+    id: "proj-5",
     title: "Company Performance Dashboard",
     category: "Data Analysis",
     featured: false,
@@ -345,7 +379,7 @@ export const projectsData: Project[] = [
   },
 
   {
-    id: "proj-4",
+    id: "proj-6",
     title: "UFC Fighter Data Analysis (Islam Makhachev)",
     category: "Data Analysis",
     featured: false,
@@ -368,7 +402,7 @@ export const projectsData: Project[] = [
   },
 
   {
-    id: "proj-5",
+    id: "proj-7",
     title: "Transportation Cost Analysis in Nigeria",
     category: "Statistics",
     featured: false,
@@ -391,7 +425,7 @@ export const projectsData: Project[] = [
   },
 
   {
-    id: "proj-6",
+    id: "proj-8",
     title: "Seleem Bakery Website",
     category: "WEB DEVELOPMENT",
     featured: false,
@@ -418,7 +452,7 @@ export const projectsData: Project[] = [
   },
 
   {
-    id: "proj-7",
+    id: "proj-9",
     title: "Smart Event Registration & Capacity Management Automation",
     category: "AI Automation",
     featured: false,
@@ -446,7 +480,7 @@ export const projectsData: Project[] = [
   },
 
   {
-    id: "proj-8",
+    id: "proj-10",
     title: "AI Customer Support Bot",
     category: "AI Automation",
     featured: true,
@@ -501,7 +535,7 @@ export const projectsData: Project[] = [
   },
 
   {
-    id: "proj-9",
+    id: "proj-11",
     title: "AI Natural Language Order Management Automation",
     category: "AI Automation",
     featured: false,
@@ -578,7 +612,7 @@ export const projectsData: Project[] = [
   },
 
   {
-    id: "proj-10",
+    id: "proj-12",
     title: "AI Email Triage & Response System",
     category: "AI Automation",
     featured: true,
@@ -642,7 +676,7 @@ export const projectsData: Project[] = [
   },
 
   {
-    id: "proj-11",
+    id: "proj-13",
     title: "Product Quality Control Data Cleaning & Validation",
     category: "Data Automation",
     featured: true,
