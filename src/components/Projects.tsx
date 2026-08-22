@@ -1,100 +1,149 @@
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { FolderGit2, Sparkles, Filter } from 'lucide-react';
-import { projectsData } from '../data/portfolioData';
-import { Project } from '../types';
-import ProjectCard from './ProjectCard';
+import { useState, useEffect } from 'react';
+import Navbar from './components/Navbar';
+import Hero from './components/Hero';
+import About from './components/About';
+import Skills from './components/Skills';
+import Projects from './components/Projects';
+import Certifications from './components/Certifications';
+import Education from './components/Education';
+import Experience from './components/Experience';
+import Contact from './components/Contact';
+import Footer from './components/Footer';
+import LightboxModal from './components/LightboxModal';
+import CustomCursor from './components/CustomCursor';
+import ScrollProgressBar from './components/ScrollProgressBar';
+import BackToTopButton from './components/BackToTopButton';
+import LoadingScreen from './components/LoadingScreen';
+import BackgroundEffects from './components/BackgroundEffects';
+import Toast from './components/Toast';
 
-interface ProjectsProps {
-  onOpenLightbox: (project: Project) => void;
-}
+import { personalInfo } from './data/portfolioData';
+import { Project, Certification } from './types';
 
-export default function Projects({ onOpenLightbox }: ProjectsProps) {
-  const [activeFilter, setActiveFilter] = useState<string>('All');
+export default function App() {
+  const [activeSection, setActiveSection] = useState<string>('hero');
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [toastType, setToastType] = useState<'success' | 'error'>('success');
 
-  const categories = ['All', ...Array.from(new Set(projectsData.map((p) => p.category)))];
+  // Modal Lightbox state
+  const [modalItem, setModalItem] = useState<Project | Certification | null>(null);
+  const [modalType, setModalType] = useState<'project' | 'certification' | null>(null);
 
-  const filteredProjects = activeFilter === 'All'
-    ? projectsData
-    : projectsData.filter((p) => p.category === activeFilter);
+  // Track the section currently reached while scrolling
+  useEffect(() => {
+    const updateActiveSection = () => {
+      const sections = document.querySelectorAll('section[id]');
+
+      // Account for the fixed navbar
+      const scrollPosition = window.scrollY + 120;
+
+      let currentSection = 'hero';
+
+      sections.forEach((section) => {
+        const element = section as HTMLElement;
+
+        if (element.offsetTop <= scrollPosition) {
+          currentSection = element.id;
+        }
+      });
+
+      setActiveSection(currentSection);
+    };
+
+    updateActiveSection();
+
+    window.addEventListener('scroll', updateActiveSection, { passive: true });
+    window.addEventListener('resize', updateActiveSection);
+
+    return () => {
+      window.removeEventListener('scroll', updateActiveSection);
+      window.removeEventListener('resize', updateActiveSection);
+    };
+  }, []);
+
+  const handleCopyEmail = () => {
+    navigator.clipboard.writeText(personalInfo.email);
+    showToast('Email address copied to clipboard!', 'success');
+  };
+
+  const showToast = (
+    message: string,
+    type: 'success' | 'error' = 'success'
+  ) => {
+    setToastMessage(message);
+    setToastType(type);
+
+    setTimeout(() => {
+      setToastMessage(null);
+    }, 3500);
+  };
+
+  const handleOpenProjectLightbox = (project: Project) => {
+    setModalItem(project);
+    setModalType('project');
+  };
+
+  const handleOpenCertModal = (cert: Certification) => {
+    setModalItem(cert);
+    setModalType('certification');
+  };
+
+  const handleCloseModal = () => {
+    setModalItem(null);
+    setModalType(null);
+  };
 
   return (
-    <section id="projects" className="py-24 relative z-10">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        {/* Header */}
-        <div className="text-center max-w-3xl mx-auto space-y-4 mb-12">
-          <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-[#FCFAF6] border border-[#DDD6C8] shadow-sm">
-            <FolderGit2 className="w-3.5 h-3.5 text-[#2F5D50]" />
-            <span className="text-xs font-mono uppercase tracking-widest text-[#2F5D50] font-semibold">
-              FEATURED WORK
-            </span>
-          </div>
-          <h2 className="text-3xl sm:text-4xl font-bold font-display text-[#1D2A26]">
-            Projects & Case Studies
-          </h2>
-          <p className="text-base text-[#4B5563]">
-            Automations, interactive business intelligence dashboards, and statistical research models.
-          </p>
-        </div>
+    <div className="relative min-h-screen bg-[#F5F1E8] text-[#1D2A26] font-sans selection:bg-[#2F5D50] selection:text-white overflow-x-hidden">
+      {/* 1-Second Loading Screen */}
+      <LoadingScreen />
 
-        {/* Filter Tabs */}
-        <div className="flex items-center justify-center flex-wrap gap-2 mb-12">
-          <div className="flex items-center space-x-1 p-1.5 rounded-2xl bg-[#FCFAF6] border border-[#DDD6C8] shadow-sm">
-            <Filter className="w-4 h-4 text-[#6B7280] ml-2 mr-1 hidden sm:block" />
-            {categories.map((cat) => {
-              const isActive = activeFilter === cat;
-              return (
-                <button
-                  key={cat}
-                  onClick={() => setActiveFilter(cat)}
-                  className={`relative px-4 py-2 rounded-xl text-xs font-semibold transition-all ${
-                    isActive
-                      ? 'text-white'
-                      : 'text-[#6B7280] hover:text-[#1D2A26]'
-                  }`}
-                >
-                  {isActive && (
-                    <motion.div
-                      layoutId="activeProjectFilter"
-                      className="absolute inset-0 bg-[#2F5D50] rounded-xl -z-10 shadow-sm"
-                      transition={{ type: 'spring', stiffness: 350, damping: 30 }}
-                    />
-                  )}
-                  {cat}
-                </button>
-              );
-            })}
-          </div>
-        </div>
+      {/* Custom Mouse Cursor */}
+      <CustomCursor />
 
-        {/* Projects Grid */}
-        <motion.div layout className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <AnimatePresence>
-            {filteredProjects.map((project) => (
-              <ProjectCard
-                key={project.id}
-                project={project}
-                onOpenLightbox={onOpenLightbox}
-              />
-            ))}
-          </AnimatePresence>
-        </motion.div>
+      {/* Scroll Progress Bar at top */}
+      <ScrollProgressBar />
 
-        {/* Empty State fallback if any filter has no items */}
-        {filteredProjects.length === 0 && (
-          <div className="text-center py-16 glass-card rounded-3xl p-8 max-w-md mx-auto">
-            <p className="text-base text-[#94A3B8]">No projects found for this category.</p>
-            <button
-              onClick={() => setActiveFilter('All')}
-              className="mt-4 px-4 py-2 rounded-xl bg-[#3B82F6] text-white text-xs font-semibold"
-            >
-              Reset Filter
-            </button>
-          </div>
-        )}
+      {/* Ambient Background Effects */}
+      <BackgroundEffects />
 
-      </div>
-    </section>
+      {/* Floating Back to Top Button */}
+      <BackToTopButton />
+
+      {/* Fixed Navbar */}
+      <Navbar activeSection={activeSection} />
+
+      {/* Main Sections */}
+      <main className="relative z-10">
+        <Hero onCopyEmail={handleCopyEmail} />
+        <About />
+        <Skills />
+        <Projects onOpenLightbox={handleOpenProjectLightbox} />
+        <Certifications onOpenCertModal={handleOpenCertModal} />
+        <Education />
+        <Experience />
+        <Contact
+          onCopyEmail={handleCopyEmail}
+          onShowToast={showToast}
+        />
+      </main>
+
+      {/* Footer */}
+      <Footer onCopyEmail={handleCopyEmail} />
+
+      {/* Lightbox / Details Modal */}
+      <LightboxModal
+        item={modalItem}
+        type={modalType}
+        onClose={handleCloseModal}
+      />
+
+      {/* Toast Notification */}
+      <Toast
+        message={toastMessage}
+        type={toastType}
+        onClose={() => setToastMessage(null)}
+      />
+    </div>
   );
 }
