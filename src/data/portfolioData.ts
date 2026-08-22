@@ -65,6 +65,12 @@ import projectChurnPivotTableImg from '../assets/images/03-pivotTable.png';
 import projectChurnStatisticalTestImg from '../assets/images/04-statistical-test.png';
 import projectChurnBusinessInsightsImg from '../assets/images/05-business-insights.png';
 
+// Sales Forecasting & Predictive Analysis images
+import projectForecastTrainDataImg from '../assets/images/01-train-data.png';
+import projectForecastMonthlyTrendImg from '../assets/images/02-monthly-trend.png';
+import projectForecastNaiveImg from '../assets/images/03-naive-forecast.png';
+import projectForecastEtsImg from '../assets/images/04-ets-forecast.png';
+
 
 export const personalInfo: PersonalInfo = {
   name: "Abdullahi Damilola Abdulsalam",
@@ -262,6 +268,58 @@ export const projectsData: Project[] = [
 
   {
     id: "proj-2",
+    title: "Sales Forecasting & Predictive Analysis",
+    category: "Data Analysis",
+    featured: true,
+    description: "Analyzed more than 1 million sales records in Microsoft Excel to identify monthly sales trends, measure volatility, and evaluate forecasting performance. Compared a naive baseline with an ETS forecasting model using MAE and RMSE to determine which approach produced more accurate predictions.",
+    tags: [
+      "Excel",
+      "Data Analysis",
+      "Forecasting",
+      "ETS",
+      "Time Series",
+      "PivotTables",
+      "MAE",
+      "RMSE",
+      "Data Visualization",
+      "Predictive Analysis"
+    ],
+    mediaUrl: projectForecastTrainDataImg,
+    demoUrl: "",
+    githubUrl: "https://github.com/abdullxxhi/Sales-Forecasting-and-Predictive-Analysis",
+    keyHighlights: [
+      "Aggregated more than 1 million sales records into monthly sales totals using Excel PivotTables.",
+      "Analyzed monthly trends, month-over-month changes, and volatility across 2013 and 2014.",
+      "Compared a naive forecasting baseline with an ETS model using MAE and RMSE.",
+      "ETS produced lower forecasting errors than the naive method, reducing MAE by approximately 28.3% and RMSE by approximately 30.4%.",
+      "Evaluated forecast limitations and identified that ETS struggled with sudden sales spikes and sharp declines."
+    ],
+    automationScreenshots: [
+      {
+        image: projectForecastTrainDataImg,
+        title: "Sales Dataset",
+        caption: "Shows the large historical sales dataset used for the forecasting and predictive analysis."
+      },
+      {
+        image: projectForecastMonthlyTrendImg,
+        title: "Monthly Sales Trend",
+        caption: "Shows the PivotTable aggregation used to group the sales data by month and year for trend analysis."
+      },
+      {
+        image: projectForecastNaiveImg,
+        title: "Naive Forecast",
+        caption: "Shows the naive forecasting approach used as the baseline for evaluating forecast performance."
+      },
+      {
+        image: projectForecastEtsImg,
+        title: "ETS Forecast",
+        caption: "Shows the ETS forecast created using Excel's Forecast Sheet, including the forecast results and confidence bounds."
+      }
+    ]
+  },
+
+  {
+    id: "proj-3",
     title: "Clinic Appointment Automation",
     category: "AI Automation",
     featured: true,
@@ -298,7 +356,7 @@ export const projectsData: Project[] = [
   },
 
   {
-    id: "proj-3",
+    id: "proj-4",
     title: "Sales Performance Analysis",
     category: "Data Analysis",
     featured: false,
@@ -334,7 +392,7 @@ export const projectsData: Project[] = [
   },
 
   {
-    id: "proj-4",
+    id: "proj-5",
     title: "Sales Performance Dashboard",
     category: "Excel",
     featured: false,
@@ -357,7 +415,7 @@ export const projectsData: Project[] = [
   },
 
   {
-    id: "proj-5",
+    id: "proj-6",
     title: "Company Performance Dashboard",
     category: "Data Analysis",
     featured: false,
@@ -379,7 +437,7 @@ export const projectsData: Project[] = [
   },
 
   {
-    id: "proj-6",
+    id: "proj-7",
     title: "UFC Fighter Data Analysis (Islam Makhachev)",
     category: "Data Analysis",
     featured: false,
@@ -402,7 +460,7 @@ export const projectsData: Project[] = [
   },
 
   {
-    id: "proj-7",
+    id: "proj-8",
     title: "Transportation Cost Analysis in Nigeria",
     category: "Statistics",
     featured: false,
@@ -425,7 +483,7 @@ export const projectsData: Project[] = [
   },
 
   {
-    id: "proj-8",
+    id: "proj-9",
     title: "Seleem Bakery Website",
     category: "WEB DEVELOPMENT",
     featured: false,
@@ -452,7 +510,7 @@ export const projectsData: Project[] = [
   },
 
   {
-    id: "proj-9",
+    id: "proj-10",
     title: "Smart Event Registration & Capacity Management Automation",
     category: "AI Automation",
     featured: false,
@@ -480,7 +538,7 @@ export const projectsData: Project[] = [
   },
 
   {
-    id: "proj-10",
+    id: "proj-11",
     title: "AI Customer Support Bot",
     category: "AI Automation",
     featured: true,
@@ -535,7 +593,7 @@ export const projectsData: Project[] = [
   },
 
   {
-    id: "proj-11",
+    id: "proj-12",
     title: "AI Natural Language Order Management Automation",
     category: "AI Automation",
     featured: false,
@@ -612,7 +670,7 @@ export const projectsData: Project[] = [
   },
 
   {
-    id: "proj-12",
+    id: "proj-13",
     title: "AI Email Triage & Response System",
     category: "AI Automation",
     featured: true,
@@ -676,7 +734,7 @@ export const projectsData: Project[] = [
   },
 
   {
-    id: "proj-13",
+    id: "proj-14",
     title: "Product Quality Control Data Cleaning & Validation",
     category: "Data Automation",
     featured: true,
