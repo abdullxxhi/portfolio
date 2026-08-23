@@ -34,20 +34,40 @@ export default function Navbar({ activeSection }: NavbarProps) {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+  const scrollToSection = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    href: string
+  ) => {
     e.preventDefault();
-    setMobileMenuOpen(false);
-    const target = document.querySelector(href);
-    if (target) {
-      const navOffset = 80;
-      const elementPosition = target.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - navOffset;
 
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
-      });
+    const sectionId = href.replace('#', '');
+    const target = document.getElementById(sectionId);
+
+    if (!target) {
+      return;
     }
+
+    // Close the mobile menu first.
+    setMobileMenuOpen(false);
+
+    // Wait until React/browser has processed the menu state change
+    // before calculating the target's position.
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        const navOffset = 80;
+        const targetPosition =
+          target.getBoundingClientRect().top + window.scrollY - navOffset;
+
+        window.scrollTo({
+          top: Math.max(0, targetPosition),
+          behavior: 'smooth',
+        });
+
+        // Keep the URL hash in sync without causing the browser
+        // to perform its own jump.
+        window.history.replaceState(null, '', href);
+      });
+    });
   };
 
   return (
@@ -74,6 +94,7 @@ export default function Navbar({ activeSection }: NavbarProps) {
         <nav className="hidden lg:flex items-center space-x-1 px-3.5 py-1.5 rounded-full bg-[#FCFAF6]/90 backdrop-blur-md border border-[#DDD6C8] shadow-sm">
           {navLinks.map((link) => {
             const isActive = activeSection === link.href.substring(1);
+
             return (
               <a
                 key={link.name}
@@ -89,9 +110,14 @@ export default function Navbar({ activeSection }: NavbarProps) {
                   <motion.div
                     layoutId="activeNavTab"
                     className="absolute inset-0 bg-[#2F5D50] rounded-full -z-10 shadow-[0_2px_10px_rgba(47,93,80,0.25)]"
-                    transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                    transition={{
+                      type: 'spring',
+                      stiffness: 380,
+                      damping: 30,
+                    }}
                   />
                 )}
+
                 {link.name}
               </a>
             );
@@ -106,9 +132,12 @@ export default function Navbar({ activeSection }: NavbarProps) {
             className="relative group overflow-hidden rounded-full p-[1px] font-medium text-xs focus:outline-none"
           >
             <span className="absolute inset-0 bg-gradient-to-r from-[#2F5D50] via-[#D97745] to-[#2F5D50]" />
+
             <span className="relative px-5 py-2 rounded-full bg-[#2F5D50] flex items-center space-x-1.5 text-white group-hover:bg-[#244A40] transition-all duration-300 shadow-md">
               <Sparkles className="w-3.5 h-3.5 text-[#D97745] group-hover:text-white" />
+
               <span className="font-semibold">Hire Me</span>
+
               <ArrowUpRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
             </span>
           </a>
@@ -123,12 +152,18 @@ export default function Navbar({ activeSection }: NavbarProps) {
           >
             Hire Me
           </a>
+
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Toggle Menu"
+            aria-expanded={mobileMenuOpen}
             className="p-2 rounded-xl bg-[#FCFAF6] border border-[#DDD6C8] text-[#1D2A26] hover:text-[#2F5D50] transition-colors"
           >
-            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            {mobileMenuOpen ? (
+              <X className="w-5 h-5" />
+            ) : (
+              <Menu className="w-5 h-5" />
+            )}
           </button>
         </div>
       </div>
@@ -146,6 +181,7 @@ export default function Navbar({ activeSection }: NavbarProps) {
             <div className="px-6 py-6 space-y-2">
               {navLinks.map((link) => {
                 const isActive = activeSection === link.href.substring(1);
+
                 return (
                   <a
                     key={link.name}
@@ -161,6 +197,7 @@ export default function Navbar({ activeSection }: NavbarProps) {
                   </a>
                 );
               })}
+
               <div className="pt-2">
                 <a
                   href="#contact"
