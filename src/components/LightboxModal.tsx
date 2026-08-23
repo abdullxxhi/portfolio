@@ -1,6 +1,15 @@
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, ExternalLink, Github, CheckCircle2, Workflow, Maximize2 } from 'lucide-react';
+import {
+  X,
+  ExternalLink,
+  Github,
+  CheckCircle2,
+  Workflow,
+  BarChart3,
+  Database,
+  Maximize2
+} from 'lucide-react';
 import { Project, Certification } from '../types';
 
 interface LightboxModalProps {
@@ -32,6 +41,41 @@ export default function LightboxModal({ item, type, onClose }: LightboxModalProp
   const isProject = type === 'project';
   const projectItem = item as Project;
   const certItem = item as Certification;
+
+  /*
+   * Determine the appropriate screenshot section based on the
+   * type of project instead of displaying "Automation in Action"
+   * for every project.
+   */
+  const isAutomationProject = projectItem.category === 'AI Automation';
+
+  const isDataAnalysisProject =
+    projectItem.category === 'Excel' ||
+    projectItem.category === 'Data Analysis' ||
+    projectItem.category === 'Statistics';
+
+  const isDataQualityProject = projectItem.category === 'Data Automation';
+
+  let galleryTitle = 'Project in Action';
+  let galleryDescription = 'Supporting project screenshots and implementation details.';
+  let GalleryIcon = Workflow;
+
+  if (isAutomationProject) {
+    galleryTitle = 'Automation in Action';
+    galleryDescription =
+      'Demonstrating the completed end-to-end automation workflow and real-time execution';
+    GalleryIcon = Workflow;
+  } else if (isDataAnalysisProject) {
+    galleryTitle = 'Analysis in Action';
+    galleryDescription =
+      'Demonstrating the analytical process, data exploration, and key findings from the project';
+    GalleryIcon = BarChart3;
+  } else if (isDataQualityProject) {
+    galleryTitle = 'Data Quality in Action';
+    galleryDescription =
+      'Demonstrating the data validation, cleaning, standardization, and quality-control process';
+    GalleryIcon = Database;
+  }
 
   return (
     <AnimatePresence>
@@ -158,23 +202,22 @@ export default function LightboxModal({ item, type, onClose }: LightboxModalProp
                   </div>
                 </div>
 
-                {/* Automation in Action Section */}
+                {/* Context-Aware Project Screenshot Section */}
                 {projectItem.automationScreenshots &&
                   projectItem.automationScreenshots.length > 0 && (
                     <div className="pt-6 border-t border-[#DDD6C8] space-y-6">
                       <div className="flex items-center space-x-2.5">
                         <div className="p-2.5 rounded-xl bg-[#2F5D50]/10 text-[#2F5D50]">
-                          <Workflow className="w-5 h-5" />
+                          <GalleryIcon className="w-5 h-5" />
                         </div>
 
                         <div>
                           <h3 className="text-lg font-bold font-display text-[#1D2A26]">
-                            Automation in Action
+                            {galleryTitle}
                           </h3>
 
                           <p className="text-xs text-[#6B7280]">
-                            Demonstrating the completed end-to-end automation workflow and
-                            real-time execution
+                            {galleryDescription}
                           </p>
                         </div>
                       </div>
