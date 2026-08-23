@@ -31,28 +31,62 @@ export default function App() {
   const [modalItem, setModalItem] = useState<Project | Certification | null>(null);
   const [modalType, setModalType] = useState<'project' | 'certification' | null>(null);
 
-  // IntersectionObserver to highlight active section in Navbar
+  // Track the section currently visible to the user
   useEffect(() => {
-    const sections = document.querySelectorAll('section[id]');
-    
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveSection(entry.target.id);
-          }
-        });
-      },
-      {
-        rootMargin: '-20% 0px -60% 0px',
-        threshold: 0.1,
-      }
-    );
+    let ticking = false;
 
-    sections.forEach((sec) => observer.observe(sec));
+    const updateActiveSection = () => {
+      const sections = Array.from(
+        document.querySelectorAll<HTMLElement>('section[id]')
+      );
+
+      if (sections.length === 0) {
+        return;
+      }
+
+      const scrollPosition = window.scrollY;
+      const viewportHeight = window.innerHeight;
+
+      // Position where a section becomes the active section.
+      // This works consistently on both desktop and mobile.
+      const activationPoint = scrollPosition + viewportHeight * 0.3;
+
+      let currentSection = 'hero';
+
+      for (const section of sections) {
+        const sectionTop = section.offsetTop;
+
+        if (sectionTop <= activationPoint) {
+          currentSection = section.id;
+        } else {
+          break;
+        }
+      }
+
+      setActiveSection(currentSection);
+      ticking = false;
+    };
+
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(updateActiveSection);
+        ticking = true;
+      }
+    };
+
+    const handleResize = () => {
+      updateActiveSection();
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', handleResize);
+
+    // Set the correct section when the page first loads
+    updateActiveSection();
 
     return () => {
-      sections.forEach((sec) => observer.unobserve(sec));
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleResize);
     };
   }, []);
 
@@ -61,9 +95,13 @@ export default function App() {
     showToast('Email address copied to clipboard!', 'success');
   };
 
-  const showToast = (message: string, type: 'success' | 'error' = 'success') => {
+  const showToast = (
+    message: string,
+    type: 'success' | 'error' = 'success'
+  ) => {
     setToastMessage(message);
     setToastType(type);
+
     setTimeout(() => {
       setToastMessage(null);
     }, 3500);
@@ -113,7 +151,10 @@ export default function App() {
         <Certifications onOpenCertModal={handleOpenCertModal} />
         <Education />
         <Experience />
-        <Contact onCopyEmail={handleCopyEmail} onShowToast={showToast} />
+        <Contact
+          onCopyEmail={handleCopyEmail}
+          onShowToast={showToast}
+        />
       </main>
 
       {/* Footer */}
