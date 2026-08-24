@@ -11,10 +11,6 @@ import {
 // Profile picture
 import profilePic from '../assets/images/profile_portrait_1785602306698.jpg';
 
-import projectTicketImg from '../assets/images/project_ticket_auto_1785604298687.jpg';
-import projectSalesImg from '../assets/images/project_sales_dash_1785604311537.jpg';
-import projectPowerBiImg from '../assets/images/project_powerbi_dash_1785604325124.jpg';
-import projectUfcImg from '../assets/images/project_ufc_analys_1785604336953.jpg';
 import projectTransportImg from '../assets/images/project_transport_a_1785604349850.jpg';
 import projectSeleemImg from '../assets/images/project_seleem_bakery_1785607080040.jpg';
 import projectSeleemVideo from '../assets/images/seleem-bakery-1.mp4';
@@ -23,7 +19,6 @@ import eventRegistrationImg from '../assets/images/event-registration.png';
 
 import n8nDB from '../assets/images/n8nDB.png';
 import projectClinicWhatsappImg from '../assets/images/clinic-whatsapp.png';
-import projectClinicMailImg from '../assets/images/clinic-mail.png';
 
 import projectSupportWorkflowImg from '../assets/images/01-ai-customer-support-workflow.png';
 import projectRagImg from '../assets/images/02-knowledge-base-rag-ingestion.png';
@@ -98,11 +93,11 @@ export const statsData: StatItem[] = [
   {
     id: "stat-1",
     label: "Projects Completed",
-    value: "15+",
-    numericValue: 15,
+    value: "10+",
+    numericValue: 10,
     suffix: "+",
     iconName: "FolderGit2",
-    subtext: "Automations & Analytics Dashboards"
+    subtext: "Analytics & Automations"
   },
   {
     id: "stat-2",
@@ -372,7 +367,7 @@ export const projectsData: Project[] = [
   },
 
   {
-    id: "proj-3-original",
+    id: "proj-4",
     title: "Clinic Appointment Automation",
     category: "AI Automation",
     featured: true,
@@ -409,7 +404,7 @@ export const projectsData: Project[] = [
   },
 
   {
-    id: "proj-8",
+    id: "proj-5",
     title: "Transportation Cost Analysis in Nigeria",
     category: "Statistics",
     featured: false,
@@ -432,7 +427,7 @@ export const projectsData: Project[] = [
   },
 
   {
-    id: "proj-9",
+    id: "proj-6",
     title: "Seleem Bakery Website",
     category: "WEB DEVELOPMENT",
     featured: false,
@@ -459,7 +454,7 @@ export const projectsData: Project[] = [
   },
 
   {
-    id: "proj-10",
+    id: "proj-7",
     title: "Smart Event Registration & Capacity Management Automation",
     category: "AI Automation",
     featured: false,
@@ -487,7 +482,7 @@ export const projectsData: Project[] = [
   },
 
   {
-    id: "proj-11",
+    id: "proj-8",
     title: "AI Customer Support Bot",
     category: "AI Automation",
     featured: true,
@@ -542,7 +537,7 @@ export const projectsData: Project[] = [
   },
 
   {
-    id: "proj-12",
+    id: "proj-9",
     title: "AI Natural Language Order Management Automation",
     category: "AI Automation",
     featured: false,
@@ -619,7 +614,7 @@ export const projectsData: Project[] = [
   },
 
   {
-    id: "proj-13",
+    id: "proj-10",
     title: "AI Email Triage & Response System",
     category: "AI Automation",
     featured: true,
@@ -683,7 +678,7 @@ export const projectsData: Project[] = [
   },
 
   {
-    id: "proj-14",
+    id: "proj-11",
     title: "Product Quality Control Data Cleaning & Validation",
     category: "Data Automation",
     featured: true,
