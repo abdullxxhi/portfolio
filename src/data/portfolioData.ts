@@ -11,6 +11,7 @@ import {
 // Profile picture
 import profilePic from '../assets/images/profile_portrait_1785602306698.jpg';
 
+// Existing project images
 import projectTicketImg from '../assets/images/project_ticket_auto_1785604298687.jpg';
 import projectSalesImg from '../assets/images/project_sales_dash_1785604311537.jpg';
 import projectPowerBiImg from '../assets/images/project_powerbi_dash_1785604325124.jpg';
@@ -25,6 +26,7 @@ import n8nDB from '../assets/images/n8nDB.png';
 import projectClinicWhatsappImg from '../assets/images/clinic-whatsapp.png';
 import projectClinicMailImg from '../assets/images/clinic-mail.png';
 
+// AI Customer Support Bot images
 import projectSupportWorkflowImg from '../assets/images/01-ai-customer-support-workflow.png';
 import projectRagImg from '../assets/images/02-knowledge-base-rag-ingestion.png';
 import projectHumanEscalationImg from '../assets/images/03-human-escalation-telegram.png';
@@ -34,6 +36,7 @@ import projectTelegramAlertsImg from '../assets/images/05-telegram-business-noti
 import alxCertificateIMG from '../assets/images/alx-certificate.png';
 import fadaqaImg from '../assets/images/fadaqa.png';
 
+// AI Natural Language Order Management images
 import projectOrderDeliveryImg from '../assets/images/01-delivery-order-workflow.png';
 import projectOrderPickupImg from '../assets/images/02-pickup-order-workflow.png';
 import projectOrderOtherImg from '../assets/images/03-other-order-workflow.png';
@@ -71,12 +74,6 @@ import projectForecastMonthlyTrendImg from '../assets/images/02-monthly-trend.pn
 import projectForecastNaiveImg from '../assets/images/03-naive-forecast.png';
 import projectForecastEtsImg from '../assets/images/04-ets-forecast.png';
 
-// Weekly Sales Forecasting Analysis images
-import projectWeeklyForecastDashboardImg from '../assets/images/dashbordAI.png';
-import projectWeeklyForecastDataImg from '../assets/images/sales-transac-data.png';
-import projectWeeklyForecastMovingAverageImg from '../assets/images/moving-average.png';
-
-
 export const personalInfo: PersonalInfo = {
   name: "Abdullahi Damilola Abdulsalam",
   initials: "Build. Automate. Analyze.",
@@ -84,9 +81,9 @@ export const personalInfo: PersonalInfo = {
   location: "Lagos, Nigeria",
   email: "abdulsalamabdullahi003@gmail.com",
   phone: "+234902250296",
-  github: "https://github.com/abdullxxhi",
-  linkedin: "https://www.linkedin.com/in/abdullxxhi",
-  portfolioUrl: "https://abdullxxhi.vercel.app/",
+  github: "[https://github.com/abdullxxhi](https://github.com/abdullxxhi)",
+  linkedin: "[https://www.linkedin.com/in/abdullxxhi](https://www.linkedin.com/in/abdullxxhi)",
+  portfolioUrl: "[https://github.com/abdullxxhi](https://github.com/abdullxxhi)",
   profilePhoto: profilePic,
   focusArea: "AI Automation, Workflow Automation, Data Analysis",
   bio: "I am an AI Automation Developer & Data Analyst with a background in Statistics and a passion for building intelligent solutions that simplify work. I specialize in designing workflow automations, Google Workspace solutions, and data-driven systems that help individuals and businesses save time, reduce manual effort, and improve productivity. My experience spans Microsoft Excel, SQL, Power BI, Google Apps Script, and AI-powered workflow automation. I enjoy solving real-world problems by combining data analysis with automation to create efficient, scalable solutions.",
@@ -98,8 +95,8 @@ export const statsData: StatItem[] = [
   {
     id: "stat-1",
     label: "Projects Completed",
-    value: "15+",
-    numericValue: 15,
+    value: "10+",
+    numericValue: 10,
     suffix: "+",
     iconName: "FolderGit2",
     subtext: "Automations & Analytics Dashboards"
@@ -234,7 +231,7 @@ export const projectsData: Project[] = [
     ],
     mediaUrl: projectChurnDataImg,
     demoUrl: "",
-    githubUrl: "https://github.com/abdullxxhi/Customer-Churn-Analysis",
+    githubUrl: "[https://github.com/abdullxxhi/Customer-Churn-Analysis](https://github.com/abdullxxhi/Customer-Churn-Analysis)",
     keyHighlights: [
       "Calculated an overall 36.4% customer churn rate and identified high-risk customer segments.",
       "Analyzed churn across contract type, tenure, satisfaction, monthly charges, support tickets, internet service, and Auto Pay.",
@@ -291,7 +288,7 @@ export const projectsData: Project[] = [
     ],
     mediaUrl: projectForecastTrainDataImg,
     demoUrl: "",
-    githubUrl: "https://github.com/abdullxxhi/Sales-Forecasting-and-Predictive-Analysis",
+    githubUrl: "[https://github.com/abdullxxhi/Sales-Forecasting-and-Predictive-Analysis](https://github.com/abdullxxhi/Sales-Forecasting-and-Predictive-Analysis)",
     keyHighlights: [
       "Aggregated more than 1 million sales records into monthly sales totals using Excel PivotTables.",
       "Analyzed monthly trends, month-over-month changes, and volatility across 2013 and 2014.",
@@ -325,54 +322,6 @@ export const projectsData: Project[] = [
 
   {
     id: "proj-3",
-    title: "Weekly Sales Forecasting Analysis",
-    category: "Data Analysis",
-    featured: true,
-    description: "Analyzed 52 weeks of sales data for Product P1 using Microsoft Excel to compare Naive Forecasting, a 3-Week Moving Average, and ETS forecasting. The analysis used a W0–W39 training period and W40–W51 testing period, evaluating each method with MAE and RMSE. An interactive forecasting dashboard was also built to present actual sales, forecasts, model accuracy, and forecasting errors in a clear business-focused format.",
-    tags: [
-      "Excel",
-      "Google Sheets",
-      "Google Gemini",
-      "Forecasting",
-      "Time Series",
-      "Moving Average",
-      "ETS",
-      "MAE",
-      "RMSE",
-      "Data Visualization"
-    ],
-    mediaUrl: projectWeeklyForecastDashboardImg,
-    demoUrl: "",
-    githubUrl: "https://github.com/abdullxxhi/Weekly-Sales-Forecasting-Analysis",
-    keyHighlights: [
-      "Compared Naive Forecasting, 3-Week Moving Average, and ETS using the same testing period.",
-      "Evaluated forecasting accuracy using MAE and RMSE.",
-      "The 3-Week Moving Average achieved the lowest MAE and RMSE among the three methods tested.",
-      "Built an interactive dashboard showing actual sales, forecasts, model accuracy, and forecasting errors.",
-      "Used Google Gemini in Google Sheets to experiment with the initial dashboard design before developing the final presentation in Excel.",
-      "Demonstrated that a simpler forecasting method can outperform a more complex model depending on the characteristics of the dataset."
-    ],
-    automationScreenshots: [
-      {
-        image: projectWeeklyForecastDashboardImg,
-        title: "Weekly Sales Forecasting Dashboard",
-        caption: "Interactive dashboard presenting actual weekly sales, Naive forecasts, 3-Week Moving Average forecasts, ETS forecasts, MAE and RMSE comparisons, and forecasting errors."
-      },
-      {
-        image: projectWeeklyForecastDataImg,
-        title: "Weekly Sales Dataset",
-        caption: "Shows the 52 weekly observations for Product P1 used for the forecasting analysis, organized chronologically from W0 to W51."
-      },
-      {
-        image: projectWeeklyForecastMovingAverageImg,
-        title: "3-Week Moving Average Analysis",
-        caption: "Shows the 3-Week Moving Average forecasting analysis using recent weekly sales values to estimate future demand."
-      }
-    ]
-  },
-
-  {
-    id: "proj-3-original",
     title: "Clinic Appointment Automation",
     category: "AI Automation",
     featured: true,
@@ -387,8 +336,8 @@ export const projectsData: Project[] = [
       "Workflow Automation"
     ],
     mediaUrl: n8nDB,
-    demoUrl: "https://github.com/abdullxxhi/clinic-booking-automation",
-    githubUrl: "https://github.com/abdullxxhi",
+    demoUrl: "[https://github.com/abdullxxhi/clinic-booking-automation](https://github.com/abdullxxhi/clinic-booking-automation)",
+    githubUrl: "[https://github.com/abdullxxhi](https://github.com/abdullxxhi)",
     keyHighlights: [
       "Automated detection of Google Form submissions & Google Sheets row triggers.",
       "Instant calendar scheduling via Google Calendar API.",
@@ -409,110 +358,6 @@ export const projectsData: Project[] = [
   },
 
   {
-    id: "proj-4",
-    title: "Sales Performance Analysis",
-    category: "Data Analysis",
-    featured: false,
-    description: "Conducted an end-to-end sales performance analysis in Microsoft Excel 2025, moving from transactional data validation through business metric creation, descriptive analysis, regional and product comparisons, correlation analysis, regression modeling, and model diagnostics. The analysis translated statistical findings into business insights while critically evaluating model limitations.",
-    tags: [
-      "Excel",
-      "Data Analysis",
-      "Data Validation",
-      "PivotTables",
-      "Descriptive Statistics",
-      "Correlation Analysis",
-      "Regression Analysis",
-      "Business Analysis"
-    ],
-    mediaUrl: projectSalesImg,
-    demoUrl: "",
-    githubUrl: "",
-    keyHighlights: [
-      "Validated 30 sales transactions using duplicate checks, missing-value checks, numerical validation, business-logic checks, and dataset control totals.",
-      "Created revenue and discount metrics and analyzed regional and product performance using PivotTables and descriptive statistics.",
-      "Found that Lagos generated the highest total revenue, Abuja had the highest average transaction revenue, and Laptop generated the highest total revenue.",
-      "Analyzed correlations between revenue and units sold, unit price, and discount while avoiding unsupported causal conclusions.",
-      "Built a Unit Price to Revenue regression model with R² = 0.5501 and evaluated residuals and model diagnostics.",
-      "Identified model-design limitations because Unit Price is directly used to calculate Revenue, demonstrating critical evaluation of statistical models."
-    ],
-    automationScreenshots: [
-      {
-        image: projectSalesImg,
-        title: "Sales Dataset",
-        caption: "Shows the transactional sales dataset used for validation and analysis."
-      }
-    ]
-  },
-
-  {
-    id: "proj-5",
-    title: "Sales Performance Dashboard",
-    category: "Excel",
-    featured: false,
-    description: "Designed an interactive Excel dashboard for sales performance analysis using Pivot Tables, Pivot Charts, KPIs, dynamic slicers, and advanced Excel functions to provide actionable business intelligence.",
-    tags: [
-      "Excel",
-      "Dashboard",
-      "Analytics",
-      "Reporting",
-      "Pivot Tables"
-    ],
-    mediaUrl: projectSalesImg,
-    demoUrl: "https://github.com/abdullxxhi",
-    githubUrl: "https://github.com/abdullxxhi",
-    keyHighlights: [
-      "Dynamic slicers for real-time region, product category, and timeframe filtering.",
-      "Automated KPI summaries for revenue, conversion rate, and average order value.",
-      "Executive visual representation designed for clear stakeholder decision-making."
-    ]
-  },
-
-  {
-    id: "proj-6",
-    title: "Company Performance Dashboard",
-    category: "Data Analysis",
-    featured: false,
-    description: "Built a Power BI dashboard that visualizes business performance metrics, enabling users to monitor cross-departmental KPIs and make informed strategic decisions through interactive reports.",
-    tags: [
-      "Power BI",
-      "Business Intelligence",
-      "Data Visualization",
-      "DAX"
-    ],
-    mediaUrl: projectPowerBiImg,
-    demoUrl: "https://github.com/abdullxxhi",
-    githubUrl: "https://github.com/abdullxxhi",
-    keyHighlights: [
-      "Multi-tab breakdown for Revenue, Operational Efficiency, and Customer Metrics.",
-      "Interactive drill-down reports with custom DAX measures.",
-      "Real-time visual monitoring with intuitive warm theme."
-    ]
-  },
-
-  {
-    id: "proj-7",
-    title: "UFC Fighter Data Analysis (Islam Makhachev)",
-    category: "Data Analysis",
-    featured: false,
-    description: "Performed exploratory data analysis on UFC Lightweight Champion Islam Makhachev's fight statistics, analyzing striking accuracy, takedown efficiency, control time metrics, and fight outcomes using SQL and Excel.",
-    tags: [
-      "Islam Makhachev",
-      "UFC Analytics",
-      "SQL",
-      "Excel",
-      "Data Analysis"
-    ],
-    mediaUrl: projectUfcImg,
-    demoUrl: "https://github.com/abdullxxhi",
-    githubUrl: "https://github.com/abdullxxhi",
-    keyHighlights: [
-      "SQL data cleaning and normalization across Islam Makhachev's career fight performance records.",
-      "Statistical modeling analyzing takedown accuracy, striking defense, and control time vs. win percentage.",
-      "Comprehensive performance breakdown report highlighting career victory trajectories."
-    ]
-  },
-
-  {
     id: "proj-8",
     title: "Transportation Cost Analysis in Nigeria",
     category: "Statistics",
@@ -526,8 +371,8 @@ export const projectsData: Project[] = [
       "NBS Dataset"
     ],
     mediaUrl: projectTransportImg,
-    demoUrl: "https://github.com/abdullxxhi",
-    githubUrl: "https://github.com/abdullxxhi",
+    demoUrl: "[https://github.com/abdullxxhi](https://github.com/abdullxxhi)",
+    githubUrl: "[https://github.com/abdullxxhi](https://github.com/abdullxxhi)",
     keyHighlights: [
       "Two-Way ANOVA statistical testing validating zone vs. transit mode interactions.",
       "In-depth exploratory findings based on authentic NBS macro dataset.",
@@ -553,8 +398,8 @@ export const projectsData: Project[] = [
     mediaUrl: projectSeleemImg,
     videoUrl: projectSeleemVideo,
     isVideo: true,
-    demoUrl: "https://github.com/abdullxxhi",
-    githubUrl: "https://github.com/abdullxxhi",
+    demoUrl: "[https://github.com/abdullxxhi](https://github.com/abdullxxhi)",
+    githubUrl: "[https://github.com/abdullxxhi](https://github.com/abdullxxhi)",
     keyHighlights: [
       "Fully responsive modern UI layout built with Google Studio for desktop, tablet, and mobile.",
       "AI-powered customer support chatbot powered by n8n workflows and Gemini API.",
@@ -578,8 +423,8 @@ export const projectsData: Project[] = [
       "AI Automation"
     ],
     mediaUrl: eventRegistrationImg,
-    githubUrl: "https://github.com/abdullxxhi",
-    demoUrl: "https://github.com/abdullxxhi/ai-event-registration-automation",
+    githubUrl: "[https://github.com/abdullxxhi](https://github.com/abdullxxhi)",
+    demoUrl: "[https://github.com/abdullxxhi/ai-event-registration-automation](https://github.com/abdullxxhi/ai-event-registration-automation)",
     keyHighlights: [
       "Automatically generates unique registration IDs for every submission.",
       "Validates maximum event capacity before confirming attendance.",
@@ -606,8 +451,8 @@ export const projectsData: Project[] = [
       "Workflow Automation"
     ],
     mediaUrl: projectSupportWorkflowImg,
-    demoUrl: "https://github.com/abdullxxhi/AI-Customer-Support-Bot",
-    githubUrl: "https://github.com/abdullxxhi",
+    demoUrl: "[https://github.com/abdullxxhi/AI-Customer-Support-Bot](https://github.com/abdullxxhi/AI-Customer-Support-Bot)",
+    githubUrl: "[https://github.com/abdullxxhi](https://github.com/abdullxxhi)",
     keyHighlights: [
       "AI-powered customer support using Google Gemini",
       "Company-specific knowledge retrieval using RAG and a vector store",
@@ -662,8 +507,8 @@ export const projectsData: Project[] = [
       "Order Management"
     ],
     mediaUrl: projectOrderDeliveryImg,
-    demoUrl: "https://github.com/abdullxxhi/AI-Order-Management-Fulfillment-Automation",
-    githubUrl: "https://github.com/abdullxxhi",
+    demoUrl: "[https://github.com/abdullxxhi/AI-Order-Management-Fulfillment-Automation](https://github.com/abdullxxhi/AI-Order-Management-Fulfillment-Automation)",
+    githubUrl: "[https://github.com/abdullxxhi](https://github.com/abdullxxhi)",
     keyHighlights: [
       "Uses AI to understand natural-language customer orders and extract structured order details.",
       "Validates required information before processing the order.",
@@ -740,8 +585,8 @@ export const projectsData: Project[] = [
       "Human-in-the-Loop"
     ],
     mediaUrl: projectEmailTriageOverviewImg,
-    demoUrl: "https://github.com/abdullxxhi/AI-Email-Triage-Response",
-    githubUrl: "https://github.com/abdullxxhi",
+    demoUrl: "[https://github.com/abdullxxhi/AI-Email-Triage-Response](https://github.com/abdullxxhi/AI-Email-Triage-Response)",
+    githubUrl: "[https://github.com/abdullxxhi](https://github.com/abdullxxhi)",
     keyHighlights: [
       "Automatically retrieves and processes unread Gmail messages.",
       "Uses Google Gemini to analyze email content and determine category, priority, and intent.",
@@ -803,8 +648,8 @@ export const projectsData: Project[] = [
       "Human-in-the-Loop"
     ],
     mediaUrl: projectQualityControlWorkflowImg,
-    demoUrl: "https://github.com/abdullxxhi/Product-Quality-Control-Data-Cleaning-Validation",
-    githubUrl: "https://github.com/abdullxxhi",
+    demoUrl: "[https://github.com/abdullxxhi/Product-Quality-Control-Data-Cleaning-Validation](https://github.com/abdullxxhi/Product-Quality-Control-Data-Cleaning-Validation)",
+    githubUrl: "[https://github.com/abdullxxhi](https://github.com/abdullxxhi)",
     keyHighlights: [
       "Validates CSV structure and prepares valid records for processing.",
       "Detects invalid dates, numeric values, production counts, QC results, and defect information.",
@@ -847,7 +692,7 @@ export const certificationsData: Certification[] = [
     date: "2026",
     status: "Completed",
     image: alxCertificateIMG,
-    credentialUrl: "https://savanna.alxafrica.com/certificates/59TRPhyBSL",
+    credentialUrl: "[https://savanna.alxafrica.com/certificates/59TRPhyBSL](https://savanna.alxafrica.com/certificates/59TRPhyBSL)",
     skillsLearned: [
       "SQL",
       "Data Analytics",
@@ -891,12 +736,28 @@ export const educationData: EducationItem[] = [
 export const experienceData: ExperienceItem[] = [
   {
     id: "exp-1",
-    role: "Data Analyst",
-    company: "CR8US Studio Africa",
-    period: "2026",
-    type: "Remote",
+    role: "AI Automation Developer & Data Analyst / Trainee",
+    company: "AI Automation Practice",
+    period: "Completed (2026)",
+    type: "Specialization",
     achievements: [
-      "Carry out data collection, cleaning, labelling, structuring, and analysis tasks in support of CR8US Intelligence."
+      "Learning and building advanced AI workflow automations using modern AI tools and agents.",
+      "Architecting end-to-end automation systems with Google Apps Script and Google Workspace ecosystem.",
+      "Developing automated document generation, custom PDF rendering, email notification flows, and spreadsheet syncing.",
+      "Building real-world scalable automation projects to streamline complex business operations."
+    ]
+  },
+  {
+    id: "exp-2",
+    role: "Data Analysis Trainee",
+    company: "Data Analytics Program",
+    period: "Completed (2026)",
+    type: "Practical Experience",
+    achievements: [
+      "Analyzed complex datasets using Microsoft Excel, SQL, and Power BI to extract actionable business insights.",
+      "Designed interactive dashboards and reports featuring dynamic slicers, KPIs, and DAX calculations.",
+      "Executed data cleaning, structural transformation, and statistical normalization pipelines.",
+      "Applied statistical methods (such as Two-Way ANOVA) to solve complex business and academic problems."
     ]
   }
 ];
