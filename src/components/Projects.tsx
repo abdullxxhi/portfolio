@@ -87,9 +87,16 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
         {/* Projects Grid */}
         <motion.div
           layout
-          className="grid grid-cols-1 lg:grid-cols-2 gap-8"
+          className="
+            grid
+            grid-cols-1
+            lg:grid-cols-2
+            gap-8
+            items-stretch
+            lg:[&>*]:col-span-1
+          "
         >
-          <AnimatePresence>
+          <AnimatePresence mode="popLayout">
             {filteredProjects.map((project) => (
               <ProjectCard
                 key={project.id}
