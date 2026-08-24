@@ -71,6 +71,11 @@ import projectForecastMonthlyTrendImg from '../assets/images/02-monthly-trend.pn
 import projectForecastNaiveImg from '../assets/images/03-naive-forecast.png';
 import projectForecastEtsImg from '../assets/images/04-ets-forecast.png';
 
+// Weekly Sales Forecasting Analysis images
+import projectWeeklyForecastDashboardImg from '../assets/images/dashbordAI.png';
+import projectWeeklyForecastDataImg from '../assets/images/sales-transac-data.png';
+import projectWeeklyForecastMovingAverageImg from '../assets/images/moving-average.png';
+
 
 export const personalInfo: PersonalInfo = {
   name: "Abdullahi Damilola Abdulsalam",
@@ -81,7 +86,7 @@ export const personalInfo: PersonalInfo = {
   phone: "+234902250296",
   github: "https://github.com/abdullxxhi",
   linkedin: "https://www.linkedin.com/in/abdullxxhi",
-  portfolioUrl: "https://github.com/abdullxxhi",
+  portfolioUrl: "https://abdullxxhi.vercel.app/",
   profilePhoto: profilePic,
   focusArea: "AI Automation, Workflow Automation, Data Analysis",
   bio: "I am an AI Automation Developer & Data Analyst with a background in Statistics and a passion for building intelligent solutions that simplify work. I specialize in designing workflow automations, Google Workspace solutions, and data-driven systems that help individuals and businesses save time, reduce manual effort, and improve productivity. My experience spans Microsoft Excel, SQL, Power BI, Google Apps Script, and AI-powered workflow automation. I enjoy solving real-world problems by combining data analysis with automation to create efficient, scalable solutions.",
@@ -93,8 +98,8 @@ export const statsData: StatItem[] = [
   {
     id: "stat-1",
     label: "Projects Completed",
-    value: "10+",
-    numericValue: 10,
+    value: "15+",
+    numericValue: 15,
     suffix: "+",
     iconName: "FolderGit2",
     subtext: "Automations & Analytics Dashboards"
@@ -320,6 +325,54 @@ export const projectsData: Project[] = [
 
   {
     id: "proj-3",
+    title: "Weekly Sales Forecasting Analysis",
+    category: "Data Analysis",
+    featured: true,
+    description: "Analyzed 52 weeks of sales data for Product P1 using Microsoft Excel to compare Naive Forecasting, a 3-Week Moving Average, and ETS forecasting. The analysis used a W0–W39 training period and W40–W51 testing period, evaluating each method with MAE and RMSE. An interactive forecasting dashboard was also built to present actual sales, forecasts, model accuracy, and forecasting errors in a clear business-focused format.",
+    tags: [
+      "Excel",
+      "Google Sheets",
+      "Google Gemini",
+      "Forecasting",
+      "Time Series",
+      "Moving Average",
+      "ETS",
+      "MAE",
+      "RMSE",
+      "Data Visualization"
+    ],
+    mediaUrl: projectWeeklyForecastDashboardImg,
+    demoUrl: "",
+    githubUrl: "https://github.com/abdullxxhi/Weekly-Sales-Forecasting-Analysis",
+    keyHighlights: [
+      "Compared Naive Forecasting, 3-Week Moving Average, and ETS using the same testing period.",
+      "Evaluated forecasting accuracy using MAE and RMSE.",
+      "The 3-Week Moving Average achieved the lowest MAE and RMSE among the three methods tested.",
+      "Built an interactive dashboard showing actual sales, forecasts, model accuracy, and forecasting errors.",
+      "Used Google Gemini in Google Sheets to experiment with the initial dashboard design before developing the final presentation in Excel.",
+      "Demonstrated that a simpler forecasting method can outperform a more complex model depending on the characteristics of the dataset."
+    ],
+    automationScreenshots: [
+      {
+        image: projectWeeklyForecastDashboardImg,
+        title: "Weekly Sales Forecasting Dashboard",
+        caption: "Interactive dashboard presenting actual weekly sales, Naive forecasts, 3-Week Moving Average forecasts, ETS forecasts, MAE and RMSE comparisons, and forecasting errors."
+      },
+      {
+        image: projectWeeklyForecastDataImg,
+        title: "Weekly Sales Dataset",
+        caption: "Shows the 52 weekly observations for Product P1 used for the forecasting analysis, organized chronologically from W0 to W51."
+      },
+      {
+        image: projectWeeklyForecastMovingAverageImg,
+        title: "3-Week Moving Average Analysis",
+        caption: "Shows the 3-Week Moving Average forecasting analysis using recent weekly sales values to estimate future demand."
+      }
+    ]
+  },
+
+  {
+    id: "proj-3-original",
     title: "Clinic Appointment Automation",
     category: "AI Automation",
     featured: true,
@@ -838,28 +891,12 @@ export const educationData: EducationItem[] = [
 export const experienceData: ExperienceItem[] = [
   {
     id: "exp-1",
-    role: "AI Automation Developer & Data Analyst / Trainee",
-    company: "AI Automation Practice",
-    period: "Completed (2026)",
-    type: "Specialization",
+    role: "Data Analyst",
+    company: "CR8US Studio Africa",
+    period: "2026",
+    type: "Remote",
     achievements: [
-      "Learning and building advanced AI workflow automations using modern AI tools and agents.",
-      "Architecting end-to-end automation systems with Google Apps Script and Google Workspace ecosystem.",
-      "Developing automated document generation, custom PDF rendering, email notification flows, and spreadsheet syncing.",
-      "Building real-world scalable automation projects to streamline complex business operations."
-    ]
-  },
-  {
-    id: "exp-2",
-    role: "Data Analysis Trainee",
-    company: "Data Analytics Program",
-    period: "Completed (2026)",
-    type: "Practical Experience",
-    achievements: [
-      "Analyzed complex datasets using Microsoft Excel, SQL, and Power BI to extract actionable business insights.",
-      "Designed interactive dashboards and reports featuring dynamic slicers, KPIs, and DAX calculations.",
-      "Executed data cleaning, structural transformation, and statistical normalization pipelines.",
-      "Applied statistical methods (such as Two-Way ANOVA) to solve complex business and academic problems."
+      "Carry out data collection, cleaning, labelling, structuring, and analysis tasks in support of CR8US Intelligence."
     ]
   }
 ];
