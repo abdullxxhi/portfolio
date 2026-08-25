@@ -787,7 +787,7 @@ export const experienceData: ExperienceItem[] = [
     period: "2026",
     type: "Remote",
     achievements: [
-      "Carry out data collection, cleaning, labelling, structuring, and analysis tasks in support of CR8US Intelligence."
+      "Data collection, cleaning, labelling, structuring, and analysis tasks in support of CR8US Intelligence."
     ]
   }
 ];
