@@ -9,10 +9,10 @@ import {
 } from '../types';
 
 // Profile picture
-import profilePic from '../assets/images/profile_portrait_1785602306698.jpg';
+import profilePic from '../assets/images/profile\_portrait\_1785602306698.jpg';
 
-import projectTransportImg from '../assets/images/project_transport_a_1785604349850.jpg';
-import projectSeleemImg from '../assets/images/project_seleem_bakery_1785607080040.jpg';
+import projectTransportImg from '../assets/images/project\_transport\_a\_1785604349850.jpg';
+import projectSeleemImg from '../assets/images/project\_seleem\_bakery\_1785607080040.jpg';
 import projectSeleemVideo from '../assets/images/seleem-bakery-1.mp4';
 
 import eventRegistrationImg from '../assets/images/event-registration.png';
@@ -20,7 +20,7 @@ import eventRegistrationImg from '../assets/images/event-registration.png';
 import n8nDB from '../assets/images/n8nDB.png';
 import projectClinicWhatsappImg from '../assets/images/clinic-whatsapp.png';
 
-import projectSupportWorkflowImg from '../assets/images/01-ai-customer-support-workflow.png';
+import projectSupportWorkflowImg from '../assets/images/01-ai-customer-support-workflow\.png';
 import projectRagImg from '../assets/images/02-knowledge-base-rag-ingestion.png';
 import projectHumanEscalationImg from '../assets/images/03-human-escalation-telegram.png';
 import projectConfirmedOrderImg from '../assets/images/04-confirmed-order-automation.png';
@@ -29,10 +29,10 @@ import projectTelegramAlertsImg from '../assets/images/05-telegram-business-noti
 import alxCertificateIMG from '../assets/images/alx-certificate.png';
 import fadaqaImg from '../assets/images/fadaqa.png';
 
-import projectOrderDeliveryImg from '../assets/images/01-delivery-order-workflow.png';
-import projectOrderPickupImg from '../assets/images/02-pickup-order-workflow.png';
-import projectOrderOtherImg from '../assets/images/03-other-order-workflow.png';
-import projectOrderIncompleteImg from '../assets/images/04-incomplete-order-workflow.png';
+import projectOrderDeliveryImg from '../assets/images/01-delivery-order-workflow\.png';
+import projectOrderPickupImg from '../assets/images/02-pickup-order-workflow\.png';
+import projectOrderOtherImg from '../assets/images/03-other-order-workflow\.png';
+import projectOrderIncompleteImg from '../assets/images/04-incomplete-order-workflow\.png';
 import projectOrderSheetImg from '../assets/images/05-order-management-sheet.png';
 import projectOrderTelegramDeliveryImg from '../assets/images/06-telegram-delivery-notification.png';
 import projectOrderTelegramPickupImg from '../assets/images/07-telegram-pickup-notification.png';
@@ -40,7 +40,7 @@ import projectOrderTelegramHumanImg from '../assets/images/08-telegram-human-int
 import projectOrderTelegramClarificationImg from '../assets/images/09-telegram-order-clarification.png';
 
 // AI Email Triage & Response System images
-import projectEmailTriageOverviewImg from '../assets/images/01-workflow-overview.png';
+import projectEmailTriageOverviewImg from '../assets/images/01-workflow-overview\.png';
 import projectEmailSalesRoutingImg from '../assets/images/02-sales-email-routing.png';
 import projectEmailSupportRoutingImg from '../assets/images/03-support-email-routing.png';
 import projectEmailUrgentRoutingImg from '../assets/images/04-urgent-email-routing.png';
@@ -71,17 +71,21 @@ import projectWeeklyForecastDashboardImg from '../assets/images/dashbordAI.png';
 import projectWeeklyForecastDataImg from '../assets/images/sales-transac-data.png';
 import projectWeeklyForecastMovingAverageImg from '../assets/images/moving-average.png';
 
+// Apple Financial Performance Dashboard images
+import projectApplePerformanceDashboardImg from '../assets/images/01-perfomance-dashboard.png';
+import projectAppleProfitabilityAnalysisImg from '../assets/images/02-profitability-analysis.png';
+
 
 export const personalInfo: PersonalInfo = {
   name: "Abdullahi Damilola Abdulsalam",
   initials: "Build. Automate. Analyze.",
   role: "AI Automation Developer & Data Analyst",
   location: "Lagos, Nigeria",
-  email: "abdulsalamabdullahi003@gmail.com",
+  email: "abdulsalamabdullahi003\@gmail.com",
   phone: "+234902250296",
-  github: "https://github.com/abdullxxhi",
-  linkedin: "https://www.linkedin.com/in/abdullxxhi",
-  portfolioUrl: "https://abdullxxhi.vercel.app/",
+  github: "[https://github.com/abdullxxhi](https://github.com/abdullxxhi)",
+  linkedin: "[https://www.linkedin.com/in/abdullxxhi](https://www.linkedin.com/in/abdullxxhi)",
+  portfolioUrl: "[https://abdullxxhi.vercel.app/](https://abdullxxhi.vercel.app/)",
   profilePhoto: profilePic,
   focusArea: "AI Automation, Workflow Automation, Data Analysis",
   bio: "I am an AI Automation Developer & Data Analyst with a background in Statistics and a passion for building intelligent solutions that simplify work. I specialize in designing workflow automations, Google Workspace solutions, and data-driven systems that help individuals and businesses save time, reduce manual effort, and improve productivity. My experience spans Microsoft Excel, SQL, Power BI, Google Apps Script, and AI-powered workflow automation. I enjoy solving real-world problems by combining data analysis with automation to create efficient, scalable solutions.",
@@ -229,7 +233,7 @@ export const projectsData: Project[] = [
     ],
     mediaUrl: projectChurnDataImg,
     demoUrl: "",
-    githubUrl: "https://github.com/abdullxxhi/Customer-Churn-Analysis",
+    githubUrl: "[https://github.com/abdullxxhi/Customer-Churn-Analysis](https://github.com/abdullxxhi/Customer-Churn-Analysis)",
     keyHighlights: [
       "Calculated an overall 36.4% customer churn rate and identified high-risk customer segments.",
       "Analyzed churn across contract type, tenure, satisfaction, monthly charges, support tickets, internet service, and Auto Pay.",
@@ -286,7 +290,7 @@ export const projectsData: Project[] = [
     ],
     mediaUrl: projectForecastTrainDataImg,
     demoUrl: "",
-    githubUrl: "https://github.com/abdullxxhi/Sales-Forecasting-and-Predictive-Analysis",
+    githubUrl: "[https://github.com/abdullxxhi/Sales-Forecasting-and-Predictive-Analysis](https://github.com/abdullxxhi/Sales-Forecasting-and-Predictive-Analysis)",
     keyHighlights: [
       "Aggregated more than 1 million sales records into monthly sales totals using Excel PivotTables.",
       "Analyzed monthly trends, month-over-month changes, and volatility across 2013 and 2014.",
@@ -320,6 +324,52 @@ export const projectsData: Project[] = [
 
   {
     id: "proj-3",
+    title: "Apple Financial Performance Dashboard",
+    category: "Data Analysis",
+    featured: true,
+    description: "Built an interactive Power BI dashboard to analyze Apple's financial performance across sales, profit, products, countries, business segments, and time. The project demonstrates practical data cleaning and transformation, data modeling, DAX, KPI development, interactive dashboard design, geographic analysis, and business insight generation.",
+    tags: [
+      "Power BI",
+      "Power Query",
+      "DAX",
+      "Data Modeling",
+      "Data Visualization",
+      "Financial Analysis",
+      "Dashboard Design",
+      "Business Intelligence",
+      "Data Storytelling"
+    ],
+    mediaUrl: projectApplePerformanceDashboardImg,
+    demoUrl: "",
+    githubUrl: "",
+    keyHighlights: [
+      "Analyzed overall sales, profitability, products, countries, business segments, and sales trends over time.",
+      "Built an Executive Overview page featuring Total Sales, Total Profit, Total Units Sold, Profit Margin, sales trends, country performance, product performance, and segment analysis.",
+      "Built a dedicated Profitability Analysis page covering profit by country, profit by product, profit margin by segment, and Sales vs. Profit analysis.",
+      "Used Power Query for data cleaning and transformation, Power BI data modeling, and DAX measures for analytical calculations.",
+      "Identified approximately $118.73M in total sales, $16.89M in total profit, and an overall profit margin of approximately 14.23%.",
+      "Identified Paseo as the strongest product by both sales and total profit.",
+      "Found Government to be the highest-sales business segment and Channel Partners to have the highest profit margin.",
+      "Identified negative profitability in the Enterprise segment despite substantial sales, highlighting the need for further profitability investigation.",
+      "Identified October as the strongest month for sales and France as the country with the highest total profit.",
+      "Demonstrated that strong sales performance does not necessarily translate into strong profitability."
+    ],
+    automationScreenshots: [
+      {
+        image: projectApplePerformanceDashboardImg,
+        title: "Apple Financial Performance Dashboard",
+        caption: "Executive Overview page showing total sales, total profit, total units sold, profit margin, sales trends, sales by country, sales by product, sales by segment, and interactive Country, Segment, and Year filters."
+      },
+      {
+        image: projectAppleProfitabilityAnalysisImg,
+        title: "Profitability Analysis",
+        caption: "Second Power BI page focusing on profitability, including profit by country, profit by product, profit margin by segment, Sales vs. Profit analysis, and interactive filters."
+      }
+    ]
+  },
+
+  {
+    id: "proj-4",
     title: "Weekly Sales Forecasting Analysis",
     category: "Data Analysis",
     featured: true,
@@ -338,7 +388,7 @@ export const projectsData: Project[] = [
     ],
     mediaUrl: projectWeeklyForecastDashboardImg,
     demoUrl: "",
-    githubUrl: "https://github.com/abdullxxhi/Weekly-Sales-Forecasting-Analysis",
+    githubUrl: "[https://github.com/abdullxxhi/Weekly-Sales-Forecasting-Analysis](https://github.com/abdullxxhi/Weekly-Sales-Forecasting-Analysis)",
     keyHighlights: [
       "Compared Naive Forecasting, 3-Week Moving Average, and ETS using the same testing period.",
       "Evaluated forecasting accuracy using MAE and RMSE.",
@@ -367,7 +417,7 @@ export const projectsData: Project[] = [
   },
 
   {
-    id: "proj-4",
+    id: "proj-5",
     title: "Clinic Appointment Automation",
     category: "AI Automation",
     featured: true,
@@ -382,8 +432,8 @@ export const projectsData: Project[] = [
       "Workflow Automation"
     ],
     mediaUrl: n8nDB,
-    demoUrl: "https://github.com/abdullxxhi/clinic-booking-automation",
-    githubUrl: "https://github.com/abdullxxhi",
+    demoUrl: "[https://github.com/abdullxxhi/clinic-booking-automation](https://github.com/abdullxxhi/clinic-booking-automation)",
+    githubUrl: "[https://github.com/abdullxxhi](https://github.com/abdullxxhi)",
     keyHighlights: [
       "Automated detection of Google Form submissions & Google Sheets row triggers.",
       "Instant calendar scheduling via Google Calendar API.",
@@ -404,7 +454,7 @@ export const projectsData: Project[] = [
   },
 
   {
-    id: "proj-5",
+    id: "proj-6",
     title: "Transportation Cost Analysis in Nigeria",
     category: "Statistics",
     featured: false,
@@ -417,8 +467,8 @@ export const projectsData: Project[] = [
       "NBS Dataset"
     ],
     mediaUrl: projectTransportImg,
-    demoUrl: "https://github.com/abdullxxhi",
-    githubUrl: "https://github.com/abdullxxhi",
+    demoUrl: "[https://github.com/abdullxxhi](https://github.com/abdullxxhi)",
+    githubUrl: "[https://github.com/abdullxxhi](https://github.com/abdullxxhi)",
     keyHighlights: [
       "Two-Way ANOVA statistical testing validating zone vs. transit mode interactions.",
       "In-depth exploratory findings based on authentic NBS macro dataset.",
@@ -427,7 +477,7 @@ export const projectsData: Project[] = [
   },
 
   {
-    id: "proj-6",
+    id: "proj-7",
     title: "Seleem Bakery Website",
     category: "WEB DEVELOPMENT",
     featured: false,
@@ -444,8 +494,8 @@ export const projectsData: Project[] = [
     mediaUrl: projectSeleemImg,
     videoUrl: projectSeleemVideo,
     isVideo: true,
-    demoUrl: "https://github.com/abdullxxhi",
-    githubUrl: "https://github.com/abdullxxhi",
+    demoUrl: "[https://github.com/abdullxxhi](https://github.com/abdullxxhi)",
+    githubUrl: "[https://github.com/abdullxxhi](https://github.com/abdullxxhi)",
     keyHighlights: [
       "Fully responsive modern UI layout built with Google Studio for desktop, tablet, and mobile.",
       "AI-powered customer support chatbot powered by n8n workflows and Gemini API.",
@@ -454,7 +504,7 @@ export const projectsData: Project[] = [
   },
 
   {
-    id: "proj-7",
+    id: "proj-8",
     title: "Smart Event Registration & Capacity Management Automation",
     category: "AI Automation",
     featured: false,
@@ -469,8 +519,8 @@ export const projectsData: Project[] = [
       "AI Automation"
     ],
     mediaUrl: eventRegistrationImg,
-    githubUrl: "https://github.com/abdullxxhi",
-    demoUrl: "https://github.com/abdullxxhi/ai-event-registration-automation",
+    githubUrl: "[https://github.com/abdullxxhi](https://github.com/abdullxxhi)",
+    demoUrl: "[https://github.com/abdullxxhi/ai-event-registration-automation](https://github.com/abdullxxhi/ai-event-registration-automation)",
     keyHighlights: [
       "Automatically generates unique registration IDs for every submission.",
       "Validates maximum event capacity before confirming attendance.",
@@ -482,7 +532,7 @@ export const projectsData: Project[] = [
   },
 
   {
-    id: "proj-8",
+    id: "proj-9",
     title: "AI Customer Support Bot",
     category: "AI Automation",
     featured: true,
@@ -497,8 +547,8 @@ export const projectsData: Project[] = [
       "Workflow Automation"
     ],
     mediaUrl: projectSupportWorkflowImg,
-    demoUrl: "https://github.com/abdullxxhi/AI-Customer-Support-Bot",
-    githubUrl: "https://github.com/abdullxxhi",
+    demoUrl: "[https://github.com/abdullxxhi/AI-Customer-Support-Bot](https://github.com/abdullxxhi/AI-Customer-Support-Bot)",
+    githubUrl: "[https://github.com/abdullxxhi](https://github.com/abdullxxhi)",
     keyHighlights: [
       "AI-powered customer support using Google Gemini",
       "Company-specific knowledge retrieval using RAG and a vector store",
@@ -537,7 +587,7 @@ export const projectsData: Project[] = [
   },
 
   {
-    id: "proj-9",
+    id: "proj-10",
     title: "AI Natural Language Order Management Automation",
     category: "AI Automation",
     featured: false,
@@ -553,8 +603,8 @@ export const projectsData: Project[] = [
       "Order Management"
     ],
     mediaUrl: projectOrderDeliveryImg,
-    demoUrl: "https://github.com/abdullxxhi/AI-Order-Management-Fulfillment-Automation",
-    githubUrl: "https://github.com/abdullxxhi",
+    demoUrl: "[https://github.com/abdullxxhi/AI-Order-Management-Fulfillment-Automation](https://github.com/abdullxxhi/AI-Order-Management-Fulfillment-Automation)",
+    githubUrl: "[https://github.com/abdullxxhi](https://github.com/abdullxxhi)",
     keyHighlights: [
       "Uses AI to understand natural-language customer orders and extract structured order details.",
       "Validates required information before processing the order.",
@@ -614,7 +664,7 @@ export const projectsData: Project[] = [
   },
 
   {
-    id: "proj-10",
+    id: "proj-11",
     title: "AI Email Triage & Response System",
     category: "AI Automation",
     featured: true,
@@ -631,8 +681,8 @@ export const projectsData: Project[] = [
       "Human-in-the-Loop"
     ],
     mediaUrl: projectEmailTriageOverviewImg,
-    demoUrl: "https://github.com/abdullxxhi/AI-Email-Triage-Response",
-    githubUrl: "https://github.com/abdullxxhi",
+    demoUrl: "[https://github.com/abdullxxhi/AI-Email-Triage-Response](https://github.com/abdullxxhi/AI-Email-Triage-Response)",
+    githubUrl: "[https://github.com/abdullxxhi](https://github.com/abdullxxhi)",
     keyHighlights: [
       "Automatically retrieves and processes unread Gmail messages.",
       "Uses Google Gemini to analyze email content and determine category, priority, and intent.",
@@ -678,7 +728,7 @@ export const projectsData: Project[] = [
   },
 
   {
-    id: "proj-11",
+    id: "proj-12",
     title: "Product Quality Control Data Cleaning & Validation",
     category: "Data Automation",
     featured: true,
@@ -694,8 +744,8 @@ export const projectsData: Project[] = [
       "Human-in-the-Loop"
     ],
     mediaUrl: projectQualityControlWorkflowImg,
-    demoUrl: "https://github.com/abdullxxhi/Product-Quality-Control-Data-Cleaning-Validation",
-    githubUrl: "https://github.com/abdullxxhi",
+    demoUrl: "[https://github.com/abdullxxhi/Product-Quality-Control-Data-Cleaning-Validation](https://github.com/abdullxxhi/Product-Quality-Control-Data-Cleaning-Validation)",
+    githubUrl: "[https://github.com/abdullxxhi](https://github.com/abdullxxhi)",
     keyHighlights: [
       "Validates CSV structure and prepares valid records for processing.",
       "Detects invalid dates, numeric values, production counts, QC results, and defect information.",
@@ -738,7 +788,7 @@ export const certificationsData: Certification[] = [
     date: "2026",
     status: "Completed",
     image: alxCertificateIMG,
-    credentialUrl: "https://savanna.alxafrica.com/certificates/59TRPhyBSL",
+    credentialUrl: "[https://savanna.alxafrica.com/certificates/59TRPhyBSL](https://savanna.alxafrica.com/certificates/59TRPhyBSL)",
     skillsLearned: [
       "SQL",
       "Data Analytics",
