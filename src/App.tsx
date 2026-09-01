@@ -18,7 +18,6 @@ import BackToTopButton from './components/BackToTopButton';
 import LoadingScreen from './components/LoadingScreen';
 import BackgroundEffects from './components/BackgroundEffects';
 import Toast from './components/Toast';
-import ScrollReveal from './components/ScrollReveal';
 
 import { personalInfo } from './data/portfolioData';
 import { Project, Certification } from './types';
@@ -30,9 +29,7 @@ export default function App() {
 
   // Modal Lightbox state
   const [modalItem, setModalItem] = useState<Project | Certification | null>(null);
-  const [modalType, setModalType] = useState<
-    'project' | 'certification' | null
-  >(null);
+  const [modalType, setModalType] = useState<'project' | 'certification' | null>(null);
 
   // Track the section currently visible to the user
   useEffect(() => {
@@ -50,8 +47,9 @@ export default function App() {
       const scrollPosition = window.scrollY;
       const viewportHeight = window.innerHeight;
 
-      const activationPoint =
-        scrollPosition + viewportHeight * 0.3;
+      // Position where a section becomes the active section.
+      // This works consistently on both desktop and mobile.
+      const activationPoint = scrollPosition + viewportHeight * 0.3;
 
       let currentSection = 'hero';
 
@@ -80,12 +78,10 @@ export default function App() {
       updateActiveSection();
     };
 
-    window.addEventListener('scroll', handleScroll, {
-      passive: true,
-    });
-
+    window.addEventListener('scroll', handleScroll, { passive: true });
     window.addEventListener('resize', handleResize);
 
+    // Set the correct section when the page first loads
     updateActiveSection();
 
     return () => {
@@ -96,10 +92,7 @@ export default function App() {
 
   const handleCopyEmail = () => {
     navigator.clipboard.writeText(personalInfo.email);
-    showToast(
-      'Email address copied to clipboard!',
-      'success'
-    );
+    showToast('Email address copied to clipboard!', 'success');
   };
 
   const showToast = (
@@ -131,14 +124,13 @@ export default function App() {
 
   return (
     <div className="relative min-h-screen bg-[#F5F1E8] text-[#1D2A26] font-sans selection:bg-[#2F5D50] selection:text-white overflow-x-hidden">
-
-      {/* Loading Screen */}
+      {/* 1-Second Loading Screen */}
       <LoadingScreen />
 
       {/* Custom Mouse Cursor */}
       <CustomCursor />
 
-      {/* Scroll Progress Bar */}
+      {/* Scroll Progress Bar at top */}
       <ScrollProgressBar />
 
       {/* Ambient Background Effects */}
@@ -152,52 +144,17 @@ export default function App() {
 
       {/* Main Sections */}
       <main className="relative z-10">
-
-        {/* Hero */}
         <Hero onCopyEmail={handleCopyEmail} />
-
-        {/* About */}
-        <ScrollReveal>
-          <About />
-        </ScrollReveal>
-
-        {/* Skills */}
-        <ScrollReveal delay={0.05}>
-          <Skills />
-        </ScrollReveal>
-
-        {/* Projects */}
-        <ScrollReveal delay={0.05}>
-          <Projects
-            onOpenLightbox={handleOpenProjectLightbox}
-          />
-        </ScrollReveal>
-
-        {/* Certifications */}
-        <ScrollReveal delay={0.05}>
-          <Certifications
-            onOpenCertModal={handleOpenCertModal}
-          />
-        </ScrollReveal>
-
-        {/* Education */}
-        <ScrollReveal delay={0.05}>
-          <Education />
-        </ScrollReveal>
-
-        {/* Experience */}
-        <ScrollReveal delay={0.05}>
-          <Experience />
-        </ScrollReveal>
-
-        {/* Contact */}
-        <ScrollReveal delay={0.05}>
-          <Contact
-            onCopyEmail={handleCopyEmail}
-            onShowToast={showToast}
-          />
-        </ScrollReveal>
-
+        <About />
+        <Skills />
+        <Projects onOpenLightbox={handleOpenProjectLightbox} />
+        <Certifications onOpenCertModal={handleOpenCertModal} />
+        <Education />
+        <Experience />
+        <Contact
+          onCopyEmail={handleCopyEmail}
+          onShowToast={showToast}
+        />
       </main>
 
       {/* Footer */}
@@ -222,7 +179,6 @@ export default function App() {
 
       {/* Vercel Speed Insights */}
       <SpeedInsights />
-
     </div>
   );
 }
