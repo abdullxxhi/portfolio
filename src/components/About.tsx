@@ -69,16 +69,52 @@ export default function About() {
     <section id="about" className="py-24 relative z-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-        {/* Section Header */}
+        {/* Enhanced Section Header */}
         <ScrollReveal y={20} duration={0.6}>
-          <div className="flex items-center space-x-3 mb-4">
-            <span className="p-1.5 rounded-lg bg-[#2F5D50]/10 border border-[#2F5D50]/20 text-[#2F5D50]">
-              <Sparkles className="w-4 h-4 text-[#D97745]" />
-            </span>
+          <div className="mb-10 sm:mb-12">
 
-            <span className="text-xs font-mono uppercase tracking-widest text-[#2F5D50] font-semibold">
-              ABOUT ME
-            </span>
+            {/* Section Label + Number */}
+            <div className="flex items-center gap-3 mb-5">
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] sm:text-xs font-mono font-bold tracking-widest text-[#D97745]">
+                  01
+                </span>
+
+                <span className="text-[#B8B0A2] text-xs">
+                  /
+                </span>
+
+                <span className="p-1.5 rounded-lg bg-[#2F5D50]/10 border border-[#2F5D50]/20">
+                  <Sparkles className="w-3.5 h-3.5 text-[#D97745]" />
+                </span>
+              </div>
+
+              <div className="h-px flex-1 max-w-[120px] bg-gradient-to-r from-[#2F5D50]/40 to-transparent" />
+
+              <span className="text-[10px] sm:text-xs font-mono uppercase tracking-[0.2em] text-[#2F5D50] font-semibold">
+                ABOUT ME
+              </span>
+            </div>
+
+            {/* Heading Accent */}
+            <div className="relative">
+              <div className="absolute -left-3 sm:-left-4 top-1 bottom-1 w-1 rounded-full bg-gradient-to-b from-[#2F5D50] via-[#4E8D66] to-[#D97745]" />
+
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-display text-[#1D2A26] leading-tight max-w-4xl">
+                A little about{' '}
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#2F5D50] to-[#D97745]">
+                  what I do.
+                </span>
+              </h2>
+            </div>
+
+            {/* Small Supporting Line */}
+            <div className="mt-5 flex items-center gap-3">
+              <div className="w-8 h-px bg-[#D97745]" />
+              <p className="text-xs sm:text-sm text-[#6B7280] font-mono tracking-wide">
+                BUILD • AUTOMATE • ANALYZE
+              </p>
+            </div>
           </div>
         </ScrollReveal>
 
@@ -93,14 +129,20 @@ export default function About() {
             className="lg:col-span-6"
           >
             <div className="space-y-6">
-              <h2 className="text-3xl sm:text-4xl font-bold font-display text-[#1D2A26] leading-tight">
+
+              <h3 className="text-3xl sm:text-4xl font-bold font-display text-[#1D2A26] leading-tight">
                 {personalInfo.aboutHeadline}
-              </h2>
+              </h3>
 
               <div className="p-5 rounded-2xl bg-[#FCFAF6] border border-[#DDD6C8] shadow-sm space-y-3.5">
+
                 <div className="flex items-center space-x-3 text-sm text-[#1D2A26]">
                   <MapPin className="w-4 h-4 text-[#2F5D50]" />
-                  <span className="font-semibold">Location:</span>
+
+                  <span className="font-semibold">
+                    Location:
+                  </span>
+
                   <span className="text-[#4B5563]">
                     {personalInfo.location}
                   </span>
@@ -108,7 +150,11 @@ export default function About() {
 
                 <div className="flex items-center space-x-3 text-sm text-[#1D2A26]">
                   <GraduationCap className="w-4 h-4 text-[#D97745]" />
-                  <span className="font-semibold">Education:</span>
+
+                  <span className="font-semibold">
+                    Education:
+                  </span>
+
                   <span className="text-[#4B5563]">
                     BSc Statistics, University of Ilorin
                   </span>
@@ -116,11 +162,16 @@ export default function About() {
 
                 <div className="flex items-center space-x-3 text-sm text-[#1D2A26]">
                   <Cpu className="w-4 h-4 text-[#4E8D66]" />
-                  <span className="font-semibold">Core Focus:</span>
+
+                  <span className="font-semibold">
+                    Core Focus:
+                  </span>
+
                   <span className="text-[#4E8D66] font-mono text-xs font-semibold">
                     {personalInfo.focusArea}
                   </span>
                 </div>
+
               </div>
             </div>
           </ScrollReveal>
@@ -133,6 +184,7 @@ export default function About() {
             className="lg:col-span-6"
           >
             <div className="space-y-4 text-[#4B5563] text-base leading-relaxed">
+
               <p>
                 I am an{' '}
                 <strong className="text-[#1D2A26]">
@@ -159,12 +211,14 @@ export default function About() {
                 turning raw data into interactive dashboards and combining
                 statistical precision with modern automation.
               </p>
+
             </div>
           </ScrollReveal>
         </div>
 
         {/* Below: 4 Stat Cards */}
         <div className="mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
           {statsData.map((stat, idx) => {
             const IconComponent =
               iconsMap[stat.iconName] || FolderGit2;
@@ -185,10 +239,12 @@ export default function About() {
                     }
                   }}
                 >
+
                   {/* Glow accent line */}
                   <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#2F5D50] to-[#D97745] opacity-0 group-hover:opacity-100 transition-opacity" />
 
                   <div className="flex items-center justify-between mb-4">
+
                     <div className="p-3 rounded-2xl bg-[#2F5D50]/10 border border-[#2F5D50]/20 text-[#2F5D50] group-hover:scale-110 transition-transform">
                       <IconComponent className="w-6 h-6" />
                     </div>
@@ -196,6 +252,7 @@ export default function About() {
                     <span className="text-[10px] font-mono uppercase tracking-wider text-[#6B7280]">
                       0{idx + 1}
                     </span>
+
                   </div>
 
                   <div className="text-3xl sm:text-4xl font-bold font-display text-[#1D2A26] tracking-tight mb-1">
@@ -216,10 +273,12 @@ export default function About() {
                   <div className="text-xs text-[#6B7280] mt-1">
                     {stat.subtext}
                   </div>
+
                 </motion.div>
               </ScrollReveal>
             );
           })}
+
         </div>
 
       </div>
