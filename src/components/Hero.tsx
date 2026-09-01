@@ -82,8 +82,9 @@ export default function Hero({ onCopyEmail }: HeroProps) {
   };
 
   /*
-   * Lightweight decorative AI/data network.
-   * SVG keeps this visually sharp without adding another dependency.
+   * Lightweight AI / data network.
+   * The network is visible on both desktop and mobile.
+   * On mobile it is smaller, softer, and placed behind the content.
    */
   const networkNodes = [
     { x: 12, y: 24, r: 2.2, delay: 0 },
@@ -92,12 +93,14 @@ export default function Hero({ onCopyEmail }: HeroProps) {
     { x: 58, y: 14, r: 1.8, delay: 0.6 },
     { x: 72, y: 27, r: 2.3, delay: 2.2 },
     { x: 88, y: 16, r: 1.8, delay: 1.2 },
+
     { x: 18, y: 52, r: 1.7, delay: 2.5 },
     { x: 36, y: 66, r: 2.2, delay: 0.8 },
     { x: 54, y: 48, r: 1.9, delay: 1.7 },
     { x: 69, y: 62, r: 2.4, delay: 0.4 },
     { x: 84, y: 49, r: 1.8, delay: 2.8 },
     { x: 94, y: 72, r: 2.1, delay: 1.4 },
+
     { x: 25, y: 84, r: 1.8, delay: 2 },
     { x: 48, y: 78, r: 2.3, delay: 0.3 },
     { x: 67, y: 88, r: 1.8, delay: 1.6 },
@@ -110,14 +113,17 @@ export default function Hero({ onCopyEmail }: HeroProps) {
     [42, 30, 58, 14],
     [58, 14, 72, 27],
     [72, 27, 88, 16],
+
     [18, 52, 36, 66],
     [36, 66, 54, 48],
     [54, 48, 69, 62],
     [69, 62, 84, 49],
     [84, 49, 94, 72],
+
     [25, 84, 48, 78],
     [48, 78, 67, 88],
     [67, 88, 83, 80],
+
     [42, 30, 54, 48],
     [36, 66, 48, 78],
     [69, 62, 67, 88],
@@ -129,15 +135,32 @@ export default function Hero({ onCopyEmail }: HeroProps) {
       id="hero"
       className="relative min-h-[85vh] flex items-center pt-28 pb-16 overflow-hidden"
     >
+
       {/* ========================================================= */}
       {/* HERO DECORATIVE VISUAL */}
       {/* ========================================================= */}
 
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
 
-        {/* Large ambient glow */}
+        {/* Main ambient glow */}
         <motion.div
-          className="absolute -top-40 right-[-12%] w-[520px] h-[520px] rounded-full bg-gradient-to-br from-[#2F5D50]/14 via-[#4E8D66]/8 to-[#D97745]/10 blur-[110px]"
+          className="
+            absolute
+            -top-32
+            right-[-25%]
+            sm:right-[-12%]
+            w-[360px]
+            h-[360px]
+            sm:w-[520px]
+            sm:h-[520px]
+            rounded-full
+            bg-gradient-to-br
+            from-[#2F5D50]/10
+            via-[#4E8D66]/6
+            to-[#D97745]/7
+            blur-[90px]
+            sm:blur-[110px]
+          "
           animate={{
             x: [0, -20, 0],
             y: [0, 18, 0],
@@ -152,7 +175,20 @@ export default function Hero({ onCopyEmail }: HeroProps) {
 
         {/* Secondary glow */}
         <motion.div
-          className="absolute bottom-[-180px] left-[-10%] w-[460px] h-[460px] rounded-full bg-[#D97745]/8 blur-[120px]"
+          className="
+            absolute
+            bottom-[-120px]
+            left-[-25%]
+            sm:left-[-10%]
+            w-[320px]
+            h-[320px]
+            sm:w-[460px]
+            sm:h-[460px]
+            rounded-full
+            bg-[#D97745]/6
+            blur-[100px]
+            sm:blur-[120px]
+          "
           animate={{
             x: [0, 25, 0],
             y: [0, -15, 0]
@@ -164,9 +200,24 @@ export default function Hero({ onCopyEmail }: HeroProps) {
           }}
         />
 
-        {/* AI / Data Network */}
+        {/* ======================================================= */}
+        {/* AI / DATA NETWORK */}
+        {/* ======================================================= */}
+
         <motion.div
-          className="absolute right-[-4%] top-[12%] w-[58%] max-w-[760px] h-[70%] hidden sm:block opacity-70"
+          className="
+            absolute
+            top-[16%]
+            right-[-25%]
+            sm:right-[-4%]
+            w-[75%]
+            sm:w-[58%]
+            max-w-[760px]
+            h-[62%]
+            sm:h-[70%]
+            opacity-40
+            sm:opacity-70
+          "
           animate={{
             y: [0, -8, 0]
           }}
@@ -181,6 +232,7 @@ export default function Hero({ onCopyEmail }: HeroProps) {
             className="w-full h-full"
             preserveAspectRatio="none"
           >
+
             {/* Network connections */}
             {networkLines.map(
               ([x1, y1, x2, y2], index) => (
@@ -193,7 +245,10 @@ export default function Hero({ onCopyEmail }: HeroProps) {
                   stroke="#2F5D50"
                   strokeWidth="0.18"
                   strokeOpacity="0.16"
-                  initial={{ pathLength: 0, opacity: 0 }}
+                  initial={{
+                    pathLength: 0,
+                    opacity: 0
+                  }}
                   animate={{
                     pathLength: 1,
                     opacity: [0.05, 0.2, 0.05]
@@ -218,6 +273,8 @@ export default function Hero({ onCopyEmail }: HeroProps) {
             {networkNodes.map(
               ({ x, y, r, delay }, index) => (
                 <g key={`node-${index}`}>
+
+                  {/* Node glow */}
                   <motion.circle
                     cx={x}
                     cy={y}
@@ -239,6 +296,7 @@ export default function Hero({ onCopyEmail }: HeroProps) {
                     }}
                   />
 
+                  {/* Main node */}
                   <motion.circle
                     cx={x}
                     cy={y}
@@ -254,11 +312,12 @@ export default function Hero({ onCopyEmail }: HeroProps) {
                       ease: 'easeInOut'
                     }}
                   />
+
                 </g>
               )
             )}
 
-            {/* Central highlighted data node */}
+            {/* Central highlighted node */}
             <motion.circle
               cx="54"
               cy="48"
@@ -293,17 +352,46 @@ export default function Hero({ onCopyEmail }: HeroProps) {
                 ease: 'easeInOut'
               }}
             />
+
           </svg>
         </motion.div>
 
         {/* Subtle horizontal data lines */}
-        <div className="absolute right-0 top-[30%] w-[45%] h-px bg-gradient-to-r from-transparent via-[#2F5D50]/10 to-transparent" />
+        <div className="
+          absolute
+          right-0
+          top-[30%]
+          w-[45%]
+          h-px
+          bg-gradient-to-r
+          from-transparent
+          via-[#2F5D50]/10
+          to-transparent
+        " />
 
-        <div className="absolute right-[5%] top-[65%] w-[35%] h-px bg-gradient-to-r from-transparent via-[#D97745]/10 to-transparent" />
+        <div className="
+          absolute
+          right-[5%]
+          top-[65%]
+          w-[35%]
+          h-px
+          bg-gradient-to-r
+          from-transparent
+          via-[#D97745]/10
+          to-transparent
+        " />
 
-        {/* Small floating data markers */}
+        {/* Floating data marker */}
         <motion.div
-          className="absolute right-[14%] top-[22%] w-2 h-2 rounded-full bg-[#D97745]/50 hidden sm:block"
+          className="
+            absolute
+            right-[14%]
+            top-[22%]
+            w-2
+            h-2
+            rounded-full
+            bg-[#D97745]/50
+          "
           animate={{
             y: [0, -12, 0],
             opacity: [0.25, 0.7, 0.25]
@@ -315,8 +403,17 @@ export default function Hero({ onCopyEmail }: HeroProps) {
           }}
         />
 
+        {/* Second floating marker */}
         <motion.div
-          className="absolute right-[30%] top-[72%] w-1.5 h-1.5 rounded-full bg-[#2F5D50]/50 hidden sm:block"
+          className="
+            absolute
+            right-[30%]
+            top-[72%]
+            w-1.5
+            h-1.5
+            rounded-full
+            bg-[#2F5D50]/50
+          "
           animate={{
             y: [0, 10, 0],
             opacity: [0.2, 0.6, 0.2]
@@ -327,6 +424,7 @@ export default function Hero({ onCopyEmail }: HeroProps) {
             ease: 'easeInOut'
           }}
         />
+
       </div>
 
       {/* ========================================================= */}
@@ -338,8 +436,14 @@ export default function Hero({ onCopyEmail }: HeroProps) {
 
           {/* Main Hero Copy */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{
+              opacity: 0,
+              y: 20
+            }}
+            animate={{
+              opacity: 1,
+              y: 0
+            }}
             transition={{
               duration: 0.8,
               ease: 'easeOut'
@@ -361,7 +465,19 @@ export default function Hero({ onCopyEmail }: HeroProps) {
                 duration: 0.6,
                 delay: 0.15
               }}
-              className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-[#FCFAF6]/90 border border-[#DDD6C8] shadow-sm backdrop-blur-sm"
+              className="
+                inline-flex
+                items-center
+                space-x-2
+                px-3.5
+                py-1.5
+                rounded-full
+                bg-[#FCFAF6]/90
+                border
+                border-[#DDD6C8]
+                shadow-sm
+                backdrop-blur-sm
+              "
             >
               <span className="relative flex items-center justify-center">
                 <span className="absolute w-3 h-3 rounded-full bg-[#4E8D66]/30 animate-ping" />
@@ -391,7 +507,16 @@ export default function Hero({ onCopyEmail }: HeroProps) {
                   duration: 0.7,
                   delay: 0.25
                 }}
-                className="text-4xl sm:text-5xl lg:text-6xl font-bold font-display text-[#1D2A26] tracking-tight leading-[1.1]"
+                className="
+                  text-4xl
+                  sm:text-5xl
+                  lg:text-6xl
+                  font-bold
+                  font-display
+                  text-[#1D2A26]
+                  tracking-tight
+                  leading-[1.1]
+                "
               >
                 Hello, I'm <br />
 
@@ -426,6 +551,7 @@ export default function Hero({ onCopyEmail }: HeroProps) {
 
                 <span className="w-2 h-5 bg-[#D97745] animate-pulse" />
               </motion.div>
+
             </div>
 
             {/* One-line bio */}
@@ -463,6 +589,7 @@ export default function Hero({ onCopyEmail }: HeroProps) {
               }}
               className="pt-2 flex flex-wrap gap-4 items-center"
             >
+
               <motion.a
                 href="#projects"
                 onClick={(e) =>
@@ -475,10 +602,23 @@ export default function Hero({ onCopyEmail }: HeroProps) {
                 whileTap={{
                   scale: 0.97
                 }}
-                className="px-6 py-3.5 rounded-2xl bg-[#2F5D50] text-white font-semibold text-sm flex items-center space-x-2.5 shadow-[0_8px_25px_rgba(47,93,80,0.25)] hover:bg-[#244A40] transition-all"
+                className="
+                  px-6
+                  py-3.5
+                  rounded-2xl
+                  bg-[#2F5D50]
+                  text-white
+                  font-semibold
+                  text-sm
+                  flex
+                  items-center
+                  space-x-2.5
+                  shadow-[0_8px_25px_rgba(47,93,80,0.25)]
+                  hover:bg-[#244A40]
+                  transition-all
+                "
               >
                 <span>View Projects</span>
-
                 <ArrowRight className="w-4 h-4" />
               </motion.a>
 
@@ -494,12 +634,29 @@ export default function Hero({ onCopyEmail }: HeroProps) {
                 whileTap={{
                   scale: 0.97
                 }}
-                className="px-6 py-3.5 rounded-2xl bg-[#FCFAF6] border border-[#DDD6C8] text-[#1D2A26] hover:text-[#2F5D50] hover:border-[#2F5D50] font-semibold text-sm flex items-center space-x-2 shadow-sm transition-all"
+                className="
+                  px-6
+                  py-3.5
+                  rounded-2xl
+                  bg-[#FCFAF6]
+                  border
+                  border-[#DDD6C8]
+                  text-[#1D2A26]
+                  hover:text-[#2F5D50]
+                  hover:border-[#2F5D50]
+                  font-semibold
+                  text-sm
+                  flex
+                  items-center
+                  space-x-2
+                  shadow-sm
+                  transition-all
+                "
               >
                 <MessageSquare className="w-4 h-4 text-[#D97745]" />
-
                 <span>Let's Talk</span>
               </motion.a>
+
             </motion.div>
 
             {/* Small Social Icons & Quick Contact */}
@@ -534,7 +691,18 @@ export default function Hero({ onCopyEmail }: HeroProps) {
                 whileTap={{
                   scale: 0.95
                 }}
-                className="p-2.5 rounded-xl bg-[#FCFAF6] border border-[#DDD6C8] text-[#4B5563] hover:text-[#2F5D50] hover:border-[#2F5D50] transition-all shadow-sm"
+                className="
+                  p-2.5
+                  rounded-xl
+                  bg-[#FCFAF6]
+                  border
+                  border-[#DDD6C8]
+                  text-[#4B5563]
+                  hover:text-[#2F5D50]
+                  hover:border-[#2F5D50]
+                  transition-all
+                  shadow-sm
+                "
               >
                 <Github className="w-4 h-4" />
               </motion.a>
@@ -551,7 +719,18 @@ export default function Hero({ onCopyEmail }: HeroProps) {
                 whileTap={{
                   scale: 0.95
                 }}
-                className="p-2.5 rounded-xl bg-[#FCFAF6] border border-[#DDD6C8] text-[#4B5563] hover:text-[#2F5D50] hover:border-[#2F5D50] transition-all shadow-sm"
+                className="
+                  p-2.5
+                  rounded-xl
+                  bg-[#FCFAF6]
+                  border
+                  border-[#DDD6C8]
+                  text-[#4B5563]
+                  hover:text-[#2F5D50]
+                  hover:border-[#2F5D50]
+                  transition-all
+                  shadow-sm
+                "
               >
                 <Linkedin className="w-4 h-4" />
               </motion.a>
@@ -567,7 +746,18 @@ export default function Hero({ onCopyEmail }: HeroProps) {
                 whileTap={{
                   scale: 0.95
                 }}
-                className="p-2.5 rounded-xl bg-[#FCFAF6] border border-[#DDD6C8] text-[#4B5563] hover:text-[#2F5D50] hover:border-[#2F5D50] transition-all shadow-sm"
+                className="
+                  p-2.5
+                  rounded-xl
+                  bg-[#FCFAF6]
+                  border
+                  border-[#DDD6C8]
+                  text-[#4B5563]
+                  hover:text-[#2F5D50]
+                  hover:border-[#2F5D50]
+                  transition-all
+                  shadow-sm
+                "
               >
                 <Mail className="w-4 h-4" />
               </motion.button>
@@ -583,11 +773,24 @@ export default function Hero({ onCopyEmail }: HeroProps) {
                 whileTap={{
                   scale: 0.95
                 }}
-                className="p-2.5 rounded-xl bg-[#FCFAF6] border border-[#DDD6C8] text-[#4B5563] hover:text-[#2F5D50] hover:border-[#2F5D50] transition-all shadow-sm"
+                className="
+                  p-2.5
+                  rounded-xl
+                  bg-[#FCFAF6]
+                  border
+                  border-[#DDD6C8]
+                  text-[#4B5563]
+                  hover:text-[#2F5D50]
+                  hover:border-[#2F5D50]
+                  transition-all
+                  shadow-sm
+                "
               >
                 <Phone className="w-4 h-4" />
               </motion.a>
+
             </motion.div>
+
           </motion.div>
         </div>
       </div>
