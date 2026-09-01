@@ -111,6 +111,7 @@ export default function About() {
             {/* Small Supporting Line */}
             <div className="mt-5 flex items-center gap-3">
               <div className="w-8 h-px bg-[#D97745]" />
+
               <p className="text-xs sm:text-sm text-[#6B7280] font-mono tracking-wide">
                 BUILD • AUTOMATE • ANALYZE
               </p>
@@ -216,7 +217,7 @@ export default function About() {
           </ScrollReveal>
         </div>
 
-        {/* Below: 4 Stat Cards */}
+        {/* Enhanced Stat Cards */}
         <div className="mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
 
           {statsData.map((stat, idx) => {
@@ -231,48 +232,157 @@ export default function About() {
                 delay={idx * 0.1}
               >
                 <motion.div
-                  className="bg-[#FCFAF6] border border-[#DDD6C8] glass-card-hover p-6 rounded-[20px] relative overflow-hidden group shadow-sm"
+                  className="relative overflow-hidden bg-[#FCFAF6] border border-[#DDD6C8] p-6 rounded-[20px] shadow-sm group cursor-default"
                   whileHover={{
-                    y: -4,
+                    y: -6,
+                    scale: 1.015,
                     transition: {
-                      duration: 0.2
+                      duration: 0.22,
+                      ease: 'easeOut'
                     }
+                  }}
+                  whileTap={{
+                    scale: 0.985
                   }}
                 >
 
-                  {/* Glow accent line */}
-                  <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#2F5D50] to-[#D97745] opacity-0 group-hover:opacity-100 transition-opacity" />
+                  {/* Soft animated background glow */}
+                  <motion.div
+                    className="absolute -right-12 -top-12 w-32 h-32 rounded-full bg-[#2F5D50]/5 blur-2xl pointer-events-none"
+                    animate={{
+                      scale: [1, 1.15, 1],
+                      opacity: [0.4, 0.7, 0.4]
+                    }}
+                    transition={{
+                      duration: 4,
+                      repeat: Infinity,
+                      repeatType: 'mirror',
+                      delay: idx * 0.5,
+                      ease: 'easeInOut'
+                    }}
+                  />
 
-                  <div className="flex items-center justify-between mb-4">
+                  {/* Bottom decorative glow */}
+                  <div className="absolute -bottom-10 -left-10 w-24 h-24 rounded-full bg-[#D97745]/5 blur-2xl pointer-events-none" />
 
-                    <div className="p-3 rounded-2xl bg-[#2F5D50]/10 border border-[#2F5D50]/20 text-[#2F5D50] group-hover:scale-110 transition-transform">
-                      <IconComponent className="w-6 h-6" />
+                  {/* Animated top accent */}
+                  <motion.div
+                    className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#2F5D50] via-[#4E8D66] to-[#D97745] origin-left"
+                    initial={{ scaleX: 0 }}
+                    whileInView={{ scaleX: 1 }}
+                    viewport={{ once: true }}
+                    transition={{
+                      duration: 0.7,
+                      delay: idx * 0.1 + 0.2,
+                      ease: 'easeOut'
+                    }}
+                  />
+
+                  {/* Card Content */}
+                  <div className="relative z-10">
+
+                    {/* Icon + Number */}
+                    <div className="flex items-center justify-between mb-5">
+
+                      <motion.div
+                        className="relative p-3 rounded-2xl bg-[#2F5D50]/10 border border-[#2F5D50]/20 text-[#2F5D50]"
+                        whileHover={{
+                          scale: 1.1,
+                          rotate: 3
+                        }}
+                        whileTap={{
+                          scale: 0.95
+                        }}
+                        transition={{
+                          duration: 0.2
+                        }}
+                      >
+                        {/* Icon glow */}
+                        <motion.div
+                          className="absolute inset-0 rounded-2xl bg-[#2F5D50]/10 blur-md"
+                          animate={{
+                            opacity: [0.2, 0.5, 0.2]
+                          }}
+                          transition={{
+                            duration: 3,
+                            repeat: Infinity,
+                            delay: idx * 0.4,
+                            ease: 'easeInOut'
+                          }}
+                        />
+
+                        <IconComponent className="relative z-10 w-6 h-6" />
+                      </motion.div>
+
+                      <span className="text-[10px] font-mono uppercase tracking-wider text-[#6B7280]">
+                        0{idx + 1}
+                      </span>
                     </div>
 
-                    <span className="text-[10px] font-mono uppercase tracking-wider text-[#6B7280]">
-                      0{idx + 1}
-                    </span>
+                    {/* Number */}
+                    <motion.div
+                      className="text-3xl sm:text-4xl font-bold font-display text-[#1D2A26] tracking-tight mb-1"
+                      initial={{ opacity: 0, y: 8 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{
+                        duration: 0.5,
+                        delay: idx * 0.1 + 0.25
+                      }}
+                    >
+                      {stat.numericValue ? (
+                        <AnimatedCounter
+                          endValue={stat.numericValue}
+                          suffix={stat.suffix}
+                        />
+                      ) : (
+                        stat.value
+                      )}
+                    </motion.div>
 
-                  </div>
+                    {/* Label */}
+                    <div className="text-sm font-semibold text-[#1D2A26]">
+                      {stat.label}
+                    </div>
 
-                  <div className="text-3xl sm:text-4xl font-bold font-display text-[#1D2A26] tracking-tight mb-1">
-                    {stat.numericValue ? (
-                      <AnimatedCounter
-                        endValue={stat.numericValue}
-                        suffix={stat.suffix}
+                    {/* Supporting Text */}
+                    <div className="text-xs text-[#6B7280] mt-1 leading-relaxed">
+                      {stat.subtext}
+                    </div>
+
+                    {/* Bottom micro detail */}
+                    <div className="mt-5 flex items-center gap-2">
+                      <motion.div
+                        className="h-1.5 w-1.5 rounded-full bg-[#4E8D66]"
+                        animate={{
+                          scale: [1, 1.35, 1],
+                          opacity: [0.5, 1, 0.5]
+                        }}
+                        transition={{
+                          duration: 2,
+                          repeat: Infinity,
+                          delay: idx * 0.3,
+                          ease: 'easeInOut'
+                        }}
                       />
-                    ) : (
-                      stat.value
-                    )}
+
+                      <span className="text-[9px] font-mono uppercase tracking-widest text-[#9A9388]">
+                        ACTIVE
+                      </span>
+                    </div>
+
                   </div>
 
-                  <div className="text-sm font-semibold text-[#1D2A26]">
-                    {stat.label}
-                  </div>
-
-                  <div className="text-xs text-[#6B7280] mt-1">
-                    {stat.subtext}
-                  </div>
+                  {/* Hover border */}
+                  <motion.div
+                    className="absolute inset-0 rounded-[20px] border border-[#2F5D50]/0 pointer-events-none"
+                    whileHover={{
+                      borderColor: 'rgba(47, 93, 80, 0.25)'
+                    }}
+                    transition={{
+                      duration: 0.2
+                    }}
+                  />
 
                 </motion.div>
               </ScrollReveal>
