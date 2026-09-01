@@ -145,12 +145,23 @@ export default function App() {
       {/* Main Sections */}
       <main className="relative z-10">
         <Hero onCopyEmail={handleCopyEmail} />
+
         <About />
+
         <Skills />
-        <Projects onOpenLightbox={handleOpenProjectLightbox} />
-        <Certifications onOpenCertModal={handleOpenCertModal} />
+
+        <Projects
+          onOpenLightbox={handleOpenProjectLightbox}
+        />
+
+        <Certifications
+          onOpenCertModal={handleOpenCertModal}
+        />
+
         <Education />
+
         <Experience />
+
         <Contact
           onCopyEmail={handleCopyEmail}
           onShowToast={showToast}
