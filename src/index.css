@@ -24,6 +24,10 @@
     --radius-pill: 9999px;
   }
 
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
     background-color: var(--bg-main);
     color: var(--text-body);
@@ -50,6 +54,11 @@
       'Space Grotesk',
       system-ui,
       sans-serif;
+    color: var(--text-heading);
+  }
+
+  ::selection {
+    background: rgba(47, 93, 80, 0.15);
     color: var(--text-heading);
   }
 }
@@ -94,24 +103,19 @@
   background: var(--surface-card);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-card);
-
-  /* Almost invisible elevation */
   box-shadow: 0 2px 10px rgba(47, 93, 80, 0.035);
 }
 
 .glass-card-hover {
   transition:
-    border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-    box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    border-color 220ms ease,
+    box-shadow 220ms ease,
+    transform 220ms ease;
 }
 
 .glass-card-hover:hover {
   border-color: rgba(47, 93, 80, 0.3);
-
-  /* Subtle hover elevation */
   box-shadow: 0 6px 18px rgba(47, 93, 80, 0.07);
-
   transform: translateY(-2px);
 }
 
@@ -131,6 +135,65 @@
    Motion Utilities
 -------------------------------------------------- */
 
+/*
+  Animation philosophy:
+  - No infinite decorative motion.
+  - No floating UI.
+  - No pulsing glow.
+  - Movement should happen once and have a purpose.
+*/
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 400ms ease-out both;
+}
+
+.animate-fade-up {
+  animation: fadeUp 500ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-fade-down {
+  animation: fadeDown 350ms ease-out both;
+}
+
+/*
+  Kept for compatibility with existing components.
+  These are intentionally restrained.
+*/
+
 @keyframes float {
   0%,
   100% {
@@ -138,13 +201,19 @@
   }
 
   50% {
-    transform: translateY(-6px);
+    transform: translateY(-3px);
   }
 }
 
 .animate-float {
-  animation: float 6s ease-in-out infinite;
+  animation: float 8s ease-in-out infinite;
 }
+
+/*
+  Legacy glow animation is now static.
+  This prevents decorative elements from
+  constantly drawing attention.
+*/
 
 @keyframes pulseGlow {
   0%,
@@ -154,13 +223,13 @@
   }
 
   50% {
-    opacity: 0.22;
-    transform: scale(1.03);
+    opacity: 0.14;
+    transform: scale(1.01);
   }
 }
 
 .animate-pulse-glow {
-  animation: pulseGlow 8s ease-in-out infinite;
+  animation: pulseGlow 10s ease-in-out infinite;
 }
 
 /* --------------------------------------------------
