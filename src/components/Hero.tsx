@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
 import {
   ArrowRight,
@@ -7,12 +7,10 @@ import {
   Linkedin,
   Mail,
   Phone,
-  Sparkles,
   Database,
   BarChart3,
   Workflow,
   CheckCircle2,
-  Zap,
 } from 'lucide-react';
 import { personalInfo } from '../data/portfolioData';
 
@@ -53,7 +51,7 @@ export default function Hero({ onCopyEmail }: HeroProps) {
         if (displayedText === '') {
           setIsDeleting(false);
           setCurrentRoleIndex(
-            (prev) => (prev + 1) % roles.length
+            (previous) => (previous + 1) % roles.length
           );
         }
       }
@@ -63,17 +61,16 @@ export default function Hero({ onCopyEmail }: HeroProps) {
   }, [displayedText, isDeleting, currentRoleIndex]);
 
   const scrollToSection = (
-    e: React.MouseEvent<HTMLAnchorElement>,
+    event: React.MouseEvent<HTMLAnchorElement>,
     href: string
   ) => {
-    e.preventDefault();
+    event.preventDefault();
 
     const target = document.querySelector(href);
 
     if (target) {
       const navOffset = 80;
-      const elementPosition =
-        target.getBoundingClientRect().top;
+      const elementPosition = target.getBoundingClientRect().top;
 
       const offsetPosition =
         elementPosition + window.pageYOffset - navOffset;
@@ -115,253 +112,105 @@ export default function Hero({ onCopyEmail }: HeroProps) {
   return (
     <section
       id="hero"
-      className="relative min-h-[88vh] flex items-center pt-28 pb-16 overflow-hidden"
+      className="relative flex min-h-[88vh] items-center overflow-hidden pb-16 pt-28"
     >
-      {/* =========================================================
-          HERO ATMOSPHERE
-      ========================================================== */}
+      <div className="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="grid items-center gap-14 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
 
-      <div
-        className="absolute inset-0 pointer-events-none overflow-hidden"
-        aria-hidden="true"
-      >
-        {/* Main sage glow */}
-        <motion.div
-          className="
-            absolute
-            -top-48
-            -right-32
-            sm:-right-10
-            w-[420px]
-            h-[420px]
-            sm:w-[600px]
-            sm:h-[600px]
-            rounded-full
-            will-change-transform
-          "
-          style={{
-            background:
-              'radial-gradient(circle, rgba(47,93,80,0.16) 0%, rgba(47,93,80,0.06) 40%, transparent 72%)',
-            filter: 'blur(55px)',
-          }}
-          animate={{
-            x: [0, -18, 0],
-            y: [0, 20, 0],
-            scale: [1, 1.04, 1],
-          }}
-          transition={{
-            duration: 16,
-            repeat: Infinity,
-            ease: 'easeInOut',
-          }}
-        />
+          {/* --------------------------------------------------
+              LEFT — INTRODUCTION
+          -------------------------------------------------- */}
 
-        {/* Terracotta glow */}
-        <motion.div
-          className="
-            absolute
-            -bottom-48
-            -left-40
-            w-[400px]
-            h-[400px]
-            sm:w-[520px]
-            sm:h-[520px]
-            rounded-full
-            will-change-transform
-          "
-          style={{
-            background:
-              'radial-gradient(circle, rgba(217,119,69,0.12) 0%, rgba(217,119,69,0.035) 45%, transparent 72%)',
-            filter: 'blur(60px)',
-          }}
-          animate={{
-            x: [0, 22, 0],
-            y: [0, -16, 0],
-          }}
-          transition={{
-            duration: 18,
-            repeat: Infinity,
-            ease: 'easeInOut',
-          }}
-        />
+          <div className="space-y-7">
 
-        {/* Fine technical grid */}
-        <div
-          className="absolute inset-0 opacity-[0.18]"
-          style={{
-            backgroundImage: `
-              linear-gradient(rgba(47,93,80,0.07) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(47,93,80,0.07) 1px, transparent 1px)
-            `,
-            backgroundSize: '64px 64px',
-          }}
-        />
-
-        {/* Decorative horizontal line */}
-        <div
-          className="
-            absolute
-            top-[32%]
-            right-0
-            w-[38%]
-            h-px
-            bg-gradient-to-r
-            from-transparent
-            via-[#2F5D50]/15
-            to-transparent
-          "
-        />
-
-        <div
-          className="
-            absolute
-            bottom-[24%]
-            left-0
-            w-[30%]
-            h-px
-            bg-gradient-to-r
-            from-transparent
-            via-[#D97745]/12
-            to-transparent
-          "
-        />
-      </div>
-
-      {/* =========================================================
-          MAIN CONTENT
-      ========================================================== */}
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10">
-        <div className="grid lg:grid-cols-[1.05fr_0.95fr] gap-12 lg:gap-16 items-center">
-
-          {/* =====================================================
-              LEFT — PERSONAL BRAND
-          ====================================================== */}
-
-          <div className="space-y-6">
-            {/* Role badge */}
+            {/* Eyebrow */}
             <motion.div
-              initial={{
-                opacity: 0,
-                y: 15,
-              }}
-              animate={{
-                opacity: 1,
-                y: 0,
-              }}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{
-                duration: 0.6,
+                duration: 0.45,
+                ease: [0.16, 1, 0.3, 1],
               }}
-              className="
-                inline-flex
-                items-center
-                gap-2.5
-                px-3.5
-                py-1.5
-                rounded-full
-                bg-[#FCFAF6]/90
-                border
-                border-[#DDD6C8]
-                shadow-sm
-                backdrop-blur-sm
-              "
+              className="flex items-center gap-2"
             >
-              <span className="relative flex items-center justify-center">
-                <span className="absolute w-3 h-3 rounded-full bg-[#4E8D66]/30 animate-ping" />
-                <span className="relative w-2 h-2 rounded-full bg-[#4E8D66]" />
-              </span>
+              <span className="h-1.5 w-1.5 rounded-full bg-[#4E8D66]" />
 
-              <Sparkles className="w-3.5 h-3.5 text-[#D97745]" />
-
-              <span className="text-[11px] sm:text-xs font-mono uppercase tracking-widest text-[#2F5D50] font-semibold">
-                AI AUTOMATION & DATA ANALYTICS
+              <span className="text-[11px] font-medium uppercase tracking-[0.16em] text-[#6B7280]">
+                AI Automation & Data Analytics
               </span>
             </motion.div>
 
-            {/* Main heading */}
+            {/* Main Heading */}
             <motion.div
-              initial={{
-                opacity: 0,
-                y: 25,
-              }}
-              animate={{
-                opacity: 1,
-                y: 0,
-              }}
+              initial={{ opacity: 0, y: 18 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{
-                duration: 0.8,
-                delay: 0.1,
-                ease: [0.22, 1, 0.36, 1],
+                duration: 0.65,
+                delay: 0.08,
+                ease: [0.16, 1, 0.3, 1],
               }}
             >
               <h1
                 className="
-                  text-4xl
-                  sm:text-5xl
-                  lg:text-[4.25rem]
-                  font-bold
+                  max-w-3xl
                   font-display
+                  text-[2.75rem]
+                  font-bold
+                  leading-[1.02]
+                  tracking-[-0.045em]
                   text-[#1D2A26]
-                  tracking-tight
-                  leading-[1.04]
+                  sm:text-5xl
+                  lg:text-[4.5rem]
                 "
               >
                 Hello, I'm
                 <br />
-
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#2F5D50] via-[#3d7263] to-[#D97745]">
+                <span className="text-[#2F5D50]">
                   {personalInfo.name}
                 </span>
               </h1>
             </motion.div>
 
-            {/* Dynamic role */}
+            {/* Dynamic Role */}
             <motion.div
-              initial={{
-                opacity: 0,
-                x: -15,
-              }}
-              animate={{
-                opacity: 1,
-                x: 0,
-              }}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{
-                duration: 0.7,
-                delay: 0.3,
+                duration: 0.5,
+                delay: 0.18,
+                ease: [0.16, 1, 0.3, 1],
               }}
-              className="h-9 flex items-center gap-2 text-lg sm:text-xl font-mono"
+              className="flex h-8 items-center gap-2"
             >
-              <span className="text-[#D97745] font-semibold">
+              <span className="font-mono text-sm font-semibold text-[#D97745]">
                 &gt;
               </span>
 
-              <span className="font-semibold text-[#1D2A26]">
+              <span className="font-mono text-base font-medium text-[#1D2A26] sm:text-lg">
                 {displayedText}
               </span>
 
-              <span className="w-2 h-5 bg-[#D97745] animate-pulse" />
+              <span
+                className="h-5 w-px bg-[#D97745]"
+                aria-hidden="true"
+              />
             </motion.div>
 
             {/* Description */}
             <motion.p
-              initial={{
-                opacity: 0,
-                y: 15,
-              }}
-              animate={{
-                opacity: 1,
-                y: 0,
-              }}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{
-                duration: 0.7,
-                delay: 0.4,
+                duration: 0.55,
+                delay: 0.25,
+                ease: [0.16, 1, 0.3, 1],
               }}
               className="
-                text-base
-                sm:text-lg
-                text-[#4B5563]
                 max-w-xl
-                leading-relaxed
+                text-base
+                leading-7
+                text-[#4B5563]
+                sm:text-lg
               "
             >
               {personalInfo.aboutHeadline}
@@ -369,334 +218,187 @@ export default function Hero({ onCopyEmail }: HeroProps) {
 
             {/* CTA */}
             <motion.div
-              initial={{
-                opacity: 0,
-                y: 15,
-              }}
-              animate={{
-                opacity: 1,
-                y: 0,
-              }}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{
-                duration: 0.7,
-                delay: 0.5,
+                duration: 0.55,
+                delay: 0.32,
+                ease: [0.16, 1, 0.3, 1],
               }}
-              className="flex flex-wrap gap-4 items-center pt-1"
+              className="flex flex-wrap items-center gap-3 pt-1"
             >
-              <motion.a
+              <a
                 href="#projects"
-                onClick={(e) =>
-                  scrollToSection(e, '#projects')
+                onClick={(event) =>
+                  scrollToSection(event, '#projects')
                 }
-                whileHover={{
-                  scale: 1.03,
-                  y: -3,
-                }}
-                whileTap={{
-                  scale: 0.97,
-                }}
                 className="
-                  px-6
-                  py-3.5
-                  rounded-2xl
-                  bg-[#2F5D50]
-                  text-white
-                  font-semibold
-                  text-sm
-                  flex
+                  inline-flex
                   items-center
-                  gap-2.5
-                  shadow-[0_10px_30px_rgba(47,93,80,0.22)]
-                  hover:bg-[#244A40]
+                  gap-2
+                  rounded-lg
+                  bg-[#2F5D50]
+                  px-5
+                  py-3
+                  text-sm
+                  font-semibold
+                  text-white
                   transition-colors
+                  duration-200
+                  hover:bg-[#244A40]
                 "
               >
                 <span>View Projects</span>
-                <ArrowRight className="w-4 h-4" />
-              </motion.a>
+                <ArrowRight className="h-4 w-4" />
+              </a>
 
-              <motion.a
+              <a
                 href="#contact"
-                onClick={(e) =>
-                  scrollToSection(e, '#contact')
+                onClick={(event) =>
+                  scrollToSection(event, '#contact')
                 }
-                whileHover={{
-                  scale: 1.03,
-                  y: -3,
-                }}
-                whileTap={{
-                  scale: 0.97,
-                }}
                 className="
-                  px-6
-                  py-3.5
-                  rounded-2xl
-                  bg-[#FCFAF6]
-                  border
-                  border-[#DDD6C8]
-                  text-[#1D2A26]
-                  hover:text-[#2F5D50]
-                  hover:border-[#2F5D50]
-                  font-semibold
-                  text-sm
-                  flex
+                  inline-flex
                   items-center
                   gap-2
-                  shadow-sm
+                  rounded-lg
+                  border
+                  border-[#DDD6C8]
+                  bg-[#FCFAF6]
+                  px-5
+                  py-3
+                  text-sm
+                  font-semibold
+                  text-[#1D2A26]
                   transition-colors
+                  duration-200
+                  hover:border-[#2F5D50]
+                  hover:text-[#2F5D50]
                 "
               >
-                <MessageSquare className="w-4 h-4 text-[#D97745]" />
+                <MessageSquare className="h-4 w-4 text-[#D97745]" />
                 <span>Let's Talk</span>
-              </motion.a>
+              </a>
             </motion.div>
 
-            {/* Social links */}
+            {/* Social Links */}
             <motion.div
-              initial={{
-                opacity: 0,
-                y: 10,
-              }}
-              animate={{
-                opacity: 1,
-                y: 0,
-              }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
               transition={{
-                duration: 0.6,
-                delay: 0.65,
+                duration: 0.5,
+                delay: 0.42,
               }}
-              className="pt-2 flex items-center gap-3 text-[#6B7280]"
+              className="flex items-center gap-4 pt-1"
             >
-              <span className="text-xs font-mono uppercase tracking-wider mr-1">
-                Connect:
+              <span className="text-xs text-[#9A9388]">
+                Connect
               </span>
 
-              <motion.a
+              <span className="h-px w-6 bg-[#DDD6C8]" />
+
+              <a
                 href={personalInfo.github}
                 target="_blank"
                 rel="noreferrer"
                 aria-label="GitHub"
-                whileHover={{
-                  y: -3,
-                  scale: 1.05,
-                }}
-                whileTap={{
-                  scale: 0.95,
-                }}
                 className="
-                  p-2.5
-                  rounded-xl
-                  bg-[#FCFAF6]
-                  border
-                  border-[#DDD6C8]
-                  text-[#4B5563]
-                  hover:text-[#2F5D50]
-                  hover:border-[#2F5D50]
+                  text-[#6B7280]
                   transition-colors
-                  shadow-sm
+                  duration-200
+                  hover:text-[#2F5D50]
                 "
               >
-                <Github className="w-4 h-4" />
-              </motion.a>
+                <Github className="h-4 w-4" />
+              </a>
 
-              <motion.a
+              <a
                 href={personalInfo.linkedin}
                 target="_blank"
                 rel="noreferrer"
                 aria-label="LinkedIn"
-                whileHover={{
-                  y: -3,
-                  scale: 1.05,
-                }}
-                whileTap={{
-                  scale: 0.95,
-                }}
                 className="
-                  p-2.5
-                  rounded-xl
-                  bg-[#FCFAF6]
-                  border
-                  border-[#DDD6C8]
-                  text-[#4B5563]
-                  hover:text-[#2F5D50]
-                  hover:border-[#2F5D50]
+                  text-[#6B7280]
                   transition-colors
-                  shadow-sm
+                  duration-200
+                  hover:text-[#2F5D50]
                 "
               >
-                <Linkedin className="w-4 h-4" />
-              </motion.a>
+                <Linkedin className="h-4 w-4" />
+              </a>
 
-              <motion.button
+              <button
+                type="button"
                 onClick={onCopyEmail}
-                aria-label="Copy Email"
-                title="Copy Email"
-                whileHover={{
-                  y: -3,
-                  scale: 1.05,
-                }}
-                whileTap={{
-                  scale: 0.95,
-                }}
+                aria-label="Copy email"
+                title="Copy email"
                 className="
-                  p-2.5
-                  rounded-xl
-                  bg-[#FCFAF6]
-                  border
-                  border-[#DDD6C8]
-                  text-[#4B5563]
-                  hover:text-[#2F5D50]
-                  hover:border-[#2F5D50]
+                  text-[#6B7280]
                   transition-colors
-                  shadow-sm
+                  duration-200
+                  hover:text-[#2F5D50]
                 "
               >
-                <Mail className="w-4 h-4" />
-              </motion.button>
+                <Mail className="h-4 w-4" />
+              </button>
 
-              <motion.a
+              <a
                 href={`tel:${personalInfo.phone}`}
-                aria-label="Call Phone"
+                aria-label="Call phone"
                 title={personalInfo.phone}
-                whileHover={{
-                  y: -3,
-                  scale: 1.05,
-                }}
-                whileTap={{
-                  scale: 0.95,
-                }}
                 className="
-                  p-2.5
-                  rounded-xl
-                  bg-[#FCFAF6]
-                  border
-                  border-[#DDD6C8]
-                  text-[#4B5563]
-                  hover:text-[#2F5D50]
-                  hover:border-[#2F5D50]
+                  text-[#6B7280]
                   transition-colors
-                  shadow-sm
+                  duration-200
+                  hover:text-[#2F5D50]
                 "
               >
-                <Phone className="w-4 h-4" />
-              </motion.a>
+                <Phone className="h-4 w-4" />
+              </a>
             </motion.div>
           </div>
 
-          {/* =====================================================
-              RIGHT — AI / DATA WORKFLOW VISUAL
-          ====================================================== */}
+          {/* --------------------------------------------------
+              RIGHT — WORKFLOW
+          -------------------------------------------------- */}
 
           <motion.div
-            initial={{
-              opacity: 0,
-              x: 35,
-              scale: 0.96,
-            }}
-            animate={{
-              opacity: 1,
-              x: 0,
-              scale: 1,
-            }}
+            initial={{ opacity: 0, x: 24 }}
+            animate={{ opacity: 1, x: 0 }}
             transition={{
-              duration: 0.9,
-              delay: 0.35,
-              ease: [0.22, 1, 0.36, 1],
+              duration: 0.7,
+              delay: 0.18,
+              ease: [0.16, 1, 0.3, 1],
             }}
             className="relative"
           >
-            {/* Outer glow */}
             <div
               className="
-                absolute
-                -inset-6
-                rounded-[34px]
-                bg-[#2F5D50]/5
-                blur-2xl
-              "
-              aria-hidden="true"
-            />
-
-            {/* Main visual card */}
-            <motion.div
-              whileHover={{
-                y: -5,
-              }}
-              transition={{
-                duration: 0.3,
-              }}
-              className="
-                relative
-                rounded-[28px]
-                bg-[#FCFAF6]/90
+                overflow-hidden
+                rounded-2xl
                 border
                 border-[#DDD6C8]
-                shadow-[0_25px_70px_rgba(47,93,80,0.10)]
-                backdrop-blur-sm
-                overflow-hidden
+                bg-[#FCFAF6]
               "
             >
-              {/* Top bar */}
-              <div className="
-                flex
-                items-center
-                justify-between
-                px-5
-                py-4
-                border-b
-                border-[#DDD6C8]/80
-              ">
-                <div className="flex items-center gap-2.5">
-                  <div className="flex gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-[#D97745]/70" />
-                    <span className="w-2 h-2 rounded-full bg-[#4E8D66]/70" />
-                    <span className="w-2 h-2 rounded-full bg-[#2F5D50]/50" />
-                  </div>
+              {/* Header */}
+              <div className="border-b border-[#DDD6C8] px-5 py-4 sm:px-6">
+                <p className="text-[10px] font-medium uppercase tracking-[0.16em] text-[#6B7280]">
+                  How I work
+                </p>
 
-                  <span className="text-[10px] font-mono uppercase tracking-[0.18em] text-[#6B7280]">
-                    intelligent workflow
+                <h2 className="mt-2 font-display text-2xl font-bold tracking-tight text-[#1D2A26] sm:text-3xl">
+                  From raw data
+                  <br />
+                  <span className="text-[#2F5D50]">
+                    to useful outcomes.
                   </span>
-                </div>
-
-                <div className="flex items-center gap-1.5 text-[#4E8D66]">
-                  <span className="relative flex h-2 w-2">
-                    <span className="absolute inline-flex h-full w-full rounded-full bg-[#4E8D66] opacity-60 animate-ping" />
-                    <span className="relative inline-flex h-2 w-2 rounded-full bg-[#4E8D66]" />
-                  </span>
-
-                  <span className="text-[10px] font-mono uppercase tracking-wider">
-                    Active
-                  </span>
-                </div>
+                </h2>
               </div>
 
-              {/* Workflow */}
-              <div className="p-5 sm:p-7">
-                <div className="mb-6">
-                  <div className="flex items-center gap-2 text-[#D97745] mb-2">
-                    <Zap className="w-4 h-4" />
-
-                    <span className="text-xs font-mono uppercase tracking-widest font-semibold">
-                      My workflow
-                    </span>
-                  </div>
-
-                  <h2 className="
-                    font-display
-                    text-2xl
-                    sm:text-3xl
-                    font-bold
-                    text-[#1D2A26]
-                  ">
-                    From raw data
-                    <br />
-                    <span className="text-[#2F5D50]">
-                      to useful outcomes.
-                    </span>
-                  </h2>
-                </div>
-
-                <div className="space-y-3">
+              {/* Workflow Steps */}
+              <div className="p-5 sm:p-6">
+                <div className="space-y-1">
                   {workflowSteps.map(
                     (
                       {
@@ -709,183 +411,57 @@ export default function Hero({ onCopyEmail }: HeroProps) {
                     ) => (
                       <motion.div
                         key={label}
-                        initial={{
-                          opacity: 0,
-                          x: 15,
-                        }}
-                        animate={{
-                          opacity: 1,
-                          x: 0,
-                        }}
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
                         transition={{
-                          duration: 0.5,
-                          delay: 0.75 + index * 0.12,
+                          duration: 0.4,
+                          delay: 0.5 + index * 0.08,
+                          ease: [0.16, 1, 0.3, 1],
                         }}
-                        className="relative"
                       >
-                        <div className="
-                          group
-                          flex
-                          items-center
-                          gap-3
-                          sm:gap-4
-                          p-3
-                          rounded-2xl
-                          border
-                          border-[#DDD6C8]/80
-                          bg-[#F5F1E8]/45
-                          hover:bg-[#F5F1E8]
-                          hover:border-[#2F5D50]/25
-                          transition-colors
-                        ">
+                        <div className="flex items-center gap-3 rounded-lg px-2 py-3 transition-colors duration-200 hover:bg-[#F5F1E8] sm:gap-4">
                           {/* Number */}
-                          <span className="
-                            hidden
-                            sm:block
-                            w-7
-                            text-[10px]
-                            font-mono
-                            text-[#9CA3AF]
-                          ">
+                          <span className="w-6 shrink-0 font-mono text-[10px] text-[#A8A095]">
                             {number}
                           </span>
 
                           {/* Icon */}
-                          <div className="
-                            flex
-                            items-center
-                            justify-center
-                            w-10
-                            h-10
-                            rounded-xl
-                            bg-[#FCFAF6]
-                            border
-                            border-[#DDD6C8]
-                            text-[#2F5D50]
-                            shadow-sm
-                            shrink-0
-                          ">
-                            <Icon className="w-4 h-4" />
+                          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[#DDD6C8] bg-[#F5F1E8] text-[#2F5D50]">
+                            <Icon className="h-4 w-4" />
                           </div>
 
                           {/* Text */}
                           <div className="min-w-0">
-                            <div className="
-                              text-sm
-                              font-bold
-                              tracking-wide
-                              text-[#1D2A26]
-                            ">
+                            <p className="text-sm font-semibold text-[#1D2A26]">
                               {label}
-                            </div>
+                            </p>
 
-                            <div className="
-                              text-xs
-                              text-[#6B7280]
-                              mt-0.5
-                            ">
+                            <p className="mt-0.5 text-xs text-[#6B7280]">
                               {description}
-                            </div>
-                          </div>
-
-                          {/* Status */}
-                          <div className="ml-auto">
-                            <motion.div
-                              animate={{
-                                opacity: [0.35, 1, 0.35],
-                              }}
-                              transition={{
-                                duration: 2.5,
-                                repeat: Infinity,
-                                delay: index * 0.4,
-                              }}
-                              className="w-1.5 h-1.5 rounded-full bg-[#4E8D66]"
-                            />
+                            </p>
                           </div>
                         </div>
 
-                        {/* Connector */}
                         {index < workflowSteps.length - 1 && (
-                          <div className="
-                            absolute
-                            left-[29px]
-                            sm:left-[48px]
-                            top-[58px]
-                            h-3
-                            border-l
-                            border-dashed
-                            border-[#2F5D50]/20
-                          " />
+                          <div className="ml-[21px] h-1 border-l border-dashed border-[#DDD6C8]" />
                         )}
                       </motion.div>
                     )
                   )}
                 </div>
 
-                {/* Bottom status */}
-                <div className="
-                  mt-5
-                  pt-4
-                  border-t
-                  border-[#DDD6C8]/80
-                  flex
-                  items-center
-                  justify-between
-                ">
-                  <span className="
-                    text-[10px]
-                    font-mono
-                    uppercase
-                    tracking-wider
-                    text-[#6B7280]
-                  ">
+                {/* Footer */}
+                <div className="mt-4 flex items-center justify-between border-t border-[#DDD6C8] pt-4">
+                  <span className="text-[10px] uppercase tracking-[0.14em] text-[#9A9388]">
                     Analysis + Automation
                   </span>
 
-                  <span className="
-                    text-[10px]
-                    font-mono
-                    text-[#2F5D50]
-                    font-semibold
-                  ">
-                    READY
+                  <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#2F5D50]">
+                    Ready
                   </span>
                 </div>
               </div>
-            </motion.div>
-
-            {/* Floating mini badge */}
-            <motion.div
-              animate={{
-                y: [0, -7, 0],
-              }}
-              transition={{
-                duration: 5,
-                repeat: Infinity,
-                ease: 'easeInOut',
-              }}
-              className="
-                absolute
-                -top-4
-                -right-3
-                sm:-right-5
-                px-3
-                py-2
-                rounded-xl
-                bg-[#2F5D50]
-                text-white
-                shadow-[0_10px_30px_rgba(47,93,80,0.22)]
-                flex
-                items-center
-                gap-2
-              "
-            >
-              <Sparkles className="w-3.5 h-3.5 text-[#F5F1E8]" />
-
-              <span className="text-[10px] font-mono uppercase tracking-wider font-semibold">
-                Build • Analyze • Automate
-              </span>
-            </motion.div>
+            </div>
           </motion.div>
         </div>
       </div>
