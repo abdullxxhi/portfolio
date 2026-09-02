@@ -1,80 +1,124 @@
 import { motion } from 'motion/react';
-import { GraduationCap, CheckCircle2, Sparkles, BookOpen } from 'lucide-react';
+import {
+  GraduationCap,
+  CheckCircle2,
+} from 'lucide-react';
 import { educationData } from '../data/portfolioData';
 
 export default function Education() {
   return (
-    <section id="education" className="py-24 relative z-10">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        {/* Header */}
-        <div className="text-center max-w-3xl mx-auto space-y-4 mb-16">
-          <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-[#FCFAF6] border border-[#DDD6C8] shadow-sm">
-            <GraduationCap className="w-3.5 h-3.5 text-[#2F5D50]" />
-            <span className="text-xs font-mono uppercase tracking-widest text-[#2F5D50] font-semibold">
-              ACADEMIC BACKGROUND
+    <section
+      id="education"
+      className="relative z-10 py-24 sm:py-28"
+    >
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+
+        {/* --------------------------------------------------
+            Section Header
+        -------------------------------------------------- */}
+
+        <motion.div
+          initial={{ opacity: 0, y: 18 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{
+            duration: 0.55,
+            ease: [0.16, 1, 0.3, 1],
+          }}
+          className="mb-12 max-w-3xl sm:mb-14"
+        >
+          <div className="mb-4 flex items-center gap-3">
+            <span className="font-mono text-[10px] font-semibold tracking-[0.16em] text-[#D97745]">
+              06
+            </span>
+
+            <span className="h-px w-8 bg-[#DDD6C8]" />
+
+            <span className="text-[10px] font-medium uppercase tracking-[0.16em] text-[#6B7280]">
+              Education
             </span>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-bold font-display text-[#1D2A26]">
-            Education
+
+          <h2 className="font-display text-3xl font-bold leading-tight tracking-[-0.025em] text-[#1D2A26] sm:text-4xl lg:text-5xl">
+            Academic foundation.
           </h2>
-          <p className="text-base text-[#4B5563]">
-            Rigorous university foundation in statistical inference, mathematical modeling, and quantitative analysis.
+
+          <p className="mt-5 max-w-2xl text-base leading-7 text-[#4B5563]">
+            A university foundation in statistics, quantitative analysis,
+            and mathematical reasoning.
           </p>
-        </div>
+        </motion.div>
 
-        {/* Education Timeline Card */}
-        <div className="max-w-4xl mx-auto">
-          {educationData.map((item) => (
-            <motion.div
+        {/* --------------------------------------------------
+            Education Records
+        -------------------------------------------------- */}
+
+        <div className="mx-auto max-w-5xl">
+          {educationData.map((item, index) => (
+            <motion.article
               key={item.id}
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="bg-[#FCFAF6] p-8 sm:p-10 rounded-[20px] border border-[#DDD6C8] shadow-sm relative overflow-hidden group hover:border-[#2F5D50]/50 transition-all"
+              viewport={{
+                once: true,
+                amount: 0.2,
+              }}
+              transition={{
+                duration: 0.55,
+                delay: index * 0.08,
+                ease: [0.16, 1, 0.3, 1],
+              }}
+              className="border-y border-[#DDD6C8]"
             >
-              {/* Top Accent Gradient */}
-              <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#2F5D50] via-[#3d7263] to-[#D97745]" />
-
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
-                <div className="flex items-start space-x-4">
-                  <div className="p-4 rounded-2xl bg-[#2F5D50]/10 border border-[#2F5D50]/20 text-[#2F5D50] shrink-0">
-                    <GraduationCap className="w-8 h-8" />
+              {/* Main Education Information */}
+              <div className="grid gap-8 py-8 md:grid-cols-[1fr_auto] md:items-start md:gap-12">
+                
+                <div className="flex items-start gap-4 sm:gap-5">
+                  {/* Icon */}
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-[#DDD6C8] bg-[#FCFAF6] text-[#2F5D50]">
+                    <GraduationCap className="h-5 w-5" />
                   </div>
+
                   <div>
                     {item.status && (
-                      <span className="text-xs font-mono text-[#D97745] uppercase font-semibold tracking-wider">
+                      <p className="mb-1.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#D97745]">
                         {item.status}
-                      </span>
+                      </p>
                     )}
-                    <h3 className="text-2xl sm:text-3xl font-bold font-display text-[#1D2A26] mt-0.5">
+
+                    <h3 className="font-display text-2xl font-bold leading-tight tracking-[-0.02em] text-[#1D2A26] sm:text-3xl">
                       {item.school}
                     </h3>
-                    <p className="text-base sm:text-lg font-medium text-[#2F5D50] mt-1">
+
+                    <p className="mt-2 text-base font-medium text-[#2F5D50] sm:text-lg">
                       {item.degree}
                     </p>
                   </div>
                 </div>
-              </div>
 
-              {/* Highlights List */}
-              <div className="space-y-3 pt-4 border-t border-[#DDD6C8]">
-                <div className="text-xs font-mono uppercase tracking-wider text-[#6B7280] font-semibold flex items-center space-x-1.5">
-                  <BookOpen className="w-3.5 h-3.5 text-[#2F5D50]" />
-                  <span>Academic Focus & Highlights:</span>
-                </div>
-                {item.highlights.map((hl, i) => (
-                  <div key={i} className="flex items-start space-x-3 text-sm text-[#4B5563] leading-relaxed">
-                    <CheckCircle2 className="w-4 h-4 text-[#4E8D66] shrink-0 mt-0.5" />
-                    <span>{hl}</span>
+                {/* Academic Focus */}
+                <div className="md:min-w-[280px]">
+                  <p className="mb-3 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#6B7280]">
+                    Academic focus
+                  </p>
+
+                  <div className="space-y-2.5">
+                    {item.highlights.map((highlight, highlightIndex) => (
+                      <div
+                        key={highlightIndex}
+                        className="flex items-start gap-2.5 text-sm leading-6 text-[#4B5563]"
+                      >
+                        <CheckCircle2 className="mt-1 h-3.5 w-3.5 shrink-0 text-[#4E8D66]" />
+
+                        <span>{highlight}</span>
+                      </div>
+                    ))}
                   </div>
-                ))}
+                </div>
               </div>
-            </motion.div>
+            </motion.article>
           ))}
         </div>
-
       </div>
     </section>
   );
