@@ -87,18 +87,16 @@
 }
 
 /* --------------------------------------------------
-   Legacy Card Utility
-   Kept for components that still use it.
-   Radius now follows the system.
+   Minimal Card Surface
 -------------------------------------------------- */
 
 .glass-card {
   background: var(--surface-card);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-card);
-  box-shadow:
-    0 6px 20px -10px rgba(47, 93, 80, 0.08),
-    0 1px 4px rgba(0, 0, 0, 0.02);
+
+  /* Almost invisible elevation */
+  box-shadow: 0 2px 10px rgba(47, 93, 80, 0.035);
 }
 
 .glass-card-hover {
@@ -109,23 +107,24 @@
 }
 
 .glass-card-hover:hover {
-  border-color: rgba(47, 93, 80, 0.35);
-  box-shadow:
-    0 12px 28px -16px rgba(47, 93, 80, 0.14),
-    0 2px 8px rgba(47, 93, 80, 0.04);
+  border-color: rgba(47, 93, 80, 0.3);
+
+  /* Subtle hover elevation */
+  box-shadow: 0 6px 18px rgba(47, 93, 80, 0.07);
+
   transform: translateY(-2px);
 }
 
 /* --------------------------------------------------
-   Subtle Elevation Utilities
+   Minimal Elevation Utilities
 -------------------------------------------------- */
 
 .glow-primary {
-  box-shadow: 0 8px 24px -8px rgba(47, 93, 80, 0.16);
+  box-shadow: 0 6px 20px rgba(47, 93, 80, 0.08);
 }
 
 .glow-secondary {
-  box-shadow: 0 8px 24px -8px rgba(217, 119, 69, 0.16);
+  box-shadow: 0 6px 20px rgba(217, 119, 69, 0.08);
 }
 
 /* --------------------------------------------------
