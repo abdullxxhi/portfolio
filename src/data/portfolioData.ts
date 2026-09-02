@@ -788,7 +788,7 @@ export const certificationsData: Certification[] = [
     date: "2026",
     status: "Completed",
     image: alxCertificateIMG,
-    credentialUrl: "[https://savanna.alxafrica.com/certificates/59TRPhyBSL](https://savanna.alxafrica.com/certificates/59TRPhyBSL)",
+    credentialUrl: "[https://savanna.alxafrica.com/certificates/59TRPhyBSL)",
     skillsLearned: [
       "SQL",
       "Data Analytics",
