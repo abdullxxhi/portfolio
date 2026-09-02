@@ -1,6 +1,10 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { CheckCircle2, ExternalLink, Maximize2 } from 'lucide-react';
+import {
+  CheckCircle2,
+  ExternalLink,
+  Maximize2,
+} from 'lucide-react';
 import { Certification } from '../types';
 
 interface CertificateCardProps {
@@ -9,100 +13,102 @@ interface CertificateCardProps {
   onOpenCertModal: (cert: Certification) => void;
 }
 
-export default function CertificateCard({ cert, onOpenCertModal }: CertificateCardProps) {
+export default function CertificateCard({
+  cert,
+  onOpenCertModal,
+}: CertificateCardProps) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
+    <motion.article
+      initial={{ opacity: 0, y: 16 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      whileHover={{ y: -6 }}
-      transition={{ duration: 0.4 }}
+      viewport={{ once: true, margin: '-60px' }}
+      transition={{ duration: 0.45 }}
       onClick={() => onOpenCertModal(cert)}
-      className="bg-[#FCFAF6] text-[#1D2A26] p-8 rounded-[20px] shadow-sm border border-[#DDD6C8] flex flex-col justify-between group relative overflow-hidden cursor-pointer"
+      className="group cursor-pointer border-t border-[#DDD6C8] pt-6"
     >
-      <div>
-        {/* Certificate Image Thumbnail Preview */}
-        {cert.image && (
-          <div
-            onClick={(e) => {
-              e.stopPropagation();
-              onOpenCertModal(cert);
-            }}
-            className="relative aspect-[16/10] bg-[#111827] rounded-xl overflow-hidden mb-5 border border-[#DDD6C8] cursor-pointer group/img flex items-center justify-center p-1.5 shadow-inner"
-          >
-            <img
-              src={cert.image}
-              alt={cert.title}
-              referrerPolicy="no-referrer"
-              className="w-full h-full object-contain group-hover/img:scale-105 transition-transform duration-500"
-            />
-            <div className="absolute inset-0 bg-[#1D2A26]/10 opacity-0 group-hover/img:opacity-100 transition-opacity flex items-center justify-center">
-              <span className="px-3 py-1.5 rounded-lg bg-[#FCFAF6]/90 text-[#1D2A26] text-xs font-semibold shadow-md flex items-center space-x-1.5">
-                <Maximize2 className="w-3.5 h-3.5" />
-                <span>Expand Certificate</span>
-              </span>
-            </div>
-          </div>
-        )}
+      {/* Certificate Preview */}
+      {cert.image && (
+        <div
+          onClick={(e) => {
+            e.stopPropagation();
+            onOpenCertModal(cert);
+          }}
+          className="group/image relative mb-6 aspect-[16/10] overflow-hidden rounded-xl border border-[#DDD6C8] bg-[#EDE7DA]"
+        >
+          <img
+            src={cert.image}
+            alt={cert.title}
+            referrerPolicy="no-referrer"
+            className="h-full w-full object-contain transition-transform duration-500 group-hover/image:scale-[1.02]"
+          />
 
-        <div className="flex items-center space-x-2 text-xs font-mono font-bold uppercase tracking-wider text-[#2F5D50] mb-2">
-          <span>{cert.issuer}</span>
-          <span>•</span>
-          <span className="text-[#D97745]">{cert.date}</span>
-        </div>
-
-        <h3 className="text-xl font-bold font-display text-[#1D2A26] mb-3 group-hover:text-[#2F5D50] transition-colors">
-          {cert.title}
-        </h3>
-
-        <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-[#4E8D66]/15 text-[#245338] text-xs font-semibold mb-6">
-          <CheckCircle2 className="w-3.5 h-3.5" />
-          <span>{cert.status}</span>
-        </div>
-
-        {/* Skills Learned Pills */}
-        {cert.skillsLearned && cert.skillsLearned.length > 0 && (
-          <div className="space-y-2 mb-6">
-            <span className="text-[11px] font-mono text-[#6B7280] font-semibold uppercase tracking-wider">
-              Core Competencies:
+          <div className="absolute inset-0 flex items-center justify-center bg-[#1D2A26]/20 opacity-0 transition-opacity duration-200 group-hover/image:opacity-100">
+            <span className="inline-flex items-center gap-2 rounded-lg bg-[#FCFAF6] px-3 py-2 text-xs font-semibold text-[#1D2A26]">
+              <Maximize2 className="h-3.5 w-3.5" />
+              View certificate
             </span>
-            <div className="flex flex-wrap gap-1.5">
-              {cert.skillsLearned.map((skill) => (
-                <span
-                  key={skill}
-                  className="px-2.5 py-1 rounded-lg bg-[#F5F1E8] border border-[#DDD6C8] text-[#1D2A26] text-[11px] font-medium"
-                >
-                  {skill}
-                </span>
-              ))}
-            </div>
           </div>
-        )}
+        </div>
+      )}
+
+      {/* Meta */}
+      <div className="mb-3 flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[10px] font-semibold uppercase tracking-[0.16em]">
+        <span className="text-[#2F5D50]">
+          {cert.issuer}
+        </span>
+
+        <span className="text-[#DDD6C8]">/</span>
+
+        <span className="text-[#6B7280]">
+          {cert.date}
+        </span>
       </div>
 
-      <div className="pt-4 border-t border-[#DDD6C8] flex items-center justify-between">
+      {/* Title */}
+      <h3 className="font-display text-xl font-bold leading-tight text-[#1D2A26] transition-colors duration-200 group-hover:text-[#2F5D50]">
+        {cert.title}
+      </h3>
+
+      {/* Status */}
+      <div className="mt-4 flex items-center gap-2 text-xs font-medium text-[#4E8D66]">
+        <CheckCircle2 className="h-4 w-4" />
+        <span>{cert.status}</span>
+      </div>
+
+      {/* Skills */}
+      {cert.skillsLearned && cert.skillsLearned.length > 0 && (
+        <div className="mt-5">
+          <p className="mb-2 font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#6B7280]">
+            Core competencies
+          </p>
+
+          <div className="flex flex-wrap gap-x-3 gap-y-1.5">
+            {cert.skillsLearned.map((skill) => (
+              <span
+                key={skill}
+                className="text-xs text-[#4B5563]"
+              >
+                {skill}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Action */}
+      <div className="mt-6 flex items-center border-t border-[#DDD6C8] pt-4">
         <button
+          type="button"
           onClick={(e) => {
             e.stopPropagation();
             onOpenCertModal(cert);
           }}
-          className="text-xs font-bold text-[#2F5D50] hover:text-[#1D2A26] flex items-center space-x-1.5 transition-colors"
+          className="inline-flex items-center gap-2 text-xs font-semibold text-[#2F5D50] transition-colors hover:text-[#1D2A26]"
         >
-          <Maximize2 className="w-3.5 h-3.5" />
-          <span>View Certificate</span>
-        </button>
-
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            onOpenCertModal(cert);
-          }}
-          className="p-2.5 rounded-xl bg-[#2F5D50] text-white hover:bg-[#244A40] transition-colors"
-          aria-label="View Certificate"
-        >
-          <ExternalLink className="w-4 h-4" />
+          View Certificate
+          <ExternalLink className="h-3.5 w-3.5" />
         </button>
       </div>
-    </motion.div>
+    </motion.article>
   );
 }
