@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Menu, X, ArrowUpRight, Sparkles } from 'lucide-react';
+import { Menu, X, ArrowUpRight } from 'lucide-react';
 import { personalInfo } from '../data/portfolioData';
 
 interface NavbarProps {
@@ -23,14 +23,13 @@ export default function Navbar({ activeSection }: NavbarProps) {
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 40) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
+      setIsScrolled(window.scrollY > 40);
     };
 
-    window.addEventListener('scroll', handleScroll);
+    handleScroll();
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -47,24 +46,22 @@ export default function Navbar({ activeSection }: NavbarProps) {
       return;
     }
 
-    // Close the mobile menu first.
     setMobileMenuOpen(false);
 
-    // Wait until React/browser has processed the menu state change
-    // before calculating the target's position.
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
-        const navOffset = 80;
+        const navOffset = 76;
+
         const targetPosition =
-          target.getBoundingClientRect().top + window.scrollY - navOffset;
+          target.getBoundingClientRect().top +
+          window.scrollY -
+          navOffset;
 
         window.scrollTo({
           top: Math.max(0, targetPosition),
           behavior: 'smooth',
         });
 
-        // Keep the URL hash in sync without causing the browser
-        // to perform its own jump.
         window.history.replaceState(null, '', href);
       });
     });
@@ -72,26 +69,26 @@ export default function Navbar({ activeSection }: NavbarProps) {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-300 ${
+      className={`fixed left-0 right-0 top-0 z-[100] border-b transition-all duration-300 ${
         isScrolled
-          ? 'py-3 bg-[#F5F1E8]/90 backdrop-blur-xl border-b border-[#DDD6C8] shadow-[0_4px_20px_rgba(47,93,80,0.08)]'
-          : 'py-5 bg-transparent'
+          ? 'border-[#DDD6C8] bg-[#F5F1E8]/95 py-3 backdrop-blur-md'
+          : 'border-transparent bg-transparent py-5'
       }`}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
-        {/* Left: Brand Name */}
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        {/* Brand */}
         <a
           href="#hero"
           onClick={(e) => scrollToSection(e, '#hero')}
-          className="flex flex-col group cursor-pointer"
+          className="group flex items-center"
         >
-          <span className="font-display font-bold text-sm tracking-tight text-[#1D2A26] group-hover:text-[#2F5D50] transition-colors">
-            Build. Automate. Analyze.
+          <span className="font-display text-sm font-bold tracking-tight text-[#1D2A26] transition-colors duration-200 group-hover:text-[#2F5D50]">
+            {personalInfo.initials}
           </span>
         </a>
 
-        {/* Center: Desktop Menu */}
-        <nav className="hidden lg:flex items-center space-x-1 px-3.5 py-1.5 rounded-full bg-[#FCFAF6]/90 backdrop-blur-md border border-[#DDD6C8] shadow-sm">
+        {/* Desktop Navigation */}
+        <nav className="hidden items-center gap-6 lg:flex">
           {navLinks.map((link) => {
             const isActive = activeSection === link.href.substring(1);
 
@@ -100,16 +97,18 @@ export default function Navbar({ activeSection }: NavbarProps) {
                 key={link.name}
                 href={link.href}
                 onClick={(e) => scrollToSection(e, link.href)}
-                className={`relative px-3.5 py-1.5 text-xs font-medium rounded-full transition-all duration-200 ${
+                className={`relative py-2 text-xs font-medium transition-colors duration-200 ${
                   isActive
-                    ? 'text-white font-semibold'
-                    : 'text-[#4B5563] hover:text-[#1D2A26]'
+                    ? 'text-[#2F5D50]'
+                    : 'text-[#6B7280] hover:text-[#1D2A26]'
                 }`}
               >
+                {link.name}
+
                 {isActive && (
-                  <motion.div
-                    layoutId="activeNavTab"
-                    className="absolute inset-0 bg-[#2F5D50] rounded-full -z-10 shadow-[0_2px_10px_rgba(47,93,80,0.25)]"
+                  <motion.span
+                    layoutId="activeNavIndicator"
+                    className="absolute bottom-0 left-0 right-0 h-px bg-[#2F5D50]"
                     transition={{
                       type: 'spring',
                       stiffness: 380,
@@ -117,98 +116,90 @@ export default function Navbar({ activeSection }: NavbarProps) {
                     }}
                   />
                 )}
-
-                {link.name}
               </a>
             );
           })}
         </nav>
 
-        {/* Right: Primary CTA "Hire Me" */}
-        <div className="hidden sm:flex items-center space-x-3">
+        {/* Desktop CTA */}
+        <div className="hidden lg:flex">
           <a
             href="#contact"
             onClick={(e) => scrollToSection(e, '#contact')}
-            className="relative group overflow-hidden rounded-full p-[1px] font-medium text-xs focus:outline-none"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-[#2F5D50] px-4 py-2 text-xs font-semibold text-white transition-colors duration-200 hover:bg-[#244A40]"
           >
-            <span className="absolute inset-0 bg-gradient-to-r from-[#2F5D50] via-[#D97745] to-[#2F5D50]" />
-
-            <span className="relative px-5 py-2 rounded-full bg-[#2F5D50] flex items-center space-x-1.5 text-white group-hover:bg-[#244A40] transition-all duration-300 shadow-md">
-              <Sparkles className="w-3.5 h-3.5 text-[#D97745] group-hover:text-white" />
-
-              <span className="font-semibold">Hire Me</span>
-
-              <ArrowUpRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-            </span>
+            <span>Hire Me</span>
+            <ArrowUpRight className="h-3.5 w-3.5" />
           </a>
         </div>
 
-        {/* Mobile Hamburger Toggle */}
-        <div className="flex lg:hidden items-center space-x-2">
+        {/* Mobile Controls */}
+        <div className="flex items-center gap-2 lg:hidden">
           <a
             href="#contact"
             onClick={(e) => scrollToSection(e, '#contact')}
-            className="px-3.5 py-1.5 rounded-full bg-[#2F5D50] text-white text-xs font-semibold shadow-sm sm:hidden"
+            className="inline-flex items-center gap-1 rounded-lg bg-[#2F5D50] px-3.5 py-2 text-xs font-semibold text-white transition-colors duration-200 hover:bg-[#244A40]"
           >
-            Hire Me
+            <span>Hire Me</span>
+            <ArrowUpRight className="h-3.5 w-3.5" />
           </a>
 
           <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            aria-label="Toggle Menu"
+            type="button"
+            onClick={() => setMobileMenuOpen((open) => !open)}
+            aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={mobileMenuOpen}
-            className="p-2 rounded-xl bg-[#FCFAF6] border border-[#DDD6C8] text-[#1D2A26] hover:text-[#2F5D50] transition-colors"
+            className="flex h-9 w-9 items-center justify-center rounded-lg border border-[#DDD6C8] bg-[#FCFAF6] text-[#1D2A26] transition-colors duration-200 hover:border-[#2F5D50] hover:text-[#2F5D50]"
           >
             {mobileMenuOpen ? (
-              <X className="w-5 h-5" />
+              <X className="h-4 w-4" />
             ) : (
-              <Menu className="w-5 h-5" />
+              <Menu className="h-4 w-4" />
             )}
           </button>
         </div>
       </div>
 
-      {/* Mobile Menu Dropdown */}
+      {/* Mobile Menu */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.25, ease: 'easeInOut' }}
-            className="lg:hidden bg-[#F5F1E8]/98 backdrop-blur-2xl border-b border-[#DDD6C8] overflow-hidden"
+            transition={{
+              duration: 0.2,
+              ease: [0.16, 1, 0.3, 1],
+            }}
+            className="overflow-hidden border-t border-[#DDD6C8] bg-[#F5F1E8]/98 backdrop-blur-md lg:hidden"
           >
-            <div className="px-6 py-6 space-y-2">
-              {navLinks.map((link) => {
-                const isActive = activeSection === link.href.substring(1);
+            <nav className="mx-auto max-w-7xl px-4 py-4 sm:px-6">
+              <div className="divide-y divide-[#DDD6C8] border-y border-[#DDD6C8]">
+                {navLinks.map((link) => {
+                  const isActive =
+                    activeSection === link.href.substring(1);
 
-                return (
-                  <a
-                    key={link.name}
-                    href={link.href}
-                    onClick={(e) => scrollToSection(e, link.href)}
-                    className={`block px-4 py-2.5 rounded-xl text-sm font-medium transition-colors ${
-                      isActive
-                        ? 'bg-[#2F5D50] text-white'
-                        : 'text-[#4B5563] hover:text-[#1D2A26] hover:bg-[#FCFAF6]'
-                    }`}
-                  >
-                    {link.name}
-                  </a>
-                );
-              })}
+                  return (
+                    <a
+                      key={link.name}
+                      href={link.href}
+                      onClick={(e) => scrollToSection(e, link.href)}
+                      className={`flex items-center justify-between py-3.5 text-sm font-medium transition-colors duration-200 ${
+                        isActive
+                          ? 'text-[#2F5D50]'
+                          : 'text-[#4B5563] hover:text-[#1D2A26]'
+                      }`}
+                    >
+                      <span>{link.name}</span>
 
-              <div className="pt-2">
-                <a
-                  href="#contact"
-                  onClick={(e) => scrollToSection(e, '#contact')}
-                  className="w-full py-3 rounded-xl bg-[#2F5D50] text-white text-center font-semibold text-sm flex items-center justify-center space-x-2 shadow-md hover:bg-[#244A40]"
-                >
-                  <span>Hire Me</span>
-                  <ArrowUpRight className="w-4 h-4" />
-                </a>
+                      {isActive && (
+                        <span className="h-1.5 w-1.5 rounded-full bg-[#2F5D50]" />
+                      )}
+                    </a>
+                  );
+                })}
               </div>
-            </div>
+            </nav>
           </motion.div>
         )}
       </AnimatePresence>
