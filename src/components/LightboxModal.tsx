@@ -8,7 +8,7 @@ import {
   Workflow,
   BarChart3,
   Database,
-  Maximize2
+  Maximize2,
 } from 'lucide-react';
 import { Project, Certification } from '../types';
 
@@ -18,8 +18,15 @@ interface LightboxModalProps {
   onClose: () => void;
 }
 
-export default function LightboxModal({ item, type, onClose }: LightboxModalProps) {
-  const [activeZoomImage, setActiveZoomImage] = useState<{ src: string; title: string } | null>(null);
+export default function LightboxModal({
+  item,
+  type,
+  onClose,
+}: LightboxModalProps) {
+  const [activeZoomImage, setActiveZoomImage] = useState<{
+    src: string;
+    title: string;
+  } | null>(null);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -33,7 +40,10 @@ export default function LightboxModal({ item, type, onClose }: LightboxModalProp
     };
 
     window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
   }, [onClose, activeZoomImage]);
 
   if (!item) return null;
@@ -42,45 +52,44 @@ export default function LightboxModal({ item, type, onClose }: LightboxModalProp
   const projectItem = item as Project;
   const certItem = item as Certification;
 
-  /*
-   * Determine the appropriate screenshot section based on the
-   * type of project instead of displaying "Automation in Action"
-   * for every project.
-   */
-  const isAutomationProject = projectItem.category === 'AI Automation';
+  const isAutomationProject =
+    projectItem.category === 'AI Automation';
 
   const isDataAnalysisProject =
     projectItem.category === 'Excel' ||
     projectItem.category === 'Data Analysis' ||
     projectItem.category === 'Statistics';
 
-  const isDataQualityProject = projectItem.category === 'Data Automation';
+  const isDataQualityProject =
+    projectItem.category === 'Data Automation';
 
   let galleryTitle = 'Project in Action';
-  let galleryDescription = 'Supporting project screenshots and implementation details.';
+  let galleryDescription =
+    'Supporting project screenshots and implementation details.';
   let GalleryIcon = Workflow;
 
   if (isAutomationProject) {
     galleryTitle = 'Automation in Action';
     galleryDescription =
-      'Demonstrating the completed end-to-end automation workflow and real-time execution';
+      'Demonstrating the completed end-to-end automation workflow and real-time execution.';
     GalleryIcon = Workflow;
   } else if (isDataAnalysisProject) {
     galleryTitle = 'Analysis in Action';
     galleryDescription =
-      'Demonstrating the analytical process, data exploration, and key findings from the project';
+      'Demonstrating the analytical process, data exploration, and key findings from the project.';
     GalleryIcon = BarChart3;
   } else if (isDataQualityProject) {
     galleryTitle = 'Data Quality in Action';
     galleryDescription =
-      'Demonstrating the data validation, cleaning, standardization, and quality-control process';
+      'Demonstrating the data validation, cleaning, standardization, and quality-control process.';
     GalleryIcon = Database;
   }
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-[10000] flex items-start justify-center p-3 sm:p-6 overflow-y-auto bg-black/80 backdrop-blur-xl">
-        {/* Click outside backdrop */}
+      <div className="fixed inset-0 z-[10000] overflow-y-auto bg-[#1D2A26]/75 p-3 sm:p-6">
+
+        {/* Backdrop */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -89,34 +98,36 @@ export default function LightboxModal({ item, type, onClose }: LightboxModalProp
           className="fixed inset-0"
         />
 
-        {/* Floating Fixed Close Button - ALWAYS visible top-right */}
+        {/* Close */}
         <button
+          type="button"
           onClick={onClose}
-          className="fixed top-4 right-4 sm:top-6 sm:right-6 p-3 sm:p-3.5 rounded-full bg-[#1D2A26]/90 text-white hover:bg-[#2F5D50] hover:scale-105 active:scale-95 transition-all z-[10020] shadow-2xl backdrop-blur-md border border-white/20 cursor-pointer flex items-center justify-center"
+          className="fixed right-4 top-4 z-[10020] flex h-10 w-10 items-center justify-center rounded-lg border border-white/20 bg-[#1D2A26] text-white transition-colors hover:bg-[#2F5D50] sm:right-6 sm:top-6"
           aria-label="Close modal"
           title="Close (Esc)"
         >
-          <X className="w-5 h-5 sm:w-6 sm:h-6" />
+          <X className="h-5 w-5" />
         </button>
 
-        {/* Modal Window */}
+        {/* Modal */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.95, y: 20 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.95, y: 20 }}
-          transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-          className="relative w-full max-w-4xl bg-[#FCFAF6] rounded-[24px] border border-[#DDD6C8] shadow-2xl overflow-y-auto overscroll-contain z-10 my-3 sm:my-8 max-h-[calc(100vh-1.5rem)] sm:max-h-[calc(100vh-4rem)]"
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 12 }}
+          transition={{ duration: 0.3 }}
+          className="relative z-10 mx-auto my-3 w-full max-w-5xl overflow-hidden rounded-[16px] border border-[#DDD6C8] bg-[#FCFAF6] sm:my-8"
         >
           {isProject ? (
             <div>
-              {/* Media Preview Header */}
+
+              {/* Project Media */}
               <div
-                className="relative aspect-[16/9] max-h-[420px] bg-[#F5F1E8] overflow-hidden group/header cursor-pointer"
+                className="group/header relative aspect-[16/9] max-h-[460px] cursor-pointer overflow-hidden bg-[#EDE7DA]"
                 onClick={() => {
                   if (!projectItem.isVideo) {
                     setActiveZoomImage({
                       src: projectItem.mediaUrl,
-                      title: projectItem.title
+                      title: projectItem.title,
                     });
                   }
                 }}
@@ -128,7 +139,7 @@ export default function LightboxModal({ item, type, onClose }: LightboxModalProp
                     controls
                     autoPlay
                     playsInline
-                    className="w-full h-full object-cover object-center"
+                    className="h-full w-full object-cover"
                     onClick={(e) => e.stopPropagation()}
                   />
                 ) : (
@@ -137,146 +148,156 @@ export default function LightboxModal({ item, type, onClose }: LightboxModalProp
                       src={projectItem.mediaUrl}
                       alt={projectItem.title}
                       referrerPolicy="no-referrer"
-                      className="w-full h-full object-cover object-center transition-transform duration-500 group-hover/header:scale-105"
+                      className="h-full w-full object-cover transition-transform duration-500 group-hover/header:scale-[1.02]"
                     />
 
-                    <div className="absolute top-4 left-4 sm:top-6 sm:left-6 px-3 py-1.5 rounded-xl bg-black/60 text-white text-xs font-semibold backdrop-blur-md opacity-0 group-hover/header:opacity-100 transition-opacity flex items-center space-x-1.5 z-10">
-                      <Maximize2 className="w-3.5 h-3.5" />
-                      <span>Click to expand image</span>
+                    <div className="absolute left-4 top-4 flex items-center gap-2 rounded-lg bg-[#1D2A26]/75 px-3 py-2 text-xs font-medium text-white opacity-0 transition-opacity duration-200 group-hover/header:opacity-100 sm:left-6 sm:top-6">
+                      <Maximize2 className="h-3.5 w-3.5" />
+                      <span>Expand image</span>
                     </div>
                   </>
                 )}
-
-                <div className="absolute inset-0 bg-gradient-to-t from-[#FCFAF6] via-transparent to-transparent opacity-90 pointer-events-none" />
-
-                <div className="absolute bottom-6 left-6 right-6">
-                  <span className="px-3.5 py-1 rounded-full bg-[#2F5D50] text-white font-mono text-xs font-semibold mb-2 inline-block shadow-sm">
-                    {projectItem.category}
-                  </span>
-
-                  <h2 className="text-2xl sm:text-3xl font-bold font-display text-[#1D2A26]">
-                    {projectItem.title}
-                  </h2>
-                </div>
               </div>
 
-              {/* Body Content */}
-              <div className="p-6 sm:p-8 space-y-6">
-                <p className="text-sm sm:text-base text-[#4B5563] leading-relaxed">
-                  {projectItem.description}
-                </p>
+              {/* Project Body */}
+              <div className="space-y-8 p-6 sm:p-8 lg:p-10">
 
-                {projectItem.keyHighlights && projectItem.keyHighlights.length > 0 && (
-                  <div className="space-y-2.5 p-4 rounded-2xl bg-[#F5F1E8] border border-[#DDD6C8]">
-                    <div className="text-xs font-mono uppercase tracking-wider text-[#2F5D50] font-semibold">
-                      Key Capabilities & Outcomes:
-                    </div>
-
-                    {projectItem.keyHighlights.map((hl, i) => (
-                      <div
-                        key={i}
-                        className="flex items-start space-x-2.5 text-xs sm:text-sm text-[#1D2A26]"
-                      >
-                        <CheckCircle2 className="w-4 h-4 text-[#4E8D66] shrink-0 mt-0.5" />
-                        <span>{hl}</span>
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-                {/* Tech Pills */}
+                {/* Title */}
                 <div>
-                  <div className="text-xs font-mono uppercase tracking-wider text-[#6B7280] mb-2 font-semibold">
-                    Technologies Used:
+                  <div className="mb-4 flex flex-wrap items-center gap-3">
+                    <span className="font-mono text-xs font-semibold uppercase tracking-[0.16em] text-[#2F5D50]">
+                      {projectItem.category}
+                    </span>
+
+                    <span className="h-1 w-1 rounded-full bg-[#D97745]" />
                   </div>
 
-                  <div className="flex flex-wrap gap-2">
-                    {projectItem.tags.map((t) => (
-                      <span
-                        key={t}
-                        className="px-3 py-1 rounded-xl bg-[#F5F1E8] border border-[#DDD6C8] text-xs font-mono text-[#2F5D50] font-medium"
-                      >
-                        #{t.replace(/^#/, '')}
-                      </span>
-                    ))}
-                  </div>
+                  <h2 className="font-display text-2xl font-bold leading-tight text-[#1D2A26] sm:text-3xl">
+                    {projectItem.title}
+                  </h2>
+
+                  <p className="mt-4 max-w-3xl text-sm leading-7 text-[#4B5563] sm:text-base">
+                    {projectItem.description}
+                  </p>
                 </div>
 
-                {/* Context-Aware Project Screenshot Section */}
-                {projectItem.automationScreenshots &&
-                  projectItem.automationScreenshots.length > 0 && (
-                    <div className="pt-6 border-t border-[#DDD6C8] space-y-6">
-                      <div className="flex items-center space-x-2.5">
-                        <div className="p-2.5 rounded-xl bg-[#2F5D50]/10 text-[#2F5D50]">
-                          <GalleryIcon className="w-5 h-5" />
-                        </div>
+                {/* Highlights */}
+                {projectItem.keyHighlights &&
+                  projectItem.keyHighlights.length > 0 && (
+                    <div className="border-y border-[#DDD6C8] py-6">
+                      <p className="mb-4 font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#6B7280]">
+                        Key capabilities & outcomes
+                      </p>
 
-                        <div>
-                          <h3 className="text-lg font-bold font-display text-[#1D2A26]">
-                            {galleryTitle}
-                          </h3>
-
-                          <p className="text-xs text-[#6B7280]">
-                            {galleryDescription}
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        {projectItem.automationScreenshots.map((shot, index) => (
+                      <div className="space-y-3">
+                        {projectItem.keyHighlights.map((highlight, i) => (
                           <div
-                            key={index}
-                            onClick={() =>
-                              setActiveZoomImage({
-                                src: shot.image,
-                                title: shot.title
-                              })
-                            }
-                            className="group flex flex-col bg-[#F5F1E8] border border-[#DDD6C8] rounded-2xl overflow-hidden shadow-sm hover:border-[#2F5D50] cursor-pointer transition-all duration-300"
+                            key={i}
+                            className="flex items-start gap-3 text-sm leading-6 text-[#4B5563]"
                           >
-                            <div className="relative aspect-[16/9] w-full bg-[#1D2A26] overflow-hidden">
-                              <img
-                                src={shot.image}
-                                alt={shot.title}
-                                referrerPolicy="no-referrer"
-                                className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
-                              />
-
-                              <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                <span className="px-3 py-1.5 rounded-xl bg-black/70 text-white text-xs font-semibold backdrop-blur-md flex items-center space-x-1.5">
-                                  <Maximize2 className="w-3.5 h-3.5" />
-                                  <span>Expand Image</span>
-                                </span>
-                              </div>
-                            </div>
-
-                            <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-2">
-                              <h4 className="text-sm font-bold font-display text-[#1D2A26] flex items-center space-x-2">
-                                <span className="w-2 h-2 rounded-full bg-[#2F5D50]" />
-                                <span>{shot.title}</span>
-                              </h4>
-
-                              <p className="text-xs text-[#4B5563] leading-relaxed">
-                                {shot.caption}
-                              </p>
-                            </div>
+                            <CheckCircle2 className="mt-1 h-4 w-4 shrink-0 text-[#4E8D66]" />
+                            <span>{highlight}</span>
                           </div>
                         ))}
                       </div>
                     </div>
                   )}
 
-                {/* Footer Buttons */}
-                <div className="pt-4 border-t border-[#DDD6C8] flex items-center justify-end space-x-3">
+                {/* Technologies */}
+                <div>
+                  <p className="mb-3 font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#6B7280]">
+                    Technologies used
+                  </p>
+
+                  <div className="flex flex-wrap gap-x-4 gap-y-2">
+                    {projectItem.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="text-xs font-medium text-[#2F5D50]"
+                      >
+                        #{tag.replace(/^#/, '')}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Screenshots */}
+                {projectItem.automationScreenshots &&
+                  projectItem.automationScreenshots.length > 0 && (
+                    <div className="border-t border-[#DDD6C8] pt-8">
+
+                      <div className="mb-6 flex items-start gap-3">
+                        <GalleryIcon className="mt-0.5 h-5 w-5 shrink-0 text-[#2F5D50]" />
+
+                        <div>
+                          <h3 className="font-display text-lg font-bold text-[#1D2A26]">
+                            {galleryTitle}
+                          </h3>
+
+                          <p className="mt-1 text-xs leading-5 text-[#6B7280]">
+                            {galleryDescription}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                        {projectItem.automationScreenshots.map(
+                          (shot, index) => (
+                            <button
+                              type="button"
+                              key={index}
+                              onClick={() =>
+                                setActiveZoomImage({
+                                  src: shot.image,
+                                  title: shot.title,
+                                })
+                              }
+                              className="group/screenshot overflow-hidden rounded-xl border border-[#DDD6C8] bg-[#F5F1E8] text-left transition-colors hover:border-[#2F5D50]"
+                            >
+                              <div className="relative aspect-[16/9] overflow-hidden bg-[#1D2A26]">
+                                <img
+                                  src={shot.image}
+                                  alt={shot.title}
+                                  referrerPolicy="no-referrer"
+                                  className="h-full w-full object-cover object-top transition-transform duration-500 group-hover/screenshot:scale-[1.02]"
+                                />
+
+                                <div className="absolute inset-0 flex items-center justify-center bg-[#1D2A26]/25 opacity-0 transition-opacity duration-200 group-hover/screenshot:opacity-100">
+                                  <span className="inline-flex items-center gap-2 rounded-lg bg-[#FCFAF6] px-3 py-2 text-xs font-semibold text-[#1D2A26]">
+                                    <Maximize2 className="h-3.5 w-3.5" />
+                                    Expand image
+                                  </span>
+                                </div>
+                              </div>
+
+                              <div className="p-4 sm:p-5">
+                                <h4 className="font-display text-sm font-bold text-[#1D2A26]">
+                                  {shot.title}
+                                </h4>
+
+                                <p className="mt-2 text-xs leading-5 text-[#4B5563]">
+                                  {shot.caption}
+                                </p>
+                              </div>
+                            </button>
+                          )
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                {/* Project Links */}
+                <div className="flex flex-wrap items-center justify-end gap-4 border-t border-[#DDD6C8] pt-6">
                   {projectItem.githubUrl && (
                     <a
                       href={projectItem.githubUrl}
                       target="_blank"
                       rel="noreferrer"
-                      className="px-5 py-2.5 rounded-xl bg-[#F5F1E8] border border-[#DDD6C8] text-[#1D2A26] text-xs font-semibold flex items-center space-x-2 hover:border-[#2F5D50] hover:text-[#2F5D50] transition-colors"
+                      className="inline-flex items-center gap-2 text-xs font-semibold text-[#1D2A26] transition-colors hover:text-[#2F5D50]"
                     >
-                      <Github className="w-4 h-4" />
-                      <span>Repository</span>
+                      <Github className="h-4 w-4" />
+                      Repository
+                      <ExternalLink className="h-3.5 w-3.5" />
                     </a>
                   )}
 
@@ -285,25 +306,28 @@ export default function LightboxModal({ item, type, onClose }: LightboxModalProp
                       href={projectItem.demoUrl}
                       target="_blank"
                       rel="noreferrer"
-                      className="px-5 py-2.5 rounded-xl bg-[#2F5D50] text-white text-xs font-semibold flex items-center space-x-2 shadow-sm hover:bg-[#244A40] transition-colors"
+                      className="inline-flex items-center gap-2 rounded-lg bg-[#2F5D50] px-4 py-2.5 text-xs font-semibold text-white transition-colors hover:bg-[#244A40]"
                     >
-                      <span>Launch Demo</span>
-                      <ExternalLink className="w-4 h-4" />
+                      Launch Demo
+                      <ExternalLink className="h-4 w-4" />
                     </a>
                   )}
                 </div>
               </div>
             </div>
           ) : (
-            /* Certification Modal View */
+            /* Certification Modal */
             <div className="flex flex-col">
+
+              {/* Certificate Image */}
               {certItem.image && (
-                <div
-                  className="relative bg-[#0F172A] aspect-[16/10] max-h-[500px] w-full flex items-center justify-center p-3 border-b border-[#DDD6C8] shadow-inner overflow-hidden group/cert cursor-pointer"
+                <button
+                  type="button"
+                  className="group/cert relative aspect-[16/10] max-h-[520px] w-full overflow-hidden border-b border-[#DDD6C8] bg-[#111827] p-3"
                   onClick={() =>
                     setActiveZoomImage({
                       src: certItem.image!,
-                      title: certItem.title
+                      title: certItem.title,
                     })
                   }
                 >
@@ -311,73 +335,87 @@ export default function LightboxModal({ item, type, onClose }: LightboxModalProp
                     src={certItem.image}
                     alt={certItem.title}
                     referrerPolicy="no-referrer"
-                    className="w-full h-full object-contain rounded-lg transition-transform duration-500 group-hover/cert:scale-102"
+                    className="h-full w-full object-contain transition-transform duration-500 group-hover/cert:scale-[1.01]"
                   />
 
-                  <div className="absolute top-4 left-4 px-3 py-1.5 rounded-xl bg-black/60 text-white text-xs font-semibold backdrop-blur-md opacity-0 group-hover/cert:opacity-100 transition-opacity flex items-center space-x-1.5 z-10">
-                    <Maximize2 className="w-3.5 h-3.5" />
-                    <span>Click to view full certificate</span>
+                  <div className="absolute left-4 top-4 flex items-center gap-2 rounded-lg bg-[#1D2A26]/75 px-3 py-2 text-xs font-medium text-white opacity-0 transition-opacity duration-200 group-hover/cert:opacity-100">
+                    <Maximize2 className="h-3.5 w-3.5" />
+                    <span>View full certificate</span>
                   </div>
-                </div>
+                </button>
               )}
 
-              <div className="p-8 sm:p-10 space-y-6 text-center">
-                <div>
-                  <span className="text-xs font-mono uppercase tracking-widest text-[#2F5D50] font-semibold">
-                    OFFICIAL ACCREDITATION
-                  </span>
+              {/* Certificate Details */}
+              <div className="p-6 sm:p-8 lg:p-10">
 
-                  <h2 className="text-2xl sm:text-3xl font-bold font-display text-[#1D2A26] mt-1">
+                <div className="border-b border-[#DDD6C8] pb-6">
+                  <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-[#2F5D50]">
+                    Official accreditation
+                  </p>
+
+                  <h2 className="mt-2 font-display text-2xl font-bold leading-tight text-[#1D2A26] sm:text-3xl">
                     {certItem.title}
                   </h2>
 
-                  <div className="text-sm font-mono text-[#D97745] font-semibold mt-1">
-                    Issued by {certItem.issuer} • {certItem.date}
+                  <p className="mt-2 text-sm font-semibold text-[#D97745]">
+                    {certItem.issuer}
+                  </p>
+
+                  <div className="mt-3 flex items-center gap-2 text-sm text-[#6B7280]">
+                    <span>{certItem.date}</span>
                   </div>
                 </div>
 
-                <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-[#4E8D66]/15 text-[#245338] text-xs font-semibold">
-                  <CheckCircle2 className="w-4 h-4" />
-                  <span>Verified Status: {certItem.status}</span>
+                {/* Status */}
+                <div className="flex items-center gap-2 py-6 text-sm font-medium text-[#4E8D66]">
+                  <CheckCircle2 className="h-4 w-4" />
+                  <span>
+                    Verified status: {certItem.status}
+                  </span>
                 </div>
 
-                {certItem.skillsLearned && (
-                  <div className="p-6 rounded-2xl bg-[#F5F1E8] border border-[#DDD6C8] max-w-lg mx-auto text-left space-y-3">
-                    <div className="text-xs font-mono uppercase tracking-wider text-[#6B7280] font-semibold">
-                      Competencies Certified:
-                    </div>
+                {/* Skills */}
+                {certItem.skillsLearned &&
+                  certItem.skillsLearned.length > 0 && (
+                    <div className="border-t border-[#DDD6C8] pt-6">
+                      <p className="mb-4 font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#6B7280]">
+                        Competencies covered
+                      </p>
 
-                    <div className="flex flex-wrap gap-2">
-                      {certItem.skillsLearned.map((s) => (
-                        <span
-                          key={s}
-                          className="px-3 py-1 rounded-xl bg-[#FCFAF6] border border-[#DDD6C8] text-xs font-medium text-[#1D2A26]"
-                        >
-                          ✓ {s}
-                        </span>
-                      ))}
+                      <div className="flex flex-wrap gap-x-4 gap-y-2">
+                        {certItem.skillsLearned.map((skill) => (
+                          <span
+                            key={skill}
+                            className="text-xs text-[#4B5563]"
+                          >
+                            {skill}
+                          </span>
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )}
 
-                <div className="pt-4 flex items-center justify-center space-x-4">
+                {/* Actions */}
+                <div className="mt-8 flex flex-wrap items-center justify-end gap-4 border-t border-[#DDD6C8] pt-6">
                   {certItem.credentialUrl && (
                     <a
                       href={certItem.credentialUrl}
                       target="_blank"
                       rel="noreferrer"
-                      className="px-6 py-2.5 rounded-xl bg-[#2F5D50] text-white text-xs font-semibold flex items-center space-x-2 hover:bg-[#244A40] transition-colors shadow-sm"
+                      className="inline-flex items-center gap-2 rounded-lg bg-[#2F5D50] px-4 py-2.5 text-xs font-semibold text-white transition-colors hover:bg-[#244A40]"
                     >
-                      <span>Verify Credential</span>
-                      <ExternalLink className="w-4 h-4" />
+                      Verify Credential
+                      <ExternalLink className="h-4 w-4" />
                     </a>
                   )}
 
                   <button
+                    type="button"
                     onClick={onClose}
-                    className="px-6 py-2.5 rounded-xl bg-[#F5F1E8] border border-[#DDD6C8] text-[#1D2A26] text-xs font-semibold hover:border-[#2F5D50] hover:text-[#2F5D50] transition-colors"
+                    className="inline-flex items-center gap-2 text-xs font-semibold text-[#1D2A26] transition-colors hover:text-[#2F5D50]"
                   >
-                    Close Window
+                    Close
+                    <X className="h-4 w-4" />
                   </button>
                 </div>
               </div>
@@ -385,48 +423,48 @@ export default function LightboxModal({ item, type, onClose }: LightboxModalProp
           )}
         </motion.div>
 
-        {/* Dedicated Fullscreen Image Zoom Overlay */}
+        {/* Fullscreen Image Viewer */}
         <AnimatePresence>
           {activeZoomImage && (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 z-[20000] flex flex-col items-center justify-center p-4 sm:p-8 bg-black/95 backdrop-blur-2xl cursor-zoom-out"
+              className="fixed inset-0 z-[20000] flex flex-col items-center justify-center bg-[#111827]/95 p-4 sm:p-8"
               onClick={() => setActiveZoomImage(null)}
             >
-              {/* Fullscreen Close Button */}
               <button
+                type="button"
                 onClick={(e) => {
                   e.stopPropagation();
                   setActiveZoomImage(null);
                 }}
-                className="fixed top-4 right-4 sm:top-6 sm:right-6 p-3 sm:p-3.5 rounded-full bg-white/15 hover:bg-white/30 text-white transition-all z-[20020] border border-white/30 shadow-2xl backdrop-blur-md cursor-pointer flex items-center justify-center"
+                className="fixed right-4 top-4 z-[20020] flex h-10 w-10 items-center justify-center rounded-lg border border-white/20 bg-white/10 text-white transition-colors hover:bg-white/20 sm:right-6 sm:top-6"
                 aria-label="Close image preview"
-                title="Close Image View (Esc)"
+                title="Close image view (Esc)"
               >
-                <X className="w-6 h-6" />
+                <X className="h-5 w-5" />
               </button>
 
               <div
-                className="relative max-w-6xl max-h-[85vh] w-full h-full flex items-center justify-center p-2 cursor-default"
+                className="flex h-full w-full max-w-6xl items-center justify-center"
                 onClick={(e) => e.stopPropagation()}
               >
                 <img
                   src={activeZoomImage.src}
                   alt={activeZoomImage.title}
                   referrerPolicy="no-referrer"
-                  className="max-w-full max-h-full object-contain rounded-xl shadow-2xl border border-white/10"
+                  className="max-h-[85vh] max-w-full object-contain"
                 />
               </div>
 
-              <div className="mt-4 text-center z-[20010] pointer-events-none">
-                <h3 className="text-sm sm:text-base font-semibold text-white/90">
+              <div className="pointer-events-none mt-4 text-center">
+                <h3 className="text-sm font-semibold text-white/90 sm:text-base">
                   {activeZoomImage.title}
                 </h3>
 
-                <p className="text-xs text-white/50 mt-1">
-                  Click background or press Esc to close image view
+                <p className="mt-1 text-xs text-white/50">
+                  Click the background or press Esc to close
                 </p>
               </div>
             </motion.div>
