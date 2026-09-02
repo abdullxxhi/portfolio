@@ -187,9 +187,9 @@ export default function About() {
             <div className="space-y-4 text-[#4B5563] text-base leading-relaxed">
 
               <p>
-                I am an{' '}
+                I am a{' '}
                 <strong className="text-[#1D2A26]">
-                  AI Automation Developer & Data Analyst
+                  Data Analyst & AI Automation Developer 
                 </strong>{' '}
                 with a strong background in Statistics and a passion for
                 constructing intelligent solutions that simplify complex
