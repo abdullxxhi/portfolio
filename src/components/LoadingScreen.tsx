@@ -40,7 +40,7 @@ export default function LoadingScreen() {
 
             <div className="text-center">
               <h2 className="text-2xl font-bold font-display text-[#1D2A26] tracking-tight">
-                ABDULLAHI DAMILOLA
+                ABDULLAHI ✯✯ ABDULSALAM
               </h2>
               <div className="flex items-center space-x-2 mt-2 text-xs font-mono text-[#6B7280]">
                 <Cpu className="w-3.5 h-3.5 text-[#2F5D50] animate-spin" />
