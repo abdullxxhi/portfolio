@@ -27,11 +27,16 @@ export default function App() {
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [toastType, setToastType] = useState<'success' | 'error'>('success');
 
-  // Modal Lightbox state
   const [modalItem, setModalItem] = useState<Project | Certification | null>(null);
-  const [modalType, setModalType] = useState<'project' | 'certification' | null>(null);
+  const [modalType, setModalType] = useState<
+    'project' | 'certification' | null
+  >(null);
 
-  // Track the section currently visible to the user
+  /*
+   * Scroll tracking
+   * Keeps the navbar active state synchronized with
+   * the section currently visible on screen.
+   */
   useEffect(() => {
     let ticking = false;
 
@@ -41,15 +46,14 @@ export default function App() {
       );
 
       if (sections.length === 0) {
+        ticking = false;
         return;
       }
 
       const scrollPosition = window.scrollY;
       const viewportHeight = window.innerHeight;
-
-      // Position where a section becomes the active section.
-      // This works consistently on both desktop and mobile.
-      const activationPoint = scrollPosition + viewportHeight * 0.3;
+      const activationPoint =
+        scrollPosition + viewportHeight * 0.3;
 
       let currentSection = 'hero';
 
@@ -78,10 +82,12 @@ export default function App() {
       updateActiveSection();
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('scroll', handleScroll, {
+      passive: true,
+    });
+
     window.addEventListener('resize', handleResize);
 
-    // Set the correct section when the page first loads
     updateActiveSection();
 
     return () => {
@@ -90,44 +96,120 @@ export default function App() {
     };
   }, []);
 
-  // Open the correct section when visiting a hashless URL directly.
-  // Example: /skills -> scroll to <section id="skills">
+  /*
+   * Navigate to a section.
+   *
+   * This is deliberately handled at the App level so both:
+   * - clicking navbar links
+   * - opening /skills, /projects, etc. directly
+   *
+   * use the exact same scrolling behavior.
+   */
   useEffect(() => {
-    const pathname = window.location.pathname.replace(/\/+$/, '') || '/';
+    const getSectionFromPath = () => {
+      const pathname =
+        window.location.pathname.replace(/\/+$/, '') || '/';
 
-    if (pathname === '/') {
-      return;
-    }
+      if (pathname === '/') {
+        return null;
+      }
 
-    const sectionId = pathname.slice(1);
+      return pathname.substring(1);
+    };
 
-    const scrollToSectionFromPath = () => {
+    const scrollToPath = (behavior: ScrollBehavior) => {
+      const sectionId = getSectionFromPath();
+
+      if (!sectionId) {
+        return;
+      }
+
       const section = document.getElementById(sectionId);
 
-      if (section) {
-        const navbarOffset = 88;
-        const sectionPosition =
-          section.getBoundingClientRect().top + window.scrollY - navbarOffset;
-
-        window.scrollTo({
-          top: Math.max(0, sectionPosition),
-          behavior: 'smooth',
-        });
+      if (!section) {
+        return;
       }
+
+      const navbarOffset = 88;
+
+      const targetPosition =
+        section.getBoundingClientRect().top +
+        window.scrollY -
+        navbarOffset;
+
+      window.scrollTo({
+        top: Math.max(0, targetPosition),
+        behavior,
+      });
     };
 
-    // Wait briefly for the page sections to be mounted.
-    const timeoutId = window.setTimeout(scrollToSectionFromPath, 100);
+    /*
+     * Handles navigation events coming from Navbar.
+     */
+    const handlePortfolioNavigation = (
+      event: Event
+    ) => {
+      const customEvent =
+        event as CustomEvent<{ path: string }>;
+
+      if (!customEvent.detail?.path) {
+        return;
+      }
+
+      window.history.pushState(
+        {},
+        '',
+        customEvent.detail.path
+      );
+
+      scrollToPath('smooth');
+    };
+
+    /*
+     * Handles browser Back / Forward.
+     */
+    const handlePopState = () => {
+      scrollToPath('smooth');
+    };
+
+    window.addEventListener(
+      'portfolio:navigate',
+      handlePortfolioNavigation
+    );
+
+    window.addEventListener(
+      'popstate',
+      handlePopState
+    );
+
+    /*
+     * Handles someone opening:
+     *
+     * /about
+     * /skills
+     * /projects
+     * /contact
+     *
+     * directly.
+     */
+    const initialTimeout = window.setTimeout(() => {
+      scrollToPath('auto');
+    }, 150);
 
     return () => {
-      window.clearTimeout(timeoutId);
+      window.removeEventListener(
+        'portfolio:navigate',
+        handlePortfolioNavigation
+      );
+
+      window.removeEventListener(
+        'popstate',
+        handlePopState
+      );
+
+      window.clearTimeout(initialTimeout);
     };
   }, []);
-
-  const handleCopyEmail = () => {
-    navigator.clipboard.writeText(personalInfo.email);
-    showToast('Email address copied to clipboard!', 'success');
-  };
 
   const showToast = (
     message: string,
@@ -136,17 +218,29 @@ export default function App() {
     setToastMessage(message);
     setToastType(type);
 
-    setTimeout(() => {
+    window.setTimeout(() => {
       setToastMessage(null);
     }, 3500);
   };
 
-  const handleOpenProjectLightbox = (project: Project) => {
+  const handleCopyEmail = () => {
+    navigator.clipboard.writeText(personalInfo.email);
+    showToast(
+      'Email address copied to clipboard!',
+      'success'
+    );
+  };
+
+  const handleOpenProjectLightbox = (
+    project: Project
+  ) => {
     setModalItem(project);
     setModalType('project');
   };
 
-  const handleOpenCertModal = (cert: Certification) => {
+  const handleOpenCertModal = (
+    cert: Certification
+  ) => {
     setModalItem(cert);
     setModalType('certification');
   };
@@ -157,26 +251,19 @@ export default function App() {
   };
 
   return (
-    <div className="relative min-h-screen bg-[#F5F1E8] text-[#1D2A26] font-sans selection:bg-[#2F5D50] selection:text-white overflow-x-hidden">
-      {/* 1-Second Loading Screen */}
+    <div className="relative min-h-screen overflow-x-hidden bg-[#F5F1E8] font-sans text-[#1D2A26] selection:bg-[#2F5D50] selection:text-white">
       <LoadingScreen />
 
-      {/* Custom Mouse Cursor */}
       <CustomCursor />
 
-      {/* Scroll Progress Bar at top */}
       <ScrollProgressBar />
 
-      {/* Ambient Background Effects */}
       <BackgroundEffects />
 
-      {/* Floating Back to Top Button */}
       <BackToTopButton />
 
-      {/* Fixed Navbar */}
       <Navbar activeSection={activeSection} />
 
-      {/* Main Sections */}
       <main className="relative z-10">
         <Hero onCopyEmail={handleCopyEmail} />
 
@@ -202,27 +289,22 @@ export default function App() {
         />
       </main>
 
-      {/* Footer */}
       <Footer onCopyEmail={handleCopyEmail} />
 
-      {/* Lightbox / Details Modal */}
       <LightboxModal
         item={modalItem}
         type={modalType}
         onClose={handleCloseModal}
       />
 
-      {/* Toast Notification */}
       <Toast
         message={toastMessage}
         type={toastType}
         onClose={() => setToastMessage(null)}
       />
 
-      {/* Vercel Web Analytics */}
       <Analytics />
 
-      {/* Vercel Speed Insights */}
       <SpeedInsights />
     </div>
   );
