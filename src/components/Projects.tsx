@@ -352,10 +352,10 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
                 duration: 0.3,
                 ease: [0.16, 1, 0.3, 1],
               }}
-              className="relative flex max-h-[94vh] w-full max-w-6xl flex-col overflow-hidden rounded-[16px] border border-[#DDD6C8] bg-[#FCFAF6]"
+              className="relative flex h-[94vh] max-h-[94vh] w-full max-w-6xl flex-col overflow-hidden rounded-[16px] border border-[#DDD6C8] bg-[#FCFAF6]"
             >
               {/* Modal Header / Close */}
-              <div className="sticky top-0 z-30 flex items-center justify-between border-b border-[#DDD6C8] bg-[#FCFAF6] px-4 py-3 sm:px-7 sm:py-4">
+              <div className="relative z-30 flex shrink-0 items-center justify-between border-b border-[#DDD6C8] bg-[#FCFAF6] px-4 py-3 sm:px-7 sm:py-4">
                 <div className="min-w-0 pr-3 sm:pr-4">
                   <p className="font-mono text-[9px] font-semibold uppercase tracking-[0.16em] text-[#6B7280] sm:text-[10px]">
                     Project details
@@ -372,27 +372,16 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
                   type="button"
                   onClick={closeProjectDetails}
                   aria-label="Hide project details"
-                  className="group flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border-2 border-[#2F5D50] bg-[#FCFAF6] text-[#2F5D50] shadow-sm transition-colors hover:bg-[#2F5D50] hover:text-white sm:h-10 sm:w-10"
+                  className="group flex h-11 shrink-0 items-center justify-center gap-2 rounded-lg border-2 border-[#2F5D50] bg-[#FCFAF6] px-3 text-xs font-semibold text-[#2F5D50] shadow-sm transition-colors hover:bg-[#2F5D50] hover:text-white sm:h-10 sm:w-10 sm:px-0"
                 >
                   <X className="h-5 w-5 transition-transform duration-200 group-hover:rotate-90" />
+                  <span className="sm:hidden">Hide details</span>
                 </button>
               </div>
 
               {/* Modal Content */}
-              <div className="min-h-0 overflow-y-auto">
+              <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain">
                 <div className="p-5 sm:p-7 lg:p-9">
-                  <div className="sticky top-0 z-20 -mx-5 -mt-5 mb-6 flex justify-end bg-[#FCFAF6]/95 px-5 py-2 backdrop-blur-sm sm:hidden">
-                    <button
-                      type="button"
-                      onClick={closeProjectDetails}
-                      aria-label="Hide project details"
-                      className="flex items-center gap-2 rounded-lg border-2 border-[#2F5D50] bg-[#FCFAF6] px-3.5 py-2 text-xs font-semibold text-[#2F5D50] shadow-sm"
-                    >
-                      <X className="h-4 w-4" />
-                      Hide details
-                    </button>
-                  </div>
-
                   <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_300px] lg:gap-14">
                     {/* Main Content */}
                     <div className="min-w-0">
