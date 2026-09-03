@@ -27,10 +27,33 @@ export default function Navbar({ activeSection }: NavbarProps) {
     };
 
     handleScroll();
+
     window.addEventListener('scroll', handleScroll, { passive: true });
 
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
+
+  const scrollToSection = (sectionId: string) => {
+    const target = document.getElementById(sectionId);
+
+    if (!target) {
+      return;
+    }
+
+    const navOffset = 76;
+
+    const targetPosition =
+      target.getBoundingClientRect().top +
+      window.scrollY -
+      navOffset;
+
+    window.scrollTo({
+      top: Math.max(0, targetPosition),
+      behavior: 'smooth',
+    });
+  };
 
   const navigateToSection = (
     event: React.MouseEvent<HTMLAnchorElement>,
@@ -39,29 +62,28 @@ export default function Navbar({ activeSection }: NavbarProps) {
   ) => {
     event.preventDefault();
 
-    const target = document.getElementById(sectionId);
-
-    if (!target) return;
-
     setMobileMenuOpen(false);
 
-    const navOffset = 76;
-    const targetPosition =
-      target.getBoundingClientRect().top + window.scrollY - navOffset;
-
+    // Update the browser URL without reloading the page.
     window.history.pushState({}, '', path);
 
-    window.scrollTo({
-      top: Math.max(0, targetPosition),
-      behavior: 'smooth',
-    });
+    // Scroll to the corresponding section.
+    scrollToSection(sectionId);
   };
 
-  const handleBrandClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+  const handleBrandClick = (
+    event: React.MouseEvent<HTMLAnchorElement>
+  ) => {
     event.preventDefault();
+
     setMobileMenuOpen(false);
+
     window.history.pushState({}, '', '/');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
   };
 
   const handleHireMeClick = (
@@ -100,7 +122,11 @@ export default function Navbar({ activeSection }: NavbarProps) {
                 key={link.name}
                 href={link.path}
                 onClick={(event) =>
-                  navigateToSection(event, link.path, link.id)
+                  navigateToSection(
+                    event,
+                    link.path,
+                    link.id
+                  )
                 }
                 className={`relative py-2 text-xs font-medium transition-colors duration-200 ${
                   isActive
@@ -151,8 +177,14 @@ export default function Navbar({ activeSection }: NavbarProps) {
 
           <button
             type="button"
-            onClick={() => setMobileMenuOpen((open) => !open)}
-            aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
+            onClick={() =>
+              setMobileMenuOpen((open) => !open)
+            }
+            aria-label={
+              mobileMenuOpen
+                ? 'Close menu'
+                : 'Open menu'
+            }
             aria-expanded={mobileMenuOpen}
             className="flex h-9 w-9 items-center justify-center rounded-lg border border-[#DDD6C8] bg-[#FCFAF6] text-[#1D2A26] transition-colors duration-200 hover:border-[#2F5D50] hover:text-[#2F5D50]"
           >
@@ -169,9 +201,18 @@ export default function Navbar({ activeSection }: NavbarProps) {
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
+            initial={{
+              opacity: 0,
+              height: 0,
+            }}
+            animate={{
+              opacity: 1,
+              height: 'auto',
+            }}
+            exit={{
+              opacity: 0,
+              height: 0,
+            }}
             transition={{
               duration: 0.2,
               ease: [0.16, 1, 0.3, 1],
@@ -181,14 +222,19 @@ export default function Navbar({ activeSection }: NavbarProps) {
             <nav className="mx-auto max-w-7xl px-4 py-4 sm:px-6">
               <div className="divide-y divide-[#DDD6C8] border-y border-[#DDD6C8]">
                 {navLinks.map((link) => {
-                  const isActive = activeSection === link.id;
+                  const isActive =
+                    activeSection === link.id;
 
                   return (
                     <a
                       key={link.name}
                       href={link.path}
                       onClick={(event) =>
-                        navigateToSection(event, link.path, link.id)
+                        navigateToSection(
+                          event,
+                          link.path,
+                          link.id
+                        )
                       }
                       className={`flex items-center justify-between py-3.5 text-sm font-medium transition-colors duration-200 ${
                         isActive
