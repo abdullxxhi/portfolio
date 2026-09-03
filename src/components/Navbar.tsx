@@ -12,13 +12,13 @@ export default function Navbar({ activeSection }: NavbarProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navLinks = [
-    { name: 'About', href: '#about' },
-    { name: 'Skills', href: '#skills' },
-    { name: 'Projects', href: '#projects' },
-    { name: 'Certifications', href: '#certifications' },
-    { name: 'Education', href: '#education' },
-    { name: 'Experience', href: '#experience' },
-    { name: 'Contact', href: '#contact' },
+    { name: 'About', path: '/about', id: 'about' },
+    { name: 'Skills', path: '/skills', id: 'skills' },
+    { name: 'Projects', path: '/projects', id: 'projects' },
+    { name: 'Certifications', path: '/certifications', id: 'certifications' },
+    { name: 'Education', path: '/education', id: 'education' },
+    { name: 'Experience', path: '/experience', id: 'experience' },
+    { name: 'Contact', path: '/contact', id: 'contact' },
   ];
 
   useEffect(() => {
@@ -27,44 +27,47 @@ export default function Navbar({ activeSection }: NavbarProps) {
     };
 
     handleScroll();
-
     window.addEventListener('scroll', handleScroll, { passive: true });
 
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const scrollToSection = (
-    e: React.MouseEvent<HTMLAnchorElement>,
-    href: string
+  const navigateToSection = (
+    event: React.MouseEvent<HTMLAnchorElement>,
+    path: string,
+    sectionId: string
   ) => {
-    e.preventDefault();
+    event.preventDefault();
 
-    const sectionId = href.replace('#', '');
     const target = document.getElementById(sectionId);
 
-    if (!target) {
-      return;
-    }
+    if (!target) return;
 
     setMobileMenuOpen(false);
 
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        const navOffset = 76;
+    const navOffset = 76;
+    const targetPosition =
+      target.getBoundingClientRect().top + window.scrollY - navOffset;
 
-        const targetPosition =
-          target.getBoundingClientRect().top +
-          window.scrollY -
-          navOffset;
+    window.history.pushState({}, '', path);
 
-        window.scrollTo({
-          top: Math.max(0, targetPosition),
-          behavior: 'smooth',
-        });
-
-        window.history.replaceState(null, '', href);
-      });
+    window.scrollTo({
+      top: Math.max(0, targetPosition),
+      behavior: 'smooth',
     });
+  };
+
+  const handleBrandClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+    setMobileMenuOpen(false);
+    window.history.pushState({}, '', '/');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleHireMeClick = (
+    event: React.MouseEvent<HTMLAnchorElement>
+  ) => {
+    navigateToSection(event, '/contact', 'contact');
   };
 
   return (
@@ -78,8 +81,8 @@ export default function Navbar({ activeSection }: NavbarProps) {
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Brand */}
         <a
-          href="#hero"
-          onClick={(e) => scrollToSection(e, '#hero')}
+          href="/"
+          onClick={handleBrandClick}
           className="group flex items-center"
         >
           <span className="font-display text-sm font-bold tracking-tight text-[#1D2A26] transition-colors duration-200 group-hover:text-[#2F5D50]">
@@ -90,13 +93,15 @@ export default function Navbar({ activeSection }: NavbarProps) {
         {/* Desktop Navigation */}
         <nav className="hidden items-center gap-6 lg:flex">
           {navLinks.map((link) => {
-            const isActive = activeSection === link.href.substring(1);
+            const isActive = activeSection === link.id;
 
             return (
               <a
                 key={link.name}
-                href={link.href}
-                onClick={(e) => scrollToSection(e, link.href)}
+                href={link.path}
+                onClick={(event) =>
+                  navigateToSection(event, link.path, link.id)
+                }
                 className={`relative py-2 text-xs font-medium transition-colors duration-200 ${
                   isActive
                     ? 'text-[#2F5D50]'
@@ -124,8 +129,8 @@ export default function Navbar({ activeSection }: NavbarProps) {
         {/* Desktop CTA */}
         <div className="hidden lg:flex">
           <a
-            href="#contact"
-            onClick={(e) => scrollToSection(e, '#contact')}
+            href="/contact"
+            onClick={handleHireMeClick}
             className="inline-flex items-center gap-1.5 rounded-lg bg-[#2F5D50] px-4 py-2 text-xs font-semibold text-white transition-colors duration-200 hover:bg-[#244A40]"
           >
             <span>Hire Me</span>
@@ -136,8 +141,8 @@ export default function Navbar({ activeSection }: NavbarProps) {
         {/* Mobile Controls */}
         <div className="flex items-center gap-2 lg:hidden">
           <a
-            href="#contact"
-            onClick={(e) => scrollToSection(e, '#contact')}
+            href="/contact"
+            onClick={handleHireMeClick}
             className="inline-flex items-center gap-1 rounded-lg bg-[#2F5D50] px-3.5 py-2 text-xs font-semibold text-white transition-colors duration-200 hover:bg-[#244A40]"
           >
             <span>Hire Me</span>
@@ -176,14 +181,15 @@ export default function Navbar({ activeSection }: NavbarProps) {
             <nav className="mx-auto max-w-7xl px-4 py-4 sm:px-6">
               <div className="divide-y divide-[#DDD6C8] border-y border-[#DDD6C8]">
                 {navLinks.map((link) => {
-                  const isActive =
-                    activeSection === link.href.substring(1);
+                  const isActive = activeSection === link.id;
 
                   return (
                     <a
                       key={link.name}
-                      href={link.href}
-                      onClick={(e) => scrollToSection(e, link.href)}
+                      href={link.path}
+                      onClick={(event) =>
+                        navigateToSection(event, link.path, link.id)
+                      }
                       className={`flex items-center justify-between py-3.5 text-sm font-medium transition-colors duration-200 ${
                         isActive
                           ? 'text-[#2F5D50]'
