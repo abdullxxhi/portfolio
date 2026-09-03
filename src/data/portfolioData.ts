@@ -91,6 +91,8 @@ export const personalInfo: PersonalInfo = {
   bio: "I am a Data Analyst & AI Automation Developer with a background in Statistics and a passion for turning data into useful insights and practical solutions. I specialize in data analysis, business intelligence, dashboard development, and workflow automation. My experience spans Microsoft Excel, SQL, Power BI, Google Apps Script, and AI-powered workflow automation. I enjoy solving real-world problems by combining analytical thinking with automation to improve decision-making, reduce repetitive work, and increase productivity.",
 };
 
+aboutHeadline: "Turning data into clear insights and building practical solutions that improve decisions, reduce repetitive work, and increase productivity.",
+
 export const statsData: StatItem[] = [
   {
     id: "stat-1",
