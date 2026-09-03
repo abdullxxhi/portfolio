@@ -14,7 +14,6 @@ import profilePic from '../assets/images/profile_portrait_1785602306698.jpg';
 import projectTicketImg from '../assets/images/project_ticket_auto_1785604298687.jpg';
 import projectSalesImg from '../assets/images/project_sales_dash_1785604311537.jpg';
 import projectPowerBiImg from '../assets/images/project_powerbi_dash_1785604325124.jpg';
-import projectUfcImg from '../assets/images/project_ufc_analys_1785604336953.jpg';
 import projectTransportImg from '../assets/images/project_transport_a_1785604349850.jpg';
 import projectSeleemImg from '../assets/images/project_seleem_bakery_1785607080040.jpg';
 import projectSeleemVideo from '../assets/images/seleem-bakery-1.mp4';
@@ -39,10 +38,10 @@ import projectOrderPickupImg from '../assets/images/02-pickup-order-workflow.png
 import projectOrderOtherImg from '../assets/images/03-other-order-workflow.png';
 import projectOrderIncompleteImg from '../assets/images/04-incomplete-order-workflow.png';
 import projectOrderSheetImg from '../assets/images/05-order-management-sheet.png';
-import projectOrderTelegramDeliveryImg from '../assets/images/06-telegram-delivery-notification.png';
-import projectOrderTelegramPickupImg from '../assets/images/07-telegram-pickup-notification.png';
-import projectOrderTelegramHumanImg from '../assets/images/08-telegram-human-intervention.png';
-import projectOrderTelegramClarificationImg from '../assets/images/09-telegram-order-clarification.png';
+import projectOrderTelegramDeliveryImg from '../assets/images/06-delivery-order-workflow.png';
+import projectOrderTelegramPickupImg from '../assets/images/07-pickup-order-workflow.png';
+import projectOrderTelegramHumanImg from '../assets/images/08-human-intervention.png';
+import projectOrderTelegramClarificationImg from '../assets/images/09-order-clarification.png';
 
 // AI Email Triage & Response System images
 import projectEmailTriageOverviewImg from '../assets/images/01-workflow-overview.png';
@@ -75,6 +74,13 @@ import projectForecastEtsImg from '../assets/images/04-ets-forecast.png';
 import projectWeeklyForecastDashboardImg from '../assets/images/dashbordAI.png';
 import projectWeeklyForecastDataImg from '../assets/images/sales-transac-data.png';
 import projectWeeklyForecastMovingAverageImg from '../assets/images/moving-average.png';
+
+// A.M. BIBIRE NIG LIMITED Website images
+import projectBibire1Img from '../assets/images/bibire1.png';
+import projectBibire2Img from '../assets/images/bibire2.png';
+import projectBibire3Img from '../assets/images/bibire3.png';
+import projectBibire4Img from '../assets/images/bibire4.png';
+import projectBibire5Img from '../assets/images/bibire5.jpeg';
 
 
 export const personalInfo: PersonalInfo = {
@@ -132,7 +138,7 @@ export const statsData: StatItem[] = [
 ];
 
 export const skillCategories: SkillCategory[] = [
-{
+  {
     title: "Data Analysis",
     icon: "BarChart3",
     description: "Transforming raw data into actionable executive insights through exploratory analysis, data cleaning, and BI reporting.",
@@ -147,7 +153,7 @@ export const skillCategories: SkillCategory[] = [
       "Reporting"
     ]
   },
-{
+  {
     title: "Advanced Excel",
     icon: "FileSpreadsheet",
     description: "Mastery over complex formulas, dynamic array functions, pivot modeling, and custom conditional logic.",
@@ -162,7 +168,7 @@ export const skillCategories: SkillCategory[] = [
       "Data Validation"
     ]
   },
-{
+  {
     title: "Programming & Databases",
     icon: "Code",
     description: "Scripting custom automated triggers and querying relational database architectures.",
@@ -173,7 +179,7 @@ export const skillCategories: SkillCategory[] = [
       "PostgreSQL"
     ]
   },
-{
+  {
     title: "AI Automation",
     icon: "Bot",
     description: "Designing autonomous workflow automations, intelligent AI agents, and automated Google Workspace pipelines.",
@@ -188,7 +194,7 @@ export const skillCategories: SkillCategory[] = [
       "Email Automation"
     ]
   },
-{
+  {
     title: "Google Workspace & Productivity",
     icon: "Layers",
     description: "Seamless integration across Google Cloud productivity applications for serverless automation.",
@@ -200,7 +206,7 @@ export const skillCategories: SkillCategory[] = [
       "Gmail Automation"
     ]
   },
-{
+  {
     title: "Soft Skills & Mindset",
     icon: "Sparkles",
     description: "Methodical statistical approach combined with high attention to detail and continuous learning.",
@@ -486,29 +492,6 @@ export const projectsData: Project[] = [
       "Multi-tab breakdown for Revenue, Operational Efficiency, and Customer Metrics.",
       "Interactive drill-down reports with custom DAX measures.",
       "Real-time visual monitoring with intuitive warm theme."
-    ]
-  },
-
-  {
-    id: "proj-7",
-    title: "UFC Fighter Data Analysis (Islam Makhachev)",
-    category: "Data Analysis",
-    featured: false,
-    description: "Performed exploratory data analysis on UFC Lightweight Champion Islam Makhachev's fight statistics, analyzing striking accuracy, takedown efficiency, control time metrics, and fight outcomes using SQL and Excel.",
-    tags: [
-      "Islam Makhachev",
-      "UFC Analytics",
-      "SQL",
-      "Excel",
-      "Data Analysis"
-    ],
-    mediaUrl: projectUfcImg,
-    demoUrl: "https://github.com/abdullxxhi",
-    githubUrl: "https://github.com/abdullxxhi",
-    keyHighlights: [
-      "SQL data cleaning and normalization across Islam Makhachev's career fight performance records.",
-      "Statistical modeling analyzing takedown accuracy, striking defense, and control time vs. win percentage.",
-      "Comprehensive performance breakdown report highlighting career victory trajectories."
     ]
   },
 
@@ -836,8 +819,9 @@ export const projectsData: Project[] = [
         caption: "Shows the generated quality report summarizing records processed, corrections made, data-quality issues identified, and records requiring human review."
       }
     ]
-  }
-    {
+  },
+
+  {
     id: "proj-15",
     title: "A.M. BIBIRE NIG LIMITED Website",
     category: "WEB DEVELOPMENT",
