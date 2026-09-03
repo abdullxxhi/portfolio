@@ -2,13 +2,14 @@ import { useMemo, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   ChevronDown,
+  ExternalLink,
   Filter,
   FolderGit2,
+  Github,
 } from 'lucide-react';
 
 import { projectsData } from '../data/portfolioData';
 import { Project } from '../types';
-import ProjectCard from './ProjectCard';
 
 interface ProjectsProps {
   onOpenLightbox: (project: Project) => void;
@@ -16,12 +17,11 @@ interface ProjectsProps {
 
 const PROJECTS_PER_LOAD = 4;
 
-export default function Projects({
-  onOpenLightbox,
-}: ProjectsProps) {
+export default function Projects({ onOpenLightbox }: ProjectsProps) {
   const [activeFilter, setActiveFilter] = useState('All');
-  const [visibleCount, setVisibleCount] = useState(
-    PROJECTS_PER_LOAD
+  const [visibleCount, setVisibleCount] = useState(PROJECTS_PER_LOAD);
+  const [expandedProjectId, setExpandedProjectId] = useState<string | null>(
+    null
   );
 
   const orderedProjects = useMemo(
@@ -47,38 +47,34 @@ export default function Projects({
   );
 
   const filteredProjects = useMemo(() => {
-    if (activeFilter === 'All') {
-      return orderedProjects;
-    }
+    if (activeFilter === 'All') return orderedProjects;
 
     return orderedProjects.filter(
       (project) => project.category === activeFilter
     );
   }, [activeFilter, orderedProjects]);
 
-  const visibleProjects = filteredProjects.slice(
-    0,
-    visibleCount
-  );
+  const visibleProjects = filteredProjects.slice(0, visibleCount);
 
-  const hasMoreProjects =
-    visibleCount < filteredProjects.length;
-
-  const remainingProjects =
-    filteredProjects.length - visibleCount;
+  const hasMoreProjects = visibleCount < filteredProjects.length;
+  const remainingProjects = filteredProjects.length - visibleCount;
 
   const handleLoadMore = () => {
     setVisibleCount((current) =>
-      Math.min(
-        current + PROJECTS_PER_LOAD,
-        filteredProjects.length
-      )
+      Math.min(current + PROJECTS_PER_LOAD, filteredProjects.length)
     );
   };
 
   const handleFilterChange = (category: string) => {
     setActiveFilter(category);
     setVisibleCount(PROJECTS_PER_LOAD);
+    setExpandedProjectId(null);
+  };
+
+  const toggleProject = (projectId: string) => {
+    setExpandedProjectId((current) =>
+      current === projectId ? null : projectId
+    );
   };
 
   return (
@@ -86,16 +82,12 @@ export default function Projects({
       id="projects"
       className="relative z-10 bg-[#F5F1E8] py-24 sm:py-28"
     >
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{
-            once: true,
-            margin: '-60px',
-          }}
+          viewport={{ once: true, margin: '-60px' }}
           transition={{ duration: 0.45 }}
           className="mb-10 max-w-3xl"
         >
@@ -103,7 +95,6 @@ export default function Projects({
             <span className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-[#2F5D50]">
               03 / Projects
             </span>
-
             <span className="h-px w-10 bg-[#DDD6C8]" />
           </div>
 
@@ -121,34 +112,24 @@ export default function Projects({
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{
-            once: true,
-            margin: '-60px',
-          }}
+          viewport={{ once: true, margin: '-60px' }}
           transition={{ duration: 0.4 }}
           className="mb-12 overflow-x-auto pb-1"
         >
           <div className="flex min-w-max items-center gap-5 border-y border-[#DDD6C8] py-3">
-
             <div className="flex items-center gap-2 pr-2 text-xs font-medium text-[#6B7280]">
               <Filter className="h-3.5 w-3.5" />
-
-              <span className="hidden sm:inline">
-                Filter
-              </span>
+              <span className="hidden sm:inline">Filter</span>
             </div>
 
             {categories.map((category) => {
-              const isActive =
-                activeFilter === category;
+              const isActive = activeFilter === category;
 
               return (
                 <button
                   key={category}
                   type="button"
-                  onClick={() =>
-                    handleFilterChange(category)
-                  }
+                  onClick={() => handleFilterChange(category)}
                   className={`relative whitespace-nowrap py-1 text-xs font-semibold transition-colors duration-200 ${
                     isActive
                       ? 'text-[#2F5D50]'
@@ -188,65 +169,312 @@ export default function Projects({
 
           <span className="font-mono text-xs text-[#6B7280]">
             {filteredProjects.length}{' '}
-            {filteredProjects.length === 1
-              ? 'project'
-              : 'projects'}
+            {filteredProjects.length === 1 ? 'project' : 'projects'}
           </span>
         </div>
 
-        {/* Project Grid */}
+        {/* Editorial Project List */}
         {visibleProjects.length > 0 ? (
-          <AnimatePresence mode="popLayout">
-            <motion.div
-              layout
-              className="grid grid-cols-1 gap-10 lg:grid-cols-2"
-            >
-              {visibleProjects.map((project, index) => (
-                <motion.div
-                  key={project.id}
-                  layout
-                  initial={{
-                    opacity: 0,
-                    y: 18,
-                  }}
-                  animate={{
-                    opacity: 1,
-                    y: 0,
-                  }}
-                  exit={{
-                    opacity: 0,
-                    y: -12,
-                  }}
-                  transition={{
-                    duration: 0.4,
-                    delay:
-                      (index % PROJECTS_PER_LOAD) *
-                      0.06,
-                    ease: [0.16, 1, 0.3, 1],
-                  }}
-                >
-                  <ProjectCard
-                    project={project}
-                    onOpenLightbox={onOpenLightbox}
-                  />
-                </motion.div>
-              ))}
-            </motion.div>
-          </AnimatePresence>
+          <div className="border-y border-[#DDD6C8]">
+            <AnimatePresence initial={false} mode="popLayout">
+              {visibleProjects.map((project, index) => {
+                const isExpanded = expandedProjectId === project.id;
+                const screenshots = project.automationScreenshots ?? [];
+
+                return (
+                  <motion.article
+                    key={project.id}
+                    layout
+                    initial={{ opacity: 0, y: 18 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -12 }}
+                    transition={{
+                      duration: 0.4,
+                      delay: (index % PROJECTS_PER_LOAD) * 0.05,
+                      ease: [0.16, 1, 0.3, 1],
+                    }}
+                    className="border-b border-[#DDD6C8] last:border-b-0"
+                  >
+                    {/* Project Summary */}
+                    <button
+                      type="button"
+                      onClick={() => toggleProject(project.id)}
+                      aria-expanded={isExpanded}
+                      className="group w-full text-left"
+                    >
+                      <div className="grid gap-5 py-8 sm:grid-cols-[64px_1fr_auto] sm:items-center sm:gap-7 sm:py-10">
+                        <span className="font-mono text-xs font-semibold text-[#6B7280]">
+                          {String(
+                            orderedProjects.findIndex(
+                              (item) => item.id === project.id
+                            ) + 1
+                          ).padStart(2, '0')}
+                        </span>
+
+                        <div className="min-w-0">
+                          <div className="mb-2 flex flex-wrap items-center gap-x-3 gap-y-2">
+                            <h3 className="font-display text-xl font-bold tracking-tight text-[#1D2A26] transition-colors duration-200 group-hover:text-[#2F5D50] sm:text-2xl">
+                              {project.title}
+                            </h3>
+
+                            <span className="rounded-full border border-[#DDD6C8] bg-[#FCFAF6] px-2.5 py-1 text-[10px] font-mono font-medium uppercase tracking-wide text-[#6B7280]">
+                              {project.category}
+                            </span>
+                          </div>
+
+                          <p className="max-w-3xl text-sm leading-6 text-[#4B5563]">
+                            {project.description}
+                          </p>
+                        </div>
+
+                        <div className="flex items-center justify-between gap-4 sm:justify-end">
+                          <span className="text-xs font-semibold text-[#2F5D50]">
+                            {isExpanded ? 'Hide project' : 'View project'}
+                          </span>
+
+                          <span
+                            className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[#DDD6C8] bg-[#FCFAF6] text-[#2F5D50] transition-all duration-300 group-hover:border-[#2F5D50] ${
+                              isExpanded ? 'rotate-180' : ''
+                            }`}
+                          >
+                            <ChevronDown className="h-4 w-4" />
+                          </span>
+                        </div>
+                      </div>
+                    </button>
+
+                    {/* Expanded Project */}
+                    <AnimatePresence initial={false}>
+                      {isExpanded && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: 'auto', opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{
+                            height: {
+                              duration: 0.4,
+                              ease: [0.16, 1, 0.3, 1],
+                            },
+                            opacity: { duration: 0.25 },
+                          }}
+                          className="overflow-hidden"
+                        >
+                          <div className="border-t border-[#DDD6C8] pb-10 pt-8 sm:pb-12 sm:pt-10">
+                            <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_300px] lg:gap-14">
+                              {/* Main Content */}
+                              <div className="min-w-0">
+                                {/* Primary Media */}
+                                {project.mediaUrl && (
+                                  <button
+                                    type="button"
+                                    onClick={() => onOpenLightbox(project)}
+                                    className="group mb-8 block w-full overflow-hidden rounded-xl border border-[#DDD6C8] bg-[#FCFAF6] text-left"
+                                    aria-label={`Open ${project.title} images`}
+                                  >
+                                    <div className="overflow-hidden">
+                                      <img
+                                        src={project.mediaUrl}
+                                        alt={`${project.title} project preview`}
+                                        className="block h-auto max-h-[520px] w-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.015]"
+                                      />
+                                    </div>
+                                    <div className="flex items-center justify-between border-t border-[#DDD6C8] px-4 py-3">
+                                      <span className="text-xs font-medium text-[#6B7280]">
+                                        Open project gallery
+                                      </span>
+                                      <ExternalLink className="h-3.5 w-3.5 text-[#2F5D50]" />
+                                    </div>
+                                  </button>
+                                )}
+
+                                {/* Full Description */}
+                                <div className="mb-10">
+                                  <p className="mb-3 font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#6B7280]">
+                                    About the project
+                                  </p>
+                                  <p className="max-w-3xl text-sm leading-7 text-[#4B5563] sm:text-base">
+                                    {project.description}
+                                  </p>
+                                </div>
+
+                                {/* Key Highlights */}
+                                {project.keyHighlights?.length > 0 && (
+                                  <div className="mb-10">
+                                    <p className="mb-4 font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#6B7280]">
+                                      What I did
+                                    </p>
+
+                                    <div className="divide-y divide-[#DDD6C8] border-y border-[#DDD6C8]">
+                                      {project.keyHighlights.map(
+                                        (highlight, highlightIndex) => (
+                                          <div
+                                            key={highlightIndex}
+                                            className="flex items-start gap-4 py-4"
+                                          >
+                                            <span className="mt-1 font-mono text-[10px] font-semibold text-[#2F5D50]">
+                                              {String(
+                                                highlightIndex + 1
+                                              ).padStart(2, '0')}
+                                            </span>
+                                            <p className="text-sm leading-6 text-[#4B5563]">
+                                              {highlight}
+                                            </p>
+                                          </div>
+                                        )
+                                      )}
+                                    </div>
+                                  </div>
+                                )}
+
+                                {/* Screenshots */}
+                                {screenshots.length > 0 && (
+                                  <div className="mb-10">
+                                    <div className="mb-4 flex items-end justify-between gap-4">
+                                      <div>
+                                        <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#6B7280]">
+                                          Project visuals
+                                        </p>
+                                        <p className="mt-1 text-sm text-[#4B5563]">
+                                          A closer look at the work behind this
+                                          project.
+                                        </p>
+                                      </div>
+
+                                      <button
+                                        type="button"
+                                        onClick={() => onOpenLightbox(project)}
+                                        className="hidden text-xs font-semibold text-[#2F5D50] hover:underline sm:block"
+                                      >
+                                        View all
+                                      </button>
+                                    </div>
+
+                                    <div className="grid gap-5 sm:grid-cols-2">
+                                      {screenshots.map((screenshot, screenshotIndex) => (
+                                        <button
+                                          key={`${screenshot.title}-${screenshotIndex}`}
+                                          type="button"
+                                          onClick={() => onOpenLightbox(project)}
+                                          className="group overflow-hidden rounded-xl border border-[#DDD6C8] bg-[#FCFAF6] text-left"
+                                        >
+                                          <div className="overflow-hidden bg-[#F5F1E8]">
+                                            <img
+                                              src={screenshot.image}
+                                              alt={screenshot.title}
+                                              className="block h-48 w-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.02]"
+                                            />
+                                          </div>
+                                          <div className="border-t border-[#DDD6C8] p-4">
+                                            <p className="text-sm font-semibold text-[#1D2A26]">
+                                              {screenshot.title}
+                                            </p>
+                                            {screenshot.caption && (
+                                              <p className="mt-1.5 text-xs leading-5 text-[#6B7280]">
+                                                {screenshot.caption}
+                                              </p>
+                                            )}
+                                          </div>
+                                        </button>
+                                      ))}
+                                    </div>
+                                  </div>
+                                )}
+
+                                {/* Video */}
+                                {project.videoUrl && (
+                                  <div className="mb-10">
+                                    <p className="mb-4 font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#6B7280]">
+                                      Project walkthrough
+                                    </p>
+                                    <div className="overflow-hidden rounded-xl border border-[#DDD6C8] bg-[#FCFAF6]">
+                                      <video
+                                        src={project.videoUrl}
+                                        controls
+                                        playsInline
+                                        className="block w-full"
+                                      />
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+
+                              {/* Project Meta */}
+                              <aside className="lg:border-l lg:border-[#DDD6C8] lg:pl-8">
+                                <div className="lg:sticky lg:top-28">
+                                  <div className="mb-8">
+                                    <p className="mb-3 font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#6B7280]">
+                                      Tools & skills
+                                    </p>
+
+                                    <div className="flex flex-wrap gap-2">
+                                      {project.tags.map((tag) => (
+                                        <span
+                                          key={tag}
+                                          className="rounded-full border border-[#DDD6C8] bg-[#FCFAF6] px-2.5 py-1.5 text-[11px] font-medium text-[#4B5563]"
+                                        >
+                                          {tag}
+                                        </span>
+                                      ))}
+                                    </div>
+                                  </div>
+
+                                  <div className="border-y border-[#DDD6C8]">
+                                    {project.githubUrl && (
+                                      <a
+                                        href={project.githubUrl}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        className="flex items-center justify-between gap-4 py-4 text-sm font-semibold text-[#2F5D50] transition-colors hover:text-[#1D2A26]"
+                                      >
+                                        <span className="flex items-center gap-2">
+                                          <Github className="h-4 w-4" />
+                                          GitHub
+                                        </span>
+                                        <ExternalLink className="h-3.5 w-3.5" />
+                                      </a>
+                                    )}
+
+                                    {project.demoUrl && (
+                                      <a
+                                        href={project.demoUrl}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        className="flex items-center justify-between gap-4 border-t border-[#DDD6C8] py-4 text-sm font-semibold text-[#2F5D50] transition-colors hover:text-[#1D2A26]"
+                                      >
+                                        <span className="flex items-center gap-2">
+                                          <ExternalLink className="h-4 w-4" />
+                                          Live / Demo
+                                        </span>
+                                        <ExternalLink className="h-3.5 w-3.5" />
+                                      </a>
+                                    )}
+                                  </div>
+
+                                  <button
+                                    type="button"
+                                    onClick={() => onOpenLightbox(project)}
+                                    className="mt-6 w-full rounded-lg border border-[#2F5D50] bg-[#2F5D50] px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#244A40]"
+                                  >
+                                    Open full case study
+                                  </button>
+                                </div>
+                              </aside>
+                            </div>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </motion.article>
+                );
+              })}
+            </AnimatePresence>
+          </div>
         ) : (
           /* Empty State */
           <motion.div
-            initial={{
-              opacity: 0,
-              y: 16,
-            }}
-            animate={{
-              opacity: 1,
-              y: 0,
-            }}
-            transition={{
-              duration: 0.4,
-            }}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
             className="border-y border-[#DDD6C8] py-16 text-center sm:py-20"
           >
             <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-lg border border-[#DDD6C8] bg-[#FCFAF6]">
@@ -259,9 +487,7 @@ export default function Projects({
 
             <button
               type="button"
-              onClick={() =>
-                handleFilterChange('All')
-              }
+              onClick={() => handleFilterChange('All')}
               className="mt-5 rounded-lg bg-[#2F5D50] px-4 py-2.5 text-xs font-semibold text-white transition-colors hover:bg-[#244A40]"
             >
               Reset Filter
@@ -272,78 +498,48 @@ export default function Projects({
         {/* Load More */}
         {hasMoreProjects && (
           <motion.div
-            initial={{
-              opacity: 0,
-              y: 14,
-            }}
-            whileInView={{
-              opacity: 1,
-              y: 0,
-            }}
-            viewport={{
-              once: true,
-              amount: 0.2,
-            }}
-            transition={{
-              duration: 0.45,
-              delay: 0.05,
-            }}
+            initial={{ opacity: 0, y: 14 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.45, delay: 0.05 }}
             className="mt-14 flex flex-col items-center"
           >
             <motion.button
               type="button"
               onClick={handleLoadMore}
-              whileHover={{
-                y: -2,
-              }}
-              whileTap={{
-                scale: 0.98,
-              }}
-              className="group relative inline-flex items-center gap-4 overflow-hidden rounded-xl border border-[#2F5D50] bg-[#FCFAF6] px-7 py-3.5 text-sm font-semibold text-[#2F5D50] shadow-[0_4px_16px_rgba(47,93,80,0.06)] transition-all duration-300 hover:bg-[#2F5D50] hover:text-white hover:shadow-[0_10px_28px_rgba(47,93,80,0.12)]"
+              whileHover={{ y: -2 }}
+              whileTap={{ scale: 0.98 }}
+              className="inline-flex items-center gap-3 rounded-lg border border-[#2F5D50] bg-[#FCFAF6] px-6 py-3 text-sm font-semibold text-[#2F5D50] transition-colors duration-200 hover:bg-[#2F5D50] hover:text-white"
             >
-              <span>
-                Load More Projects
-              </span>
-
-              <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#2F5D50]/10 transition-all duration-300 group-hover:bg-white/15">
-                <ChevronDown className="h-4 w-4 transition-transform duration-300 group-hover:translate-y-0.5" />
-              </span>
+              <span>Load More Projects</span>
+              <ChevronDown className="h-4 w-4" />
             </motion.button>
 
             <p className="mt-3 font-mono text-[11px] text-[#6B7280]">
               {remainingProjects}{' '}
-              {remainingProjects === 1
-                ? 'more project'
-                : 'more projects'}{' '}
-              to explore
+              {remainingProjects === 1 ? 'more project' : 'more projects'} to
+              explore
             </p>
           </motion.div>
         )}
 
         {/* All Projects Viewed */}
-        {!hasMoreProjects &&
-          filteredProjects.length > 4 && (
-            <motion.div
-              initial={{
-                opacity: 0,
-              }}
-              animate={{
-                opacity: 1,
-              }}
-              transition={{
-                duration: 0.45,
-              }}
-              className="mt-14 flex items-center justify-center gap-3"
-            >
-              <span className="h-px w-10 bg-[#DDD6C8] sm:w-12" />
+        {!hasMoreProjects && filteredProjects.length > 4 && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.45 }}
+            className="mt-14 flex items-center justify-center gap-3"
+          >
+            <span className="h-px w-10 bg-[#DDD6C8] sm:w-12" />
 
-              <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#6B7280] sm:text-xs">
-                All projects explored
-              </span>
+            <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#6B7280] sm:text-xs">
+              All projects explored
+            </span>
 
-              <span className="h-px w-10 bg-[#DDD6C8] sm:w-12" />
-            </motion.div>
-          )}
+            <span className="h-px w-10 bg-[#DDD6C8] sm:w-12" />
+          </motion.div>
+        )}
       </div>
     </section>
   );
