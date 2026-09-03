@@ -19,10 +19,6 @@ import {
   X,
 } from 'lucide-react';
 
-import {
-  projectApplePerformanceDashboardImg,
-  projectAppleProfitabilityAnalysisImg,
-} from '../data/powerBIProject';
 import { projectsData } from '../data/portfolioData';
 import { Project } from '../types';
 
@@ -34,68 +30,25 @@ const PROJECTS_PER_LOAD = 4;
 const SWIPE_THRESHOLD = 60;
 
 /*
- * Projects intentionally excluded from the portfolio:
+ * EXACT PORTFOLIO PROJECT ORDER
  *
- * - Sales Performance Analysis
- * - Sales Performance Dashboard
- * - Company Performance Dashboard
- * - UFC Fighter Data Analysis (Islam Makhachev)
+ * Only these 12 projects are allowed to appear
+ * in the Projects section.
  */
-const EXCLUDED_PROJECT_TITLES = new Set([
-  'Sales Performance Analysis',
-  'Sales Performance Dashboard',
-  'Company Performance Dashboard',
-  'UFC Fighter Data Analysis (Islam Makhachev)',
-]);
-
-const powerBIProject: Project = {
-  id: 'power-bi-apple-financial',
-  title: 'Apple Financial Performance Dashboard',
-  category: 'Data Analysis',
-  featured: true,
-  description:
-    "Built an interactive Power BI dashboard to analyze Apple's financial performance across sales, profit, products, countries, business segments, and time. The project demonstrates practical data cleaning and transformation, data modeling, DAX, KPI development, interactive dashboard design, geographic analysis, and business insight generation.",
-  tags: [
-    'Power BI',
-    'Power Query',
-    'DAX',
-    'Data Modeling',
-    'Data Visualization',
-    'Financial Analysis',
-    'Dashboard Design',
-    'Business Intelligence',
-    'Data Storytelling',
-  ],
-  mediaUrl: projectApplePerformanceDashboardImg,
-  demoUrl: '',
-  githubUrl: '',
-  keyHighlights: [
-    'Analyzed overall sales, profitability, products, countries, business segments, and sales trends over time.',
-    'Built an Executive Overview page featuring Total Sales, Total Profit, Total Units Sold, Profit Margin, sales trends, country performance, product performance, and segment analysis.',
-    'Built a dedicated Profitability Analysis page covering profit by country, profit by product, profit margin by segment, and Sales vs. Profit analysis.',
-    'Used Power Query for data cleaning and transformation, Power BI data modeling, and DAX measures for analytical calculations.',
-    'Identified approximately $118.73M in total sales, $16.89M in total profit, and an overall profit margin of approximately 14.23%.',
-    'Identified Paseo as the strongest product by both sales and total profit.',
-    'Found Government to be the highest-sales business segment and Channel Partners to have the highest profit margin.',
-    'Identified negative profitability in the Enterprise segment despite substantial sales, highlighting the need for further profitability investigation.',
-    'Identified October as the strongest month for sales and France as the country with the highest total profit.',
-    'Demonstrated that strong sales performance does not necessarily translate into strong profitability.',
-  ],
-  automationScreenshots: [
-    {
-      image: projectApplePerformanceDashboardImg,
-      title: 'Apple Financial Performance Dashboard',
-      caption:
-        'Executive Overview page showing total sales, total profit, total units sold, profit margin, sales trends, sales by country, sales by product, sales by segment, and interactive Country, Segment, and Year filters.',
-    },
-    {
-      image: projectAppleProfitabilityAnalysisImg,
-      title: 'Profitability Analysis',
-      caption:
-        'Second Power BI page focusing on profitability, including profit by country, profit by product, profit margin by segment, Sales vs. Profit analysis, and interactive filters.',
-    },
-  ],
-};
+const PROJECT_ORDER = [
+  'Customer Churn Analysis',
+  'Sales Forecasting & Predictive Analysis',
+  'Weekly Sales Forecasting Analysis',
+  'Apple Financial Performance Dashboard',
+  'Clinic Appointment Automation',
+  'Seleem Bakery Website',
+  'Smart Event Registration & Capacity Management Automation',
+  'AI Customer Support Bot',
+  'AI Natural Language Order Management Automation',
+  'AI Email Triage & Response System',
+  'Product Quality Control Data Cleaning & Validation',
+  'A.M. BIBIRE NIG LIMITED Website',
+];
 
 export default function Projects({ onOpenLightbox }: ProjectsProps) {
   const [activeFilter, setActiveFilter] = useState('All');
@@ -110,48 +63,23 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
   const touchStartY = useRef<number | null>(null);
 
   /*
-   * Build the portfolio list:
-   * 1. Restore the Power BI project.
-   * 2. Remove the projects the user explicitly requested removed.
-   * 3. Keep every other existing project untouched.
+   * Build the portfolio from the exact approved project list.
+   *
+   * This prevents old projects such as:
+   * - Sales Performance Analysis
+   * - Sales Performance Dashboard
+   * - Company Performance Dashboard
+   * - UFC Fighter Data Analysis
+   * - Transportation Cost Analysis in Nigeria
+   *
+   * from appearing even if they are accidentally present
+   * somewhere else in portfolioData.ts.
    */
-  const portfolioProjects = useMemo(() => {
-    const existingProjects = projectsData.filter(
-      (project) => !EXCLUDED_PROJECT_TITLES.has(project.title)
-    );
-
-    const alreadyExists = existingProjects.some(
-      (project) => project.title === powerBIProject.title
-    );
-
-    return alreadyExists
-      ? existingProjects
-      : [...existingProjects, powerBIProject];
+  const orderedProjects = useMemo(() => {
+    return PROJECT_ORDER.map((title) =>
+      projectsData.find((project) => project.title === title)
+    ).filter((project): project is Project => Boolean(project));
   }, []);
-
-  const orderedProjects = useMemo(
-    () =>
-      [...portfolioProjects].sort((a, b) => {
-        const aIsData =
-          a.category === 'Data Analysis' ||
-          a.title === 'Apple Financial Performance Dashboard';
-
-        const bIsData =
-          b.category === 'Data Analysis' ||
-          b.title === 'Apple Financial Performance Dashboard';
-
-        if (a.featured !== b.featured) {
-          return a.featured ? -1 : 1;
-        }
-
-        if (aIsData !== bIsData) {
-          return aIsData ? -1 : 1;
-        }
-
-        return 0;
-      }),
-    [portfolioProjects]
-  );
 
   const categories = useMemo(
     () => [
@@ -237,8 +165,8 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
   };
 
   /*
-   * When navigating with Previous / Next, ensure the destination
-   * project has already been loaded into the visible list.
+   * When navigating with Previous / Next, make sure the
+   * destination project is loaded into the visible list.
    */
   useEffect(() => {
     if (!selectedProject) {
@@ -248,8 +176,9 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
     if (selectedProjectIndex >= visibleCount) {
       setVisibleCount(
         Math.min(
-          Math.ceil((selectedProjectIndex + 1) / PROJECTS_PER_LOAD) *
-            PROJECTS_PER_LOAD,
+          Math.ceil(
+            (selectedProjectIndex + 1) / PROJECTS_PER_LOAD
+          ) * PROJECTS_PER_LOAD,
           filteredProjects.length
         )
       );
@@ -295,7 +224,7 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
   }, [selectedProject, filteredProjects]);
 
   /*
-   * Project viewport observer.
+   * Observe project rows as they enter the viewport.
    */
   useEffect(() => {
     const elements = Array.from(projectRefs.current.values());
@@ -306,8 +235,16 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
 
     const observer = new IntersectionObserver(
       (entries) => {
-        const visible = entries.some((entry) => entry.isIntersecting);
-        setIsProjectInView(visible);
+        const visibleEntries = entries.filter(
+          (entry) => entry.isIntersecting
+        );
+
+        if (visibleEntries.length === 0) {
+          setIsProjectInView(false);
+          return;
+        }
+
+        setIsProjectInView(true);
       },
       {
         threshold: 0.2,
@@ -332,12 +269,22 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
     projectRefs.current.set(projectId, element);
   };
 
-  const handleTouchStart = (event: TouchEvent<HTMLDivElement>) => {
-    touchStartX.current = event.touches[0]?.clientX ?? null;
-    touchStartY.current = event.touches[0]?.clientY ?? null;
+  /*
+   * Mobile swipe navigation.
+   */
+  const handleTouchStart = (
+    event: TouchEvent<HTMLDivElement>
+  ) => {
+    touchStartX.current =
+      event.touches[0]?.clientX ?? null;
+
+    touchStartY.current =
+      event.touches[0]?.clientY ?? null;
   };
 
-  const handleTouchEnd = (event: TouchEvent<HTMLDivElement>) => {
+  const handleTouchEnd = (
+    event: TouchEvent<HTMLDivElement>
+  ) => {
     if (
       touchStartX.current === null ||
       touchStartY.current === null
@@ -345,8 +292,13 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
       return;
     }
 
-    const endX = event.changedTouches[0]?.clientX ?? touchStartX.current;
-    const endY = event.changedTouches[0]?.clientY ?? touchStartY.current;
+    const endX =
+      event.changedTouches[0]?.clientX ??
+      touchStartX.current;
+
+    const endY =
+      event.changedTouches[0]?.clientY ??
+      touchStartY.current;
 
     const deltaX = endX - touchStartX.current;
     const deltaY = endY - touchStartY.current;
@@ -362,7 +314,9 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
       return;
     }
 
-    navigateProject(deltaX < 0 ? 'next' : 'previous');
+    navigateProject(
+      deltaX < 0 ? 'next' : 'previous'
+    );
   };
 
   return (
@@ -372,6 +326,7 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
         className="relative z-10 bg-[#F5F1E8] py-24 sm:py-28"
       >
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+
           {/* Section header */}
           <div className="mb-12 max-w-3xl">
             <div className="mb-4 flex items-center gap-3">
@@ -407,7 +362,9 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
                 <button
                   key={category}
                   type="button"
-                  onClick={() => handleFilterChange(category)}
+                  onClick={() =>
+                    handleFilterChange(category)
+                  }
                   className={`rounded-lg border px-3.5 py-2 text-sm font-medium transition-colors ${
                     isActive
                       ? 'border-[#2F5D50] bg-[#2F5D50] text-white'
@@ -423,30 +380,46 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
           {/* Project list */}
           <div className="border-y border-[#DDD6C8]">
             {visibleProjects.map((project, index) => {
-              const actualIndex = filteredProjects.findIndex(
-                (item) => item.id === project.id
-              );
+              const actualIndex =
+                filteredProjects.findIndex(
+                  (item) => item.id === project.id
+                );
 
-              const projectNumber =
-                String(actualIndex + 1).padStart(2, '0');
+              const projectNumber = String(
+                actualIndex + 1
+              ).padStart(2, '0');
 
               const description =
                 project.description.length > 220
-                  ? `${project.description.slice(0, 220).trim()}…`
+                  ? `${project.description
+                      .slice(0, 220)
+                      .trim()}…`
                   : project.description;
 
-              const visibleTags = project.tags.slice(0, 4);
+              const visibleTags =
+                project.tags.slice(0, 4);
+
               const remainingTags =
-                project.tags.length - visibleTags.length;
+                project.tags.length -
+                visibleTags.length;
 
               return (
                 <motion.article
                   key={project.id}
                   ref={(element) =>
-                    setProjectRef(project.id, element)
+                    setProjectRef(
+                      project.id,
+                      element
+                    )
                   }
-                  initial={{ opacity: 0, y: 18 }}
-                  whileInView={{ opacity: 1, y: 0 }}
+                  initial={{
+                    opacity: 0,
+                    y: 18,
+                  }}
+                  whileInView={{
+                    opacity: 1,
+                    y: 0,
+                  }}
                   viewport={{
                     once: true,
                     margin: '-70px',
@@ -454,16 +427,24 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
                   transition={{
                     duration: 0.5,
                     delay: index * 0.05,
-                    ease: [0.16, 1, 0.3, 1],
+                    ease: [
+                      0.16,
+                      1,
+                      0.3,
+                      1,
+                    ],
                   }}
                   className="group border-b border-[#DDD6C8] last:border-b-0"
                 >
                   <button
                     type="button"
-                    onClick={() => openProjectDetails(project)}
+                    onClick={() =>
+                      openProjectDetails(project)
+                    }
                     className="block w-full text-left"
                   >
                     <div className="grid gap-7 py-9 lg:grid-cols-[80px_minmax(0,1fr)_280px] lg:gap-10 lg:py-11">
+
                       {/* Project number */}
                       <div className="flex items-start">
                         <span className="font-mono text-sm font-semibold tracking-wide text-[#6B7280] transition-colors group-hover:text-[#2F5D50]">
@@ -515,7 +496,10 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
                         </div>
 
                         <div className="mt-6 flex items-center gap-2 text-sm font-semibold text-[#2F5D50]">
-                          <span>View case study</span>
+                          <span>
+                            View case study
+                          </span>
+
                           <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
                         </div>
                       </div>
@@ -588,7 +572,9 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
 
             <div
               className={`data-waveform ${
-                isProjectInView ? 'is-active' : ''
+                isProjectInView
+                  ? 'is-active'
+                  : ''
               }`}
               aria-hidden="true"
             >
@@ -621,7 +607,10 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
                 exit={{ opacity: 0 }}
                 className="fixed inset-0 z-[100] overflow-y-auto bg-[#1D2A26]/45 p-4 sm:p-6 lg:p-10"
                 onMouseDown={(event) => {
-                  if (event.target === event.currentTarget) {
+                  if (
+                    event.target ===
+                    event.currentTarget
+                  ) {
                     closeProjectDetails();
                   }
                 }}
@@ -630,12 +619,29 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
               >
                 <div className="mx-auto flex min-h-full max-w-5xl items-center justify-center">
                   <motion.div
-                    initial={{ opacity: 0, y: 20, scale: 0.985 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: 20, scale: 0.985 }}
+                    initial={{
+                      opacity: 0,
+                      y: 20,
+                      scale: 0.985,
+                    }}
+                    animate={{
+                      opacity: 1,
+                      y: 0,
+                      scale: 1,
+                    }}
+                    exit={{
+                      opacity: 0,
+                      y: 20,
+                      scale: 0.985,
+                    }}
                     transition={{
                       duration: 0.35,
-                      ease: [0.16, 1, 0.3, 1],
+                      ease: [
+                        0.16,
+                        1,
+                        0.3,
+                        1,
+                      ],
                     }}
                     className="w-full overflow-hidden rounded-2xl border border-[#DDD6C8] bg-[#FCFAF6]"
                   >
@@ -643,11 +649,13 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
                     <div className="flex items-center justify-between gap-4 border-b border-[#DDD6C8] px-5 py-4 sm:px-7">
                       <div className="flex min-w-0 items-center gap-3">
                         <span className="shrink-0 font-mono text-xs font-semibold text-[#2F5D50]">
-                          {String(selectedProjectNumber).padStart(
-                            2,
-                            '0'
-                          )}{' '}
-                          / {String(totalProjectCount).padStart(2, '0')}
+                          {String(
+                            selectedProjectNumber
+                          ).padStart(2, '0')}{' '}
+                          /{' '}
+                          {String(
+                            totalProjectCount
+                          ).padStart(2, '0')}
                         </span>
 
                         <span className="h-4 w-px bg-[#DDD6C8]" />
@@ -659,11 +667,14 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
 
                       <button
                         type="button"
-                        onClick={closeProjectDetails}
+                        onClick={
+                          closeProjectDetails
+                        }
                         className="inline-flex shrink-0 items-center gap-2 rounded-lg border border-[#DDD6C8] px-3 py-2 text-sm font-semibold text-[#4B5563] transition-colors hover:border-[#2F5D50]/40 hover:text-[#2F5D50]"
                         aria-label="Close project details"
                       >
                         <X className="h-4 w-4" />
+
                         <span className="hidden sm:inline">
                           Close
                         </span>
@@ -673,21 +684,28 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
                     {/* Modal content */}
                     <div className="max-h-[calc(100vh-140px)] overflow-y-auto">
                       <div className="grid lg:grid-cols-[1.15fr_0.85fr]">
+
                         {/* Media */}
                         <div className="border-b border-[#DDD6C8] bg-[#F5F1E8] p-4 sm:p-6 lg:border-b-0 lg:border-r">
                           <div className="overflow-hidden rounded-xl border border-[#DDD6C8] bg-[#FCFAF6]">
                             <div className="relative aspect-[16/10]">
                               {selectedProject.isVideo ? (
                                 <video
-                                  src={selectedProject.videoUrl}
+                                  src={
+                                    selectedProject.videoUrl
+                                  }
                                   controls
                                   playsInline
                                   className="h-full w-full object-cover"
                                 />
                               ) : (
                                 <img
-                                  src={selectedProject.mediaUrl}
-                                  alt={selectedProject.title}
+                                  src={
+                                    selectedProject.mediaUrl
+                                  }
+                                  alt={
+                                    selectedProject.title
+                                  }
                                   className="h-full w-full object-cover"
                                 />
                               )}
@@ -695,12 +713,17 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
                               <button
                                 type="button"
                                 onClick={() =>
-                                  onOpenLightbox(selectedProject)
+                                  onOpenLightbox(
+                                    selectedProject
+                                  )
                                 }
                                 className="absolute bottom-3 right-3 inline-flex items-center gap-2 rounded-lg border border-white/60 bg-[#FCFAF6]/90 px-3 py-2 text-xs font-semibold text-[#1D2A26] backdrop-blur-sm transition-colors hover:bg-white"
                               >
                                 <Maximize2 className="h-3.5 w-3.5" />
-                                <span>View media</span>
+
+                                <span>
+                                  View media
+                                </span>
                               </button>
                             </div>
                           </div>
@@ -714,16 +737,21 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
                             </span>
 
                             <h2 className="mt-2 font-display text-2xl font-bold tracking-tight text-[#1D2A26] sm:text-3xl">
-                              {selectedProject.title}
+                              {
+                                selectedProject.title
+                              }
                             </h2>
                           </div>
 
                           <p className="text-sm leading-7 text-[#4B5563]">
-                            {selectedProject.description}
+                            {
+                              selectedProject.description
+                            }
                           </p>
 
                           {/* Highlights */}
-                          {selectedProject.keyHighlights?.length ? (
+                          {selectedProject.keyHighlights
+                            ?.length ? (
                             <div className="mt-7 border-t border-[#DDD6C8] pt-6">
                               <h3 className="font-display text-sm font-bold uppercase tracking-wide text-[#1D2A26]">
                                 Key highlights
@@ -731,7 +759,10 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
 
                               <div className="mt-4 space-y-3">
                                 {selectedProject.keyHighlights.map(
-                                  (highlight, index) => (
+                                  (
+                                    highlight,
+                                    index
+                                  ) => (
                                     <div
                                       key={index}
                                       className="flex items-start gap-3"
@@ -739,7 +770,9 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
                                       <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#4E8D66]" />
 
                                       <p className="text-sm leading-6 text-[#4B5563]">
-                                        {highlight}
+                                        {
+                                          highlight
+                                        }
                                       </p>
                                     </div>
                                   )
@@ -755,14 +788,16 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
                             </h3>
 
                             <div className="mt-4 flex flex-wrap gap-2">
-                              {selectedProject.tags.map((tag) => (
-                                <span
-                                  key={tag}
-                                  className="rounded-full border border-[#DDD6C8] bg-[#F5F1E8] px-2.5 py-1 text-xs font-medium text-[#6B7280]"
-                                >
-                                  {tag}
-                                </span>
-                              ))}
+                              {selectedProject.tags.map(
+                                (tag) => (
+                                  <span
+                                    key={tag}
+                                    className="rounded-full border border-[#DDD6C8] bg-[#F5F1E8] px-2.5 py-1 text-xs font-medium text-[#6B7280]"
+                                  >
+                                    {tag}
+                                  </span>
+                                )
+                              )}
                             </div>
                           </div>
 
@@ -772,25 +807,32 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
                             <div className="mt-7 flex flex-wrap gap-3 border-t border-[#DDD6C8] pt-6">
                               {selectedProject.githubUrl && (
                                 <a
-                                  href={selectedProject.githubUrl}
+                                  href={
+                                    selectedProject.githubUrl
+                                  }
                                   target="_blank"
                                   rel="noopener noreferrer"
                                   className="inline-flex items-center gap-2 rounded-lg border border-[#DDD6C8] px-4 py-2.5 text-sm font-semibold text-[#1D2A26] transition-colors hover:border-[#2F5D50]/40 hover:text-[#2F5D50]"
                                 >
                                   <Github className="h-4 w-4" />
+
                                   GitHub
+
                                   <ExternalLink className="h-3.5 w-3.5" />
                                 </a>
                               )}
 
                               {selectedProject.demoUrl && (
                                 <a
-                                  href={selectedProject.demoUrl}
+                                  href={
+                                    selectedProject.demoUrl
+                                  }
                                   target="_blank"
                                   rel="noopener noreferrer"
                                   className="inline-flex items-center gap-2 rounded-lg bg-[#2F5D50] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#24493f]"
                                 >
                                   Live Demo
+
                                   <ArrowUpRight className="h-4 w-4" />
                                 </a>
                               )}
@@ -800,7 +842,9 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
                       </div>
 
                       {/* Screenshots */}
-                      {selectedProject.automationScreenshots?.length ? (
+                      {selectedProject
+                        .automationScreenshots
+                        ?.length ? (
                         <div className="border-t border-[#DDD6C8] px-5 py-7 sm:px-7 sm:py-8">
                           <div className="mb-6 flex items-end justify-between gap-4">
                             <div>
@@ -814,26 +858,39 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
                             </div>
 
                             <span className="font-mono text-xs text-[#6B7280]">
-                              {selectedProject.automationScreenshots.length}{' '}
+                              {
+                                selectedProject
+                                  .automationScreenshots
+                                  .length
+                              }{' '}
                               views
                             </span>
                           </div>
 
                           <div className="grid gap-5 sm:grid-cols-2">
                             {selectedProject.automationScreenshots.map(
-                              (screenshot, index) => (
+                              (
+                                screenshot,
+                                index
+                              ) => (
                                 <button
                                   key={`${screenshot.title}-${index}`}
                                   type="button"
                                   onClick={() =>
-                                    onOpenLightbox(selectedProject)
+                                    onOpenLightbox(
+                                      selectedProject
+                                    )
                                   }
                                   className="group overflow-hidden rounded-xl border border-[#DDD6C8] bg-[#F5F1E8] text-left transition-colors hover:border-[#2F5D50]/35"
                                 >
                                   <div className="aspect-video overflow-hidden bg-[#FCFAF6]">
                                     <img
-                                      src={screenshot.image}
-                                      alt={screenshot.title}
+                                      src={
+                                        screenshot.image
+                                      }
+                                      alt={
+                                        screenshot.title
+                                      }
                                       className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
                                     />
                                   </div>
@@ -842,11 +899,15 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
                                     <div className="flex items-start justify-between gap-3">
                                       <div>
                                         <h4 className="font-display text-sm font-bold text-[#1D2A26]">
-                                          {screenshot.title}
+                                          {
+                                            screenshot.title
+                                          }
                                         </h4>
 
                                         <p className="mt-1 text-xs leading-5 text-[#6B7280]">
-                                          {screenshot.caption}
+                                          {
+                                            screenshot.caption
+                                          }
                                         </p>
                                       </div>
 
@@ -861,11 +922,13 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
                       ) : null}
                     </div>
 
-                    {/* Previous / Next / Close controls */}
+                    {/* Previous / Next / Close */}
                     <div className="flex flex-col-reverse gap-3 border-t border-[#DDD6C8] px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-7">
                       <button
                         type="button"
-                        onClick={closeProjectDetails}
+                        onClick={
+                          closeProjectDetails
+                        }
                         className="inline-flex items-center justify-center gap-2 rounded-lg border border-[#DDD6C8] px-4 py-2.5 text-sm font-semibold text-[#4B5563] transition-colors hover:border-[#2F5D50]/40 hover:text-[#2F5D50]"
                       >
                         <X className="h-4 w-4" />
@@ -876,20 +939,28 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
                         <button
                           type="button"
                           onClick={() =>
-                            navigateProject('previous')
+                            navigateProject(
+                              'previous'
+                            )
                           }
                           className="inline-flex items-center gap-2 rounded-lg border border-[#DDD6C8] px-4 py-2.5 text-sm font-semibold text-[#1D2A26] transition-colors hover:border-[#2F5D50]/40 hover:text-[#2F5D50]"
                         >
                           <ArrowLeft className="h-4 w-4" />
-                          <span>Previous</span>
+
+                          <span>
+                            Previous
+                          </span>
                         </button>
 
                         <button
                           type="button"
-                          onClick={() => navigateProject('next')}
+                          onClick={() =>
+                            navigateProject('next')
+                          }
                           className="inline-flex items-center gap-2 rounded-lg bg-[#2F5D50] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#24493f]"
                         >
                           <span>Next</span>
+
                           <ArrowRight className="h-4 w-4" />
                         </button>
                       </div>
@@ -907,8 +978,6 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
 
 /*
  * Tiny editorial data waveform.
- * It is deliberately subtle and only animates when projects enter
- * the viewport.
  */
 const waveformStyles = `
 .data-waveform {
@@ -1010,10 +1079,14 @@ const waveformStyles = `
 
 if (
   typeof document !== 'undefined' &&
-  !document.getElementById('projects-waveform-styles')
+  !document.getElementById(
+    'projects-waveform-styles'
+  )
 ) {
   const style = document.createElement('style');
+
   style.id = 'projects-waveform-styles';
   style.textContent = waveformStyles;
+
   document.head.appendChild(style);
 }
