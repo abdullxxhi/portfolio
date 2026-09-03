@@ -79,7 +79,7 @@ import projectAppleProfitabilityAnalysisImg from '../assets/images/02-profitabil
 export const personalInfo: PersonalInfo = {
   name: "Abdullahi Damilola Abdulsalam",
   initials: "Build. Automate. Analyze.",
-  role: "AI Automation Developer & Data Analyst",
+  role: "Data Analyst & AI Automation Developer",
   location: "Lagos, Nigeria",
   email: "abdulsalamabdullahi003\@gmail.com",
   phone: "+234902250296",
@@ -87,10 +87,8 @@ export const personalInfo: PersonalInfo = {
   linkedin: "[https://www.linkedin.com/in/abdullxxhi](https://www.linkedin.com/in/abdullxxhi)",
   portfolioUrl: "[https://abdullxxhi.vercel.app/](https://abdullxxhi.vercel.app/)",
   profilePhoto: profilePic,
-  focusArea: "AI Automation, Workflow Automation, Data Analysis",
-  bio: "I am an AI Automation Developer & Data Analyst with a background in Statistics and a passion for building intelligent solutions that simplify work. I specialize in designing workflow automations, Google Workspace solutions, and data-driven systems that help individuals and businesses save time, reduce manual effort, and improve productivity. My experience spans Microsoft Excel, SQL, Power BI, Google Apps Script, and AI-powered workflow automation. I enjoy solving real-world problems by combining data analysis with automation to create efficient, scalable solutions.",
-  aboutHeadline: "Building AI-powered automations and data solutions that save time, eliminate repetitive work, and improve productivity.",
-  contactHeadline: "Let's connect and build AI-powered automations and data-driven solutions that make work smarter and more efficient."
+  focusArea: "Data Analysis, Business Intelligence, AI Automation",
+  bio: "I am a Data Analyst & AI Automation Developer with a background in Statistics and a passion for turning data into useful insights and practical solutions. I specialize in data analysis, business intelligence, dashboard development, and workflow automation. My experience spans Microsoft Excel, SQL, Power BI, Google Apps Script, and AI-powered workflow automation. I enjoy solving real-world problems by combining analytical thinking with automation to improve decision-making, reduce repetitive work, and increase productivity.",
 };
 
 export const statsData: StatItem[] = [
