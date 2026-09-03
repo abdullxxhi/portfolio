@@ -129,6 +129,29 @@ export default function ProjectCard({
           {shortDescription}
         </p>
 
+        {/* Tiny Animated Data Waveform */}
+        <div
+          className="mt-4 flex h-5 items-center gap-[3px]"
+          aria-hidden="true"
+        >
+          {[4, 9, 6, 13, 8, 16, 7, 11, 5, 14, 8, 12].map(
+            (height, index) => (
+              <span
+                key={index}
+                className="project-card-wave-bar w-[2px] rounded-full bg-[#2F5D50]/55"
+                style={{
+                  height: `${height}px`,
+                  animationDelay: `${index * 90}ms`,
+                }}
+              />
+            )
+          )}
+
+          <span className="ml-1 font-mono text-[8px] uppercase tracking-[0.12em] text-[#9A9388]">
+            data signal
+          </span>
+        </div>
+
         {/* Technology */}
         <div className="mt-4 flex flex-wrap items-center gap-x-2 gap-y-1.5">
           {visibleTags.map((tag, index) => (
@@ -197,6 +220,33 @@ export default function ProjectCard({
         {/* Simple divider */}
         <div className="mt-5 h-px w-full bg-[#DDD6C8] transition-colors duration-300 group-hover:bg-[#2F5D50]/25" />
       </div>
+
+      <style>
+        {`
+          @keyframes projectWave {
+            0%, 100% {
+              transform: scaleY(0.55);
+              opacity: 0.45;
+            }
+
+            50% {
+              transform: scaleY(1);
+              opacity: 1;
+            }
+          }
+
+          .project-card-wave-bar {
+            transform-origin: bottom;
+            animation: projectWave 1.5s ease-in-out infinite;
+          }
+
+          @media (prefers-reduced-motion: reduce) {
+            .project-card-wave-bar {
+              animation: none;
+            }
+          }
+        `}
+      </style>
     </motion.article>
   );
 }
