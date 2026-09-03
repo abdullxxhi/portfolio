@@ -1,12 +1,16 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import {
+  ArrowLeft,
+  ArrowRight,
+  ArrowUpRight,
   ChevronDown,
   ExternalLink,
   Filter,
   FolderGit2,
   Github,
+  Maximize2,
   X,
 } from 'lucide-react';
 
@@ -18,12 +22,18 @@ interface ProjectsProps {
 }
 
 const PROJECTS_PER_LOAD = 4;
+const SWIPE_THRESHOLD = 60;
 
 export default function Projects({ onOpenLightbox }: ProjectsProps) {
   const [activeFilter, setActiveFilter] = useState('All');
   const [visibleCount, setVisibleCount] = useState(PROJECTS_PER_LOAD);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [activeProjectIndex, setActiveProjectIndex] = useState(0);
+  const [isProjectInView, setIsProjectInView] = useState(false);
+
+  const projectRefs = useRef<Map<string, HTMLElement>>(new Map());
+  const touchStartX = useRef<number | null>(null);
+  const touchStartY = useRef<number | null>(null);
 
   const orderedProjects = useMemo(
     () =>
@@ -32,6 +42,7 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
         const bIsData = b.category === 'Data Analysis';
 
         if (aIsData === bIsData) return 0;
+
         return aIsData ? -1 : 1;
       }),
     []
@@ -48,7 +59,9 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
   );
 
   const filteredProjects = useMemo(() => {
-    if (activeFilter === 'All') return orderedProjects;
+    if (activeFilter === 'All') {
+      return orderedProjects;
+    }
 
     return orderedProjects.filter(
       (project) => project.category === activeFilter
@@ -56,51 +69,31 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
   }, [activeFilter, orderedProjects]);
 
   const visibleProjects = filteredProjects.slice(0, visibleCount);
+
   const hasMoreProjects = visibleCount < filteredProjects.length;
-  const remainingProjects = filteredProjects.length - visibleCount;
 
-  useEffect(() => {
-    const elements = Array.from(
-      document.querySelectorAll<HTMLElement>('[data-project-index]')
-    );
+  const remainingProjects =
+    filteredProjects.length - visibleCount;
 
-    if (!elements.length) return;
+  const selectedProjectIndex = selectedProject
+    ? filteredProjects.findIndex(
+        (project) => project.id === selectedProject.id
+      )
+    : -1;
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visibleEntry = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort(
-            (a, b) =>
-              Math.abs(a.boundingClientRect.top - window.innerHeight / 2) -
-              Math.abs(b.boundingClientRect.top - window.innerHeight / 2)
-          )[0];
+  const selectedProjectNumber =
+    selectedProjectIndex >= 0
+      ? selectedProjectIndex + 1
+      : 0;
 
-        if (!visibleEntry) return;
-
-        const index = Number(
-          (visibleEntry.target as HTMLElement).dataset.projectIndex
-        );
-
-        if (!Number.isNaN(index)) {
-          setActiveProjectIndex(index);
-        }
-      },
-      {
-        root: null,
-        rootMargin: '-25% 0px -45% 0px',
-        threshold: 0,
-      }
-    );
-
-    elements.forEach((element) => observer.observe(element));
-
-    return () => observer.disconnect();
-  }, [visibleProjects]);
+  const totalProjectCount = filteredProjects.length;
 
   const handleLoadMore = () => {
     setVisibleCount((current) =>
-      Math.min(current + PROJECTS_PER_LOAD, filteredProjects.length)
+      Math.min(
+        current + PROJECTS_PER_LOAD,
+        filteredProjects.length
+      )
     );
   };
 
@@ -119,43 +112,238 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
     setSelectedProject(null);
   };
 
+  const navigateProject = (direction: 'next' | 'previous') => {
+    if (!selectedProject || filteredProjects.length === 0) {
+      return;
+    }
+
+    const currentIndex = filteredProjects.findIndex(
+      (project) => project.id === selectedProject.id
+    );
+
+    if (currentIndex === -1) {
+      return;
+    }
+
+    const nextIndex =
+      direction === 'next'
+        ? (currentIndex + 1) % filteredProjects.length
+        : (currentIndex - 1 + filteredProjects.length) %
+          filteredProjects.length;
+
+    setSelectedProject(filteredProjects[nextIndex]);
+  };
+
+  const handleTouchStart = (
+    event: React.TouchEvent<HTMLDivElement>
+  ) => {
+    const touch = event.touches[0];
+
+    touchStartX.current = touch.clientX;
+    touchStartY.current = touch.clientY;
+  };
+
+  const handleTouchEnd = (
+    event: React.TouchEvent<HTMLDivElement>
+  ) => {
+    if (
+      touchStartX.current === null ||
+      touchStartY.current === null ||
+      !selectedProject
+    ) {
+      return;
+    }
+
+    const touch = event.changedTouches[0];
+
+    const deltaX =
+      touch.clientX - touchStartX.current;
+
+    const deltaY =
+      touch.clientY - touchStartY.current;
+
+    touchStartX.current = null;
+    touchStartY.current = null;
+
+    /*
+     * Ignore vertical gestures.
+     * This prevents normal mobile scrolling from
+     * accidentally changing projects.
+     */
+    if (Math.abs(deltaY) > Math.abs(deltaX)) {
+      return;
+    }
+
+    if (Math.abs(deltaX) < SWIPE_THRESHOLD) {
+      return;
+    }
+
+    if (deltaX < 0) {
+      navigateProject('next');
+    } else {
+      navigateProject('previous');
+    }
+  };
+
+  /*
+   * Keep the document behind the project modal locked.
+   */
   useEffect(() => {
-    if (!selectedProject) return;
+    if (!selectedProject) {
+      return;
+    }
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         closeProjectDetails();
       }
+
+      if (event.key === 'ArrowRight') {
+        navigateProject('next');
+      }
+
+      if (event.key === 'ArrowLeft') {
+        navigateProject('previous');
+      }
     };
 
-    const originalOverflow = document.body.style.overflow;
+    const originalOverflow =
+      document.body.style.overflow;
+
     document.body.style.overflow = 'hidden';
-    window.addEventListener('keydown', handleKeyDown);
+
+    window.addEventListener(
+      'keydown',
+      handleKeyDown
+    );
 
     return () => {
-      document.body.style.overflow = originalOverflow;
-      window.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow =
+        originalOverflow;
+
+      window.removeEventListener(
+        'keydown',
+        handleKeyDown
+      );
     };
-  }, [selectedProject]);
+  }, [selectedProject, filteredProjects]);
+
+  /*
+   * Observe project rows as they enter the viewport.
+   *
+   * The active project is whichever row is closest to
+   * the center of the viewport.
+   */
+  useEffect(() => {
+    if (visibleProjects.length === 0) {
+      return;
+    }
+
+    const elements = Array.from(
+      projectRefs.current.values()
+    );
+
+    if (elements.length === 0) {
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visibleEntries = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort(
+            (a, b) =>
+              b.intersectionRatio -
+              a.intersectionRatio
+          );
+
+        if (visibleEntries.length === 0) {
+          return;
+        }
+
+        const activeElement =
+          visibleEntries[0].target as HTMLElement;
+
+        const projectIndex = Number(
+          activeElement.dataset.projectIndex
+        );
+
+        if (!Number.isNaN(projectIndex)) {
+          setActiveProjectIndex(projectIndex);
+          setIsProjectInView(true);
+        }
+      },
+      {
+        threshold: [0.2, 0.4, 0.6, 0.8],
+        rootMargin: '-25% 0px -25% 0px',
+      }
+    );
+
+    elements.forEach((element) =>
+      observer.observe(element)
+    );
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [visibleProjects, activeFilter]);
+
+  /*
+   * Reset the active project when filtering changes.
+   */
+  useEffect(() => {
+    setActiveProjectIndex(0);
+    setIsProjectInView(false);
+  }, [activeFilter]);
+
+  /*
+   * Register a project element.
+   */
+  const registerProjectRef = (
+    projectId: string,
+    element: HTMLElement | null
+  ) => {
+    if (element) {
+      projectRefs.current.set(
+        projectId,
+        element
+      );
+    } else {
+      projectRefs.current.delete(projectId);
+    }
+  };
 
   return (
     <section
       id="projects"
-      className="relative z-10 bg-[#F5F1E8] py-24 sm:py-28"
+      className="relative z-10 bg-[#F5F1E8] py-20 sm:py-24 lg:py-28"
     >
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+
         {/* Section Header */}
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-60px' }}
-          transition={{ duration: 0.45 }}
-          className="mb-10 max-w-3xl"
+          initial={{
+            opacity: 0,
+            y: 16,
+          }}
+          whileInView={{
+            opacity: 1,
+            y: 0,
+          }}
+          viewport={{
+            once: true,
+            margin: '-60px',
+          }}
+          transition={{
+            duration: 0.45,
+          }}
+          className="mb-9 max-w-3xl sm:mb-10"
         >
           <div className="mb-4 flex items-center gap-3">
-            <span className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-[#2F5D50]">
+            <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-[#2F5D50] sm:text-xs">
               03 / Projects
             </span>
+
             <span className="h-px w-10 bg-[#DDD6C8]" />
           </div>
 
@@ -163,34 +351,122 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
             Selected work.
           </h2>
 
-          <p className="mt-4 max-w-2xl text-base leading-7 text-[#4B5563]">
-            A selection of data analysis, business intelligence, forecasting,
-            and automation projects built to solve practical problems.
+          <p className="mt-4 max-w-2xl text-sm leading-6 text-[#4B5563] sm:text-base sm:leading-7">
+            A selection of data analysis, business intelligence,
+            forecasting, and automation projects built to solve
+            practical problems.
           </p>
+        </motion.div>
+
+        {/* Mobile / Desktop Project Signal */}
+        <motion.div
+          initial={{
+            opacity: 0,
+            y: 10,
+          }}
+          whileInView={{
+            opacity: 1,
+            y: 0,
+          }}
+          viewport={{
+            once: true,
+          }}
+          transition={{
+            duration: 0.4,
+          }}
+          className="mb-7 border-y border-[#DDD6C8] py-3 sm:mb-8"
+        >
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex min-w-0 items-center gap-3">
+              <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#6B7280]">
+                Current project
+              </span>
+
+              <span className="h-px w-5 bg-[#DDD6C8]" />
+
+              <span className="font-mono text-xs font-semibold text-[#2F5D50]">
+                {String(
+                  Math.min(
+                    activeProjectIndex + 1,
+                    Math.max(filteredProjects.length, 1)
+                  )
+                ).padStart(2, '0')}
+                <span className="mx-1 text-[#B8B0A2]">
+                  /
+                </span>
+                {String(
+                  filteredProjects.length
+                ).padStart(2, '0')}
+              </span>
+            </div>
+
+            <div
+              className={`flex items-end gap-[2px] transition-opacity duration-300 ${
+                isProjectInView
+                  ? 'opacity-100'
+                  : 'opacity-40'
+              }`}
+              aria-label="Live project data signal"
+            >
+              {[5, 10, 7, 14, 8, 12, 6, 11].map(
+                (height, index) => (
+                  <span
+                    key={index}
+                    className={`project-index-wave h-[${height}px] w-[2px] rounded-full ${
+                      index === 3
+                        ? 'bg-[#D97745]'
+                        : 'bg-[#2F5D50]'
+                    }`}
+                    style={{
+                      height: `${height}px`,
+                      animationDelay: `${index * 90}ms`,
+                    }}
+                  />
+                )
+              )}
+            </div>
+          </div>
         </motion.div>
 
         {/* Filters */}
         <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-60px' }}
-          transition={{ duration: 0.4 }}
-          className="mb-12 overflow-x-auto pb-1"
+          initial={{
+            opacity: 0,
+            y: 12,
+          }}
+          whileInView={{
+            opacity: 1,
+            y: 0,
+          }}
+          viewport={{
+            once: true,
+            margin: '-60px',
+          }}
+          transition={{
+            duration: 0.4,
+          }}
+          className="mb-10 overflow-x-auto pb-1 sm:mb-12"
         >
           <div className="flex min-w-max items-center gap-5 border-y border-[#DDD6C8] py-3">
             <div className="flex items-center gap-2 pr-2 text-xs font-medium text-[#6B7280]">
               <Filter className="h-3.5 w-3.5" />
-              <span className="hidden sm:inline">Filter</span>
+
+              <span className="hidden sm:inline">
+                Filter
+              </span>
             </div>
 
             {categories.map((category) => {
-              const isActive = activeFilter === category;
+              const isActive =
+                activeFilter === category;
 
               return (
                 <button
                   key={category}
                   type="button"
-                  onClick={() => handleFilterChange(category)}
+                  onClick={() =>
+                    handleFilterChange(category)
+                  }
                   className={`relative whitespace-nowrap py-1 text-xs font-semibold transition-colors duration-200 ${
                     isActive
                       ? 'text-[#2F5D50]'
@@ -216,7 +492,7 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
           </div>
         </motion.div>
 
-        {/* Project Count + Live Index */}
+        {/* Archive Header */}
         <div className="mb-7 flex items-end justify-between gap-4">
           <div>
             <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#6B7280]">
@@ -228,141 +504,379 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
             </h3>
           </div>
 
-          <div className="flex items-center gap-4">
-            <motion.span
-              key={activeProjectIndex}
-              initial={{ opacity: 0.35 }}
-              animate={{ opacity: 1 }}
-              className="font-mono text-xs font-semibold tracking-[0.08em] text-[#2F5D50]"
-            >
-              {String(activeProjectIndex + 1).padStart(2, '0')} /{' '}
-              {String(filteredProjects.length).padStart(2, '0')}
-            </motion.span>
-
-            <span className="hidden font-mono text-xs text-[#6B7280] sm:inline">
-              {filteredProjects.length}{' '}
-              {filteredProjects.length === 1 ? 'project' : 'projects'}
-            </span>
-          </div>
+          <span className="font-mono text-[10px] text-[#6B7280] sm:text-xs">
+            {filteredProjects.length}{' '}
+            {filteredProjects.length === 1
+              ? 'project'
+              : 'projects'}
+          </span>
         </div>
 
-        {/* Editorial Project List */}
+        {/* Project List */}
         {visibleProjects.length > 0 ? (
           <div className="border-y border-[#DDD6C8]">
-            <AnimatePresence initial={false} mode="popLayout">
-              {visibleProjects.map((project, index) => {
-                const projectNumber =
-                  orderedProjects.findIndex(
-                    (item) => item.id === project.id
-                  ) + 1;
+            <AnimatePresence
+              initial={false}
+              mode="popLayout"
+            >
+              {visibleProjects.map(
+                (project, index) => {
+                  const actualProjectIndex =
+                    filteredProjects.findIndex(
+                      (item) =>
+                        item.id === project.id
+                    );
 
-                return (
-                  <motion.article
-                    key={project.id}
-                    data-project-index={projectNumber - 1}
-                    layout
-                    initial={{ opacity: 0, y: 18 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -12 }}
-                    transition={{
-                      duration: 0.4,
-                      delay: (index % PROJECTS_PER_LOAD) * 0.05,
-                      ease: [0.16, 1, 0.3, 1],
-                    }}
-                    className="group border-b border-[#DDD6C8] last:border-b-0"
-                  >
-                    <div className="grid gap-5 py-8 sm:grid-cols-[64px_1fr_auto] sm:items-center sm:gap-7 sm:py-10">
-                      {/* Project Index */}
-                      <div className="flex items-center gap-3">
-                        <motion.span
-                          animate={{
-                            color:
-                              activeProjectIndex === projectNumber - 1
-                                ? '#2F5D50'
-                                : '#6B7280',
-                          }}
-                          transition={{ duration: 0.2 }}
-                          className="font-mono text-xs font-semibold"
-                        >
-                          {String(projectNumber).padStart(2, '0')}
-                        </motion.span>
+                  const isActive =
+                    activeProjectIndex ===
+                    actualProjectIndex;
 
-                        <span
-                          className={`h-px transition-all duration-300 ${
-                            activeProjectIndex === projectNumber - 1
-                              ? 'w-5 bg-[#2F5D50]'
-                              : 'w-0 bg-transparent'
-                          }`}
-                        />
-                      </div>
+                  const shortDescription =
+                    project.description.length >
+                    190
+                      ? `${project.description
+                          .slice(0, 187)
+                          .trimEnd()}…`
+                      : project.description;
 
-                      <div className="min-w-0">
-                        <div className="mb-2 flex flex-wrap items-center gap-x-3 gap-y-2">
-                          <h3 className="font-display text-xl font-bold tracking-tight text-[#1D2A26] sm:text-2xl">
-                            {project.title}
-                          </h3>
+                  return (
+                    <motion.article
+                      key={project.id}
+                      ref={(element) =>
+                        registerProjectRef(
+                          project.id,
+                          element
+                        )
+                      }
+                      data-project-index={
+                        actualProjectIndex
+                      }
+                      layout
+                      initial={{
+                        opacity: 0,
+                        y: 18,
+                      }}
+                      animate={{
+                        opacity: 1,
+                        y: 0,
+                      }}
+                      exit={{
+                        opacity: 0,
+                        y: -12,
+                      }}
+                      transition={{
+                        duration: 0.4,
+                        delay:
+                          (index %
+                            PROJECTS_PER_LOAD) *
+                          0.05,
+                        ease: [
+                          0.16,
+                          1,
+                          0.3,
+                          1,
+                        ],
+                      }}
+                      className={`group border-b border-[#DDD6C8] last:border-b-0 ${
+                        isActive
+                          ? 'bg-[#FCFAF6]/35'
+                          : ''
+                      }`}
+                    >
+                      <div className="py-8 sm:py-10">
+                        {/* Project Top Row */}
+                        <div className="mb-5 flex items-center justify-between gap-4">
+                          <div className="flex items-center gap-3">
+                            <span
+                              className={`font-mono text-xs font-semibold transition-colors duration-300 ${
+                                isActive
+                                  ? 'text-[#2F5D50]'
+                                  : 'text-[#6B7280]'
+                              }`}
+                            >
+                              {String(
+                                actualProjectIndex +
+                                  1
+                              ).padStart(2, '0')}
+                            </span>
 
-                          <span className="rounded-full border border-[#DDD6C8] bg-[#FCFAF6] px-2.5 py-1 text-[10px] font-mono font-medium uppercase tracking-wide text-[#6B7280]">
-                            {project.category}
-                          </span>
+                            <span
+                              className={`h-px transition-all duration-300 ${
+                                isActive
+                                  ? 'w-8 bg-[#2F5D50]'
+                                  : 'w-4 bg-[#DDD6C8]'
+                              }`}
+                            />
+                          </div>
+
+                          {/* Reactive waveform */}
+                          <div
+                            className={`flex h-5 items-end gap-[2px] transition-opacity duration-300 ${
+                              isActive
+                                ? 'opacity-100'
+                                : 'opacity-30'
+                            }`}
+                            aria-hidden="true"
+                          >
+                            {[
+                              5, 9, 6, 13, 8, 11,
+                              7,
+                            ].map(
+                              (
+                                height,
+                                waveIndex
+                              ) => (
+                                <span
+                                  key={waveIndex}
+                                  className={`project-wave-bar w-[2px] rounded-full ${
+                                    waveIndex === 3
+                                      ? 'bg-[#D97745]'
+                                      : 'bg-[#2F5D50]'
+                                  }`}
+                                  style={{
+                                    height: `${height}px`,
+                                    animationDelay: `${
+                                      waveIndex *
+                                      100
+                                    }ms`,
+                                    animationPlayState:
+                                      isActive
+                                        ? 'running'
+                                        : 'paused',
+                                  }}
+                                />
+                              )
+                            )}
+                          </div>
                         </div>
 
-                        <p className="max-w-3xl text-sm leading-6 text-[#4B5563]">
-                          {project.description}
-                        </p>
+                        {/* Mobile-first project image */}
+                        {project.mediaUrl && (
+                          <button
+                            type="button"
+                            onClick={() =>
+                              openProjectDetails(
+                                project
+                              )
+                            }
+                            className="group/media mb-6 block w-full overflow-hidden rounded-xl border border-[#DDD6C8] bg-[#EDE7DA] text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2F5D50] focus-visible:ring-offset-2 sm:hidden"
+                            aria-label={`Open ${project.title}`}
+                          >
+                            <div className="relative aspect-[16/10] overflow-hidden">
+                              {project.isVideo &&
+                              project.videoUrl ? (
+                                <video
+                                  src={
+                                    project.videoUrl
+                                  }
+                                  poster={
+                                    project.mediaUrl
+                                  }
+                                  muted
+                                  playsInline
+                                  preload="metadata"
+                                  className="h-full w-full object-cover"
+                                />
+                              ) : (
+                                <img
+                                  src={
+                                    project.mediaUrl
+                                  }
+                                  alt={
+                                    project.title
+                                  }
+                                  loading={
+                                    index === 0
+                                      ? 'eager'
+                                      : 'lazy'
+                                  }
+                                  decoding="async"
+                                  referrerPolicy="no-referrer"
+                                  className="h-full w-full object-cover transition-transform duration-500 group-hover/media:scale-[1.02]"
+                                />
+                              )}
 
-                        {/* Tiny Animated Data Waveform */}
-                        <div
-                          className="mt-5 flex h-5 items-center gap-[3px] overflow-hidden"
-                          aria-hidden="true"
-                        >
-                          {[4, 9, 6, 13, 8, 16, 7, 11, 5, 14, 8, 12].map(
-                            (height, waveformIndex) => (
-                              <span
-                                key={waveformIndex}
-                                className="project-wave-bar w-[2px] rounded-full bg-[#2F5D50]/55"
-                                style={{
-                                  height: `${height}px`,
-                                  animationDelay: `${
-                                    waveformIndex * 90
-                                  }ms`,
-                                }}
-                              />
-                            )
+                              <span className="absolute bottom-3 right-3 flex h-9 w-9 items-center justify-center rounded-lg bg-[#FCFAF6]/90 text-[#2F5D50] shadow-sm backdrop-blur-sm">
+                                <Maximize2 className="h-3.5 w-3.5" />
+                              </span>
+                            </div>
+                          </button>
+                        )}
+
+                        {/* Main Project Grid */}
+                        <div className="grid gap-6 sm:grid-cols-[64px_minmax(0,1fr)_220px_auto] sm:items-center sm:gap-7">
+                          {/* Desktop index */}
+                          <div className="hidden sm:block">
+                            <span
+                              className={`font-mono text-xs font-semibold transition-colors duration-300 ${
+                                isActive
+                                  ? 'text-[#2F5D50]'
+                                  : 'text-[#6B7280]'
+                              }`}
+                            >
+                              {String(
+                                actualProjectIndex +
+                                  1
+                              ).padStart(2, '0')}
+                            </span>
+                          </div>
+
+                          {/* Project Content */}
+                          <div className="min-w-0">
+                            <div className="mb-2.5 flex flex-wrap items-center gap-x-3 gap-y-2">
+                              <span className="text-[10px] font-mono font-semibold uppercase tracking-[0.16em] text-[#D97745]">
+                                {project.category}
+                              </span>
+
+                              {project.featured && (
+                                <>
+                                  <span className="h-1 w-1 rounded-full bg-[#2F5D50]/40" />
+
+                                  <span className="text-[10px] font-mono uppercase tracking-[0.12em] text-[#6B7280]">
+                                    Featured
+                                  </span>
+                                </>
+                              )}
+                            </div>
+
+                            <h3 className="font-display text-xl font-bold leading-tight tracking-tight text-[#1D2A26] transition-colors duration-200 group-hover:text-[#2F5D50] sm:text-2xl">
+                              {project.title}
+                            </h3>
+
+                            <p className="mt-3 max-w-3xl text-sm leading-6 text-[#6B7280]">
+                              {shortDescription}
+                            </p>
+
+                            {/* Tags */}
+                            <div className="mt-4 flex flex-wrap items-center gap-x-2 gap-y-1.5">
+                              {project.tags
+                                .slice(0, 4)
+                                .map(
+                                  (
+                                    tag,
+                                    tagIndex
+                                  ) => (
+                                    <span
+                                      key={tag}
+                                      className="flex items-center gap-2 text-[11px] font-medium text-[#6B7280]"
+                                    >
+                                      {tagIndex >
+                                        0 && (
+                                        <span className="text-[#C8C1B5]">
+                                          ·
+                                        </span>
+                                      )}
+
+                                      {tag}
+                                    </span>
+                                  )
+                                )}
+
+                              {project.tags.length >
+                                4 && (
+                                <>
+                                  <span className="text-[#C8C1B5]">
+                                    ·
+                                  </span>
+
+                                  <span className="text-[11px] font-medium text-[#9A9388]">
+                                    +
+                                    {project.tags
+                                      .length -
+                                      4}
+                                  </span>
+                                </>
+                              )}
+                            </div>
+                          </div>
+
+                          {/* Desktop Project Image */}
+                          {project.mediaUrl && (
+                            <button
+                              type="button"
+                              onClick={() =>
+                                openProjectDetails(
+                                  project
+                                )
+                              }
+                              className="group/desktop-media relative hidden aspect-[16/10] w-full overflow-hidden rounded-xl border border-[#DDD6C8] bg-[#EDE7DA] text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2F5D50] focus-visible:ring-offset-2 sm:block"
+                              aria-label={`Open ${project.title}`}
+                            >
+                              {project.isVideo &&
+                              project.videoUrl ? (
+                                <video
+                                  src={
+                                    project.videoUrl
+                                  }
+                                  poster={
+                                    project.mediaUrl
+                                  }
+                                  muted
+                                  playsInline
+                                  preload="metadata"
+                                  className="h-full w-full object-cover transition-transform duration-500 group-hover/desktop-media:scale-[1.02]"
+                                />
+                              ) : (
+                                <img
+                                  src={
+                                    project.mediaUrl
+                                  }
+                                  alt={
+                                    project.title
+                                  }
+                                  loading="lazy"
+                                  decoding="async"
+                                  referrerPolicy="no-referrer"
+                                  className="h-full w-full object-cover transition-transform duration-500 group-hover/desktop-media:scale-[1.02]"
+                                />
+                              )}
+
+                              <span className="absolute bottom-3 right-3 flex h-8 w-8 items-center justify-center rounded-lg bg-[#FCFAF6]/90 text-[#2F5D50] opacity-0 shadow-sm backdrop-blur-sm transition-opacity duration-200 group-hover/desktop-media:opacity-100">
+                                <Maximize2 className="h-3.5 w-3.5" />
+                              </span>
+                            </button>
                           )}
 
-                          <span className="ml-1 font-mono text-[8px] uppercase tracking-[0.12em] text-[#9A9388]">
-                            data signal
-                          </span>
+                          {/* Action */}
+                          <button
+                            type="button"
+                            onClick={() =>
+                              openProjectDetails(
+                                project
+                              )
+                            }
+                            className="group/action inline-flex items-center justify-between gap-4 text-left sm:justify-end"
+                            aria-label={`View details for ${project.title}`}
+                          >
+                            <span className="text-xs font-semibold text-[#2F5D50] transition-colors group-hover/action:text-[#1D2A26]">
+                              View case study
+                            </span>
+
+                            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[#DDD6C8] bg-[#FCFAF6] text-[#2F5D50] transition-all duration-200 group-hover/action:border-[#2F5D50] group-hover/action:bg-[#2F5D50] group-hover/action:text-white">
+                              <ArrowUpRight className="h-4 w-4" />
+                            </span>
+                          </button>
                         </div>
                       </div>
-
-                      <button
-                        type="button"
-                        onClick={() => openProjectDetails(project)}
-                        className="group inline-flex items-center justify-between gap-4 text-left sm:justify-end"
-                        aria-label={`View details for ${project.title}`}
-                      >
-                        <span className="text-xs font-semibold text-[#2F5D50] transition-colors group-hover:text-[#1D2A26]">
-                          View project
-                        </span>
-
-                        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[#DDD6C8] bg-[#FCFAF6] text-[#2F5D50] transition-all duration-200 group-hover:border-[#2F5D50] group-hover:bg-[#2F5D50] group-hover:text-white">
-                          <ChevronDown className="-rotate-90 h-4 w-4" />
-                        </span>
-                      </button>
-                    </div>
-                  </motion.article>
-                );
-              })}
+                    </motion.article>
+                  );
+                }
+              )}
             </AnimatePresence>
           </div>
         ) : (
-          /* Empty State */
           <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
+            initial={{
+              opacity: 0,
+              y: 16,
+            }}
+            animate={{
+              opacity: 1,
+              y: 0,
+            }}
+            transition={{
+              duration: 0.4,
+            }}
             className="border-y border-[#DDD6C8] py-16 text-center sm:py-20"
           >
             <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-lg border border-[#DDD6C8] bg-[#FCFAF6]">
@@ -375,7 +889,9 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
 
             <button
               type="button"
-              onClick={() => handleFilterChange('All')}
+              onClick={() =>
+                handleFilterChange('All')
+              }
               className="mt-5 rounded-lg bg-[#2F5D50] px-4 py-2.5 text-xs font-semibold text-white transition-colors hover:bg-[#244A40]"
             >
               Reset Filter
@@ -386,62 +902,99 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
         {/* Load More */}
         {hasMoreProjects && (
           <motion.div
-            initial={{ opacity: 0, y: 14 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
-            transition={{ duration: 0.45, delay: 0.05 }}
-            className="mt-14 flex flex-col items-center"
+            initial={{
+              opacity: 0,
+              y: 14,
+            }}
+            whileInView={{
+              opacity: 1,
+              y: 0,
+            }}
+            viewport={{
+              once: true,
+              amount: 0.2,
+            }}
+            transition={{
+              duration: 0.45,
+              delay: 0.05,
+            }}
+            className="mt-12 flex flex-col items-center sm:mt-14"
           >
             <motion.button
               type="button"
               onClick={handleLoadMore}
-              whileHover={{ y: -2 }}
-              whileTap={{ scale: 0.98 }}
+              whileHover={{
+                y: -2,
+              }}
+              whileTap={{
+                scale: 0.98,
+              }}
               className="inline-flex items-center gap-3 rounded-lg border border-[#2F5D50] bg-[#FCFAF6] px-6 py-3 text-sm font-semibold text-[#2F5D50] transition-colors duration-200 hover:bg-[#2F5D50] hover:text-white"
             >
-              <span>Load More Projects</span>
+              <span>
+                Load More Projects
+              </span>
+
               <ChevronDown className="h-4 w-4" />
             </motion.button>
 
             <p className="mt-3 font-mono text-[11px] text-[#6B7280]">
               {remainingProjects}{' '}
-              {remainingProjects === 1 ? 'more project' : 'more projects'} to
-              explore
+              {remainingProjects === 1
+                ? 'more project'
+                : 'more projects'}{' '}
+              to explore
             </p>
           </motion.div>
         )}
 
         {/* All Projects Viewed */}
-        {!hasMoreProjects && filteredProjects.length > 4 && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.45 }}
-            className="mt-14 flex items-center justify-center gap-3"
-          >
-            <span className="h-px w-10 bg-[#DDD6C8] sm:w-12" />
+        {!hasMoreProjects &&
+          filteredProjects.length > 4 && (
+            <motion.div
+              initial={{
+                opacity: 0,
+              }}
+              animate={{
+                opacity: 1,
+              }}
+              transition={{
+                duration: 0.45,
+              }}
+              className="mt-12 flex items-center justify-center gap-3 sm:mt-14"
+            >
+              <span className="h-px w-10 bg-[#DDD6C8] sm:w-12" />
 
-            <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#6B7280] sm:text-xs">
-              All projects explored
-            </span>
+              <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#6B7280] sm:text-xs">
+                All projects explored
+              </span>
 
-            <span className="h-px w-10 bg-[#DDD6C8] sm:w-12" />
-          </motion.div>
-        )}
+              <span className="h-px w-10 bg-[#DDD6C8] sm:w-12" />
+            </motion.div>
+          )}
       </div>
 
-      {/* Project Details Modal */}
+      {/* Swipeable Project Case Study */}
       {typeof document !== 'undefined' &&
         createPortal(
           <AnimatePresence>
             {selectedProject && (
               <motion.div
-                className="fixed inset-0 z-[9999] flex items-center justify-center bg-[#1D2A26]/55 p-3 sm:p-6"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
+                className="fixed inset-0 z-[9999] flex items-center justify-center bg-[#1D2A26]/60 p-0 sm:p-6"
+                initial={{
+                  opacity: 0,
+                }}
+                animate={{
+                  opacity: 1,
+                }}
+                exit={{
+                  opacity: 0,
+                }}
                 onMouseDown={(event) => {
-                  if (event.target === event.currentTarget) {
+                  if (
+                    event.target ===
+                    event.currentTarget
+                  ) {
                     closeProjectDetails();
                   }
                 }}
@@ -450,21 +1003,56 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
                   role="dialog"
                   aria-modal="true"
                   aria-labelledby="project-modal-title"
-                  initial={{ opacity: 0, y: 24, scale: 0.98 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: 18, scale: 0.98 }}
+                  initial={{
+                    opacity: 0,
+                    y: 20,
+                    scale: 0.985,
+                  }}
+                  animate={{
+                    opacity: 1,
+                    y: 0,
+                    scale: 1,
+                  }}
+                  exit={{
+                    opacity: 0,
+                    y: 16,
+                    scale: 0.985,
+                  }}
                   transition={{
                     duration: 0.3,
-                    ease: [0.16, 1, 0.3, 1],
+                    ease: [
+                      0.16,
+                      1,
+                      0.3,
+                      1,
+                    ],
                   }}
-                  className="relative flex h-[94vh] max-h-[94vh] w-full max-w-6xl flex-col overflow-hidden rounded-[16px] border border-[#DDD6C8] bg-[#FCFAF6]"
+                  className="relative flex h-[100dvh] max-h-[100dvh] w-full flex-col overflow-hidden bg-[#FCFAF6] sm:h-[94vh] sm:max-h-[94vh] sm:max-w-6xl sm:rounded-[16px] sm:border sm:border-[#DDD6C8]"
+                  onTouchStart={
+                    handleTouchStart
+                  }
+                  onTouchEnd={handleTouchEnd}
                 >
-                  {/* Modal Header / Close */}
+                  {/* Modal Header */}
                   <div className="relative z-30 flex shrink-0 items-center justify-between border-b border-[#DDD6C8] bg-[#FCFAF6] px-4 py-3 sm:px-7 sm:py-4">
-                    <div className="min-w-0 pr-3 sm:pr-4">
-                      <p className="font-mono text-[9px] font-semibold uppercase tracking-[0.16em] text-[#6B7280] sm:text-[10px]">
-                        Project details
-                      </p>
+                    <div className="min-w-0 pr-3">
+                      <div className="flex items-center gap-2">
+                        <span className="font-mono text-[9px] font-semibold uppercase tracking-[0.16em] text-[#2F5D50]">
+                          {String(
+                            selectedProjectNumber
+                          ).padStart(2, '0')}{' '}
+                          /{' '}
+                          {String(
+                            totalProjectCount
+                          ).padStart(2, '0')}
+                        </span>
+
+                        <span className="h-1 w-1 rounded-full bg-[#D97745]" />
+
+                        <span className="font-mono text-[9px] uppercase tracking-[0.14em] text-[#6B7280]">
+                          Case study
+                        </span>
+                      </div>
 
                       <h2
                         id="project-modal-title"
@@ -476,12 +1064,50 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
 
                     <button
                       type="button"
-                      onClick={closeProjectDetails}
-                      aria-label="Hide project details"
-                      className="group flex h-11 shrink-0 items-center justify-center gap-2 rounded-lg border-2 border-[#2F5D50] bg-[#FCFAF6] px-3 text-xs font-semibold text-[#2F5D50] shadow-sm transition-colors hover:bg-[#2F5D50] hover:text-white sm:h-10 sm:w-10 sm:px-0"
+                      onClick={
+                        closeProjectDetails
+                      }
+                      aria-label="Close project details"
+                      className="group flex h-10 shrink-0 items-center justify-center rounded-lg border border-[#DDD6C8] bg-[#FCFAF6] px-3 text-[#1D2A26] transition-colors hover:border-[#2F5D50] hover:text-[#2F5D50] sm:w-10 sm:px-0"
                     >
                       <X className="h-5 w-5 transition-transform duration-200 group-hover:rotate-90" />
-                      <span className="sm:hidden">Hide details</span>
+
+                      <span className="ml-2 text-xs font-semibold sm:hidden">
+                        Close
+                      </span>
+                    </button>
+                  </div>
+
+                  {/* Mobile Swipe Hint */}
+                  <div className="flex shrink-0 items-center justify-between border-b border-[#DDD6C8] px-4 py-2.5 sm:hidden">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        navigateProject(
+                          'previous'
+                        )
+                      }
+                      className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-[#6B7280]"
+                      aria-label="Previous project"
+                    >
+                      <ArrowLeft className="h-3.5 w-3.5" />
+                      Prev
+                    </button>
+
+                    <span className="font-mono text-[9px] text-[#9A9388]">
+                      Swipe to explore
+                    </span>
+
+                    <button
+                      type="button"
+                      onClick={() =>
+                        navigateProject('next')
+                      }
+                      className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-[#6B7280]"
+                      aria-label="Next project"
+                    >
+                      Next
+                      <ArrowRight className="h-3.5 w-3.5" />
                     </button>
                   </div>
 
@@ -489,34 +1115,59 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
                   <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain">
                     <div className="p-5 sm:p-7 lg:p-9">
                       <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_300px] lg:gap-14">
+
                         {/* Main Content */}
                         <div className="min-w-0">
+
+                          {/* Main Project Image */}
                           {selectedProject.mediaUrl && (
                             <button
                               type="button"
-                              onClick={() => onOpenLightbox(selectedProject)}
-                              className="group mb-8 block w-full overflow-hidden rounded-xl border border-[#DDD6C8] bg-[#F5F1E8] text-left"
+                              onClick={() =>
+                                onOpenLightbox(
+                                  selectedProject
+                                )
+                              }
+                              className="group mb-7 block w-full overflow-hidden rounded-xl border border-[#DDD6C8] bg-[#F5F1E8] text-left sm:mb-8"
                               aria-label={`Open ${selectedProject.title} images`}
                             >
-                              <div className="overflow-hidden">
-                                <img
-                                  src={selectedProject.mediaUrl}
-                                  alt={`${selectedProject.title} project preview`}
-                                  className="block h-auto max-h-[520px] w-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.015]"
-                                />
-                              </div>
+                              <div className="relative overflow-hidden">
+                                {selectedProject.isVideo &&
+                                selectedProject.videoUrl ? (
+                                  <video
+                                    src={
+                                      selectedProject.videoUrl
+                                    }
+                                    poster={
+                                      selectedProject.mediaUrl
+                                    }
+                                    controls
+                                    playsInline
+                                    className="block max-h-[520px] w-full object-cover"
+                                    onClick={(event) =>
+                                      event.stopPropagation()
+                                    }
+                                  />
+                                ) : (
+                                  <img
+                                    src={
+                                      selectedProject.mediaUrl
+                                    }
+                                    alt={`${selectedProject.title} project preview`}
+                                    referrerPolicy="no-referrer"
+                                    className="block max-h-[520px] w-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.015]"
+                                  />
+                                )}
 
-                              <div className="flex items-center justify-between border-t border-[#DDD6C8] bg-[#FCFAF6] px-4 py-3">
-                                <span className="text-xs font-medium text-[#6B7280]">
-                                  Open project gallery
+                                <span className="absolute bottom-3 right-3 flex h-9 w-9 items-center justify-center rounded-lg bg-[#FCFAF6]/90 text-[#2F5D50] shadow-sm backdrop-blur-sm sm:bottom-4 sm:right-4">
+                                  <Maximize2 className="h-3.5 w-3.5" />
                                 </span>
-                                <ExternalLink className="h-3.5 w-3.5 text-[#2F5D50]" />
                               </div>
                             </button>
                           )}
 
                           {/* About */}
-                          <div className="mb-10">
+                          <div className="mb-9 sm:mb-10">
                             <p className="mb-3 font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#6B7280]">
                               About the project
                             </p>
@@ -527,21 +1178,30 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
                           </div>
 
                           {/* Key Highlights */}
-                          {selectedProject.keyHighlights?.length > 0 && (
-                            <div className="mb-10">
+                          {selectedProject.keyHighlights?.length >
+                            0 && (
+                            <div className="mb-9 sm:mb-10">
                               <p className="mb-4 font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#6B7280]">
                                 What I did
                               </p>
 
                               <div className="divide-y divide-[#DDD6C8] border-y border-[#DDD6C8]">
                                 {selectedProject.keyHighlights.map(
-                                  (highlight, highlightIndex) => (
+                                  (
+                                    highlight,
+                                    highlightIndex
+                                  ) => (
                                     <div
-                                      key={highlightIndex}
+                                      key={
+                                        highlightIndex
+                                      }
                                       className="flex items-start gap-4 py-4"
                                     >
                                       <span className="mt-1 font-mono text-[10px] font-semibold text-[#2F5D50]">
-                                        {String(highlightIndex + 1).padStart(
+                                        {String(
+                                          highlightIndex +
+                                            1
+                                        ).padStart(
                                           2,
                                           '0'
                                         )}
@@ -558,45 +1218,62 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
                           )}
 
                           {/* Screenshots */}
-                          {selectedProject.automationScreenshots?.length > 0 && (
-                            <div className="mb-10">
+                          {selectedProject.automationScreenshots?.length >
+                            0 && (
+                            <div className="mb-9 sm:mb-10">
                               <div className="mb-4">
                                 <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#6B7280]">
                                   Project visuals
                                 </p>
 
                                 <p className="mt-1 text-sm text-[#4B5563]">
-                                  A closer look at the work behind this project.
+                                  A closer look at the work behind
+                                  this project.
                                 </p>
                               </div>
 
                               <div className="grid gap-5 sm:grid-cols-2">
                                 {selectedProject.automationScreenshots.map(
-                                  (screenshot, screenshotIndex) => (
+                                  (
+                                    screenshot,
+                                    screenshotIndex
+                                  ) => (
                                     <button
                                       key={`${screenshot.title}-${screenshotIndex}`}
                                       type="button"
                                       onClick={() =>
-                                        onOpenLightbox(selectedProject)
+                                        onOpenLightbox(
+                                          selectedProject
+                                        )
                                       }
                                       className="group overflow-hidden rounded-xl border border-[#DDD6C8] bg-[#FCFAF6] text-left"
                                     >
                                       <div className="overflow-hidden bg-[#F5F1E8]">
                                         <img
-                                          src={screenshot.image}
-                                          alt={screenshot.title}
+                                          src={
+                                            screenshot.image
+                                          }
+                                          alt={
+                                            screenshot.title
+                                          }
+                                          loading="lazy"
+                                          decoding="async"
                                           className="block h-48 w-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.02]"
                                         />
                                       </div>
 
                                       <div className="border-t border-[#DDD6C8] p-4">
                                         <p className="text-sm font-semibold text-[#1D2A26]">
-                                          {screenshot.title}
+                                          {
+                                            screenshot.title
+                                          }
                                         </p>
 
                                         {screenshot.caption && (
                                           <p className="mt-1.5 text-xs leading-5 text-[#6B7280]">
-                                            {screenshot.caption}
+                                            {
+                                              screenshot.caption
+                                            }
                                           </p>
                                         )}
                                       </div>
@@ -616,7 +1293,9 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
 
                               <div className="overflow-hidden rounded-xl border border-[#DDD6C8] bg-[#F5F1E8]">
                                 <video
-                                  src={selectedProject.videoUrl}
+                                  src={
+                                    selectedProject.videoUrl
+                                  }
                                   controls
                                   playsInline
                                   className="block w-full"
@@ -629,37 +1308,47 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
                         {/* Project Meta */}
                         <aside>
                           <div className="lg:sticky lg:top-0">
-                            <div className="mb-8">
+
+                            {/* Category */}
+                            <div className="mb-7">
                               <p className="mb-3 font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#6B7280]">
                                 Category
                               </p>
 
                               <span className="inline-flex rounded-full border border-[#DDD6C8] bg-[#F5F1E8] px-3 py-1.5 text-xs font-medium text-[#4B5563]">
-                                {selectedProject.category}
+                                {
+                                  selectedProject.category
+                                }
                               </span>
                             </div>
 
-                            <div className="mb-8">
+                            {/* Tools */}
+                            <div className="mb-7">
                               <p className="mb-3 font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#6B7280]">
                                 Tools & skills
                               </p>
 
                               <div className="flex flex-wrap gap-2">
-                                {selectedProject.tags.map((tag) => (
-                                  <span
-                                    key={tag}
-                                    className="rounded-full border border-[#DDD6C8] bg-[#F5F1E8] px-2.5 py-1.5 text-[11px] font-medium text-[#4B5563]"
-                                  >
-                                    {tag}
-                                  </span>
-                                ))}
+                                {selectedProject.tags.map(
+                                  (tag) => (
+                                    <span
+                                      key={tag}
+                                      className="rounded-full border border-[#DDD6C8] bg-[#F5F1E8] px-2.5 py-1.5 text-[11px] font-medium text-[#4B5563]"
+                                    >
+                                      {tag}
+                                    </span>
+                                  )
+                                )}
                               </div>
                             </div>
 
+                            {/* Links */}
                             <div className="border-y border-[#DDD6C8]">
                               {selectedProject.githubUrl && (
                                 <a
-                                  href={selectedProject.githubUrl}
+                                  href={
+                                    selectedProject.githubUrl
+                                  }
                                   target="_blank"
                                   rel="noreferrer"
                                   className="flex items-center justify-between gap-4 py-4 text-sm font-semibold text-[#2F5D50] transition-colors hover:text-[#1D2A26]"
@@ -675,7 +1364,9 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
 
                               {selectedProject.demoUrl && (
                                 <a
-                                  href={selectedProject.demoUrl}
+                                  href={
+                                    selectedProject.demoUrl
+                                  }
                                   target="_blank"
                                   rel="noreferrer"
                                   className="flex items-center justify-between gap-4 border-t border-[#DDD6C8] py-4 text-sm font-semibold text-[#2F5D50] transition-colors hover:text-[#1D2A26]"
@@ -690,10 +1381,42 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
                               )}
                             </div>
 
+                            {/* Desktop Previous / Next */}
+                            <div className="mt-6 hidden grid-cols-2 gap-2 sm:grid">
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  navigateProject(
+                                    'previous'
+                                  )
+                                }
+                                className="inline-flex items-center justify-center gap-2 rounded-lg border border-[#DDD6C8] bg-[#FCFAF6] px-3 py-3 text-xs font-semibold text-[#4B5563] transition-colors hover:border-[#2F5D50] hover:text-[#2F5D50]"
+                              >
+                                <ArrowLeft className="h-3.5 w-3.5" />
+                                Previous
+                              </button>
+
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  navigateProject(
+                                    'next'
+                                  )
+                                }
+                                className="inline-flex items-center justify-center gap-2 rounded-lg border border-[#2F5D50] bg-[#2F5D50] px-3 py-3 text-xs font-semibold text-white transition-colors hover:bg-[#244A40]"
+                              >
+                                Next
+                                <ArrowRight className="h-3.5 w-3.5" />
+                              </button>
+                            </div>
+
+                            {/* Hide Details */}
                             <button
                               type="button"
-                              onClick={closeProjectDetails}
-                              className="mt-6 flex w-full items-center justify-center gap-2 rounded-lg border border-[#2F5D50] bg-[#2F5D50] px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#244A40]"
+                              onClick={
+                                closeProjectDetails
+                              }
+                              className="mt-3 flex w-full items-center justify-center gap-2 rounded-lg border border-[#DDD6C8] bg-[#FCFAF6] px-4 py-3 text-sm font-semibold text-[#4B5563] transition-colors hover:border-[#2F5D50] hover:text-[#2F5D50]"
                             >
                               <X className="h-4 w-4" />
                               Hide details
@@ -709,6 +1432,39 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
           </AnimatePresence>,
           document.body
         )}
-      </section>
+
+      <style>
+        {`
+          @keyframes projectWave {
+            0%, 100% {
+              transform: scaleY(0.45);
+              opacity: 0.45;
+            }
+
+            50% {
+              transform: scaleY(1);
+              opacity: 1;
+            }
+          }
+
+          .project-wave-bar {
+            transform-origin: bottom;
+            animation: projectWave 1.1s ease-in-out infinite;
+          }
+
+          .project-index-wave {
+            transform-origin: bottom;
+            animation: projectWave 1.2s ease-in-out infinite;
+          }
+
+          @media (prefers-reduced-motion: reduce) {
+            .project-wave-bar,
+            .project-index-wave {
+              animation: none !important;
+            }
+          }
+        `}
+      </style>
+    </section>
   );
 }
