@@ -129,6 +129,21 @@ export const statsData: StatItem[] = [
 ];
 
 export const skillCategories: SkillCategory[] = [
+    {
+    title: "Data Analysis",
+    icon: "BarChart3",
+    description: "Transforming raw data into actionable executive insights through exploratory analysis, data cleaning, and BI reporting.",
+    skills: [
+      "Microsoft Excel",
+      "SQL",
+      "Power BI",
+      "Data Cleaning",
+      "Data Visualization",
+      "Dashboard Design",
+      "Data Analysis",
+      "Reporting"
+    ]
+  },
   {
     title: "AI Automation",
     icon: "Bot",
@@ -144,21 +159,7 @@ export const skillCategories: SkillCategory[] = [
       "Email Automation"
     ]
   },
-  {
-    title: "Data Analysis",
-    icon: "BarChart3",
-    description: "Transforming raw data into actionable executive insights through exploratory analysis, data cleaning, and BI reporting.",
-    skills: [
-      "Microsoft Excel",
-      "SQL",
-      "Power BI",
-      "Data Cleaning",
-      "Data Visualization",
-      "Dashboard Design",
-      "Data Analysis",
-      "Reporting"
-    ]
-  },
+
   {
     title: "Advanced Excel",
     icon: "FileSpreadsheet",
