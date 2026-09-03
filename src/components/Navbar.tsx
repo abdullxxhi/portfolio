@@ -18,15 +18,67 @@ const navLinks = [
 ];
 
 const NAVBAR_OFFSET = 76;
-
 const ROTATION_DURATION = 2600;
+
+function getLagosTime() {
+  return new Intl.DateTimeFormat('en-NG', {
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false,
+    timeZone: 'Africa/Lagos',
+  }).format(new Date());
+}
+
+function getLagosHour() {
+  const hour = Number(
+    new Intl.DateTimeFormat('en-NG', {
+      hour: '2-digit',
+      hour12: false,
+      timeZone: 'Africa/Lagos',
+    }).format(new Date())
+  );
+
+  return hour;
+}
+
+function getTimeGreeting() {
+  const hour = getLagosHour();
+
+  if (hour >= 5 && hour < 12) {
+    return 'Good morning.';
+  }
+
+  if (hour >= 12 && hour < 17) {
+    return 'Good afternoon.';
+  }
+
+  if (hour >= 17 && hour < 21) {
+    return 'Good evening.';
+  }
+
+  return 'Good night.';
+}
 
 function WelcomeVisual() {
   return (
     <div className="flex items-center gap-2">
-      <span className="h-1.5 w-1.5 rounded-full bg-[#D97745]" />
-      <span className="font-display text-[11px] font-medium tracking-tight text-[#1D2A26]">
+      <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#D97745]" />
+
+      <span className="font-display text-[11px] font-medium tracking-tight text-[#1D2A26] sm:text-xs">
         Welcome.
+      </span>
+    </div>
+  );
+}
+
+function GreetingVisual({ greeting }: { greeting: string }) {
+  return (
+    <div className="flex items-center gap-2">
+      <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#D97745]" />
+
+      <span className="font-display text-[10px] font-medium tracking-tight text-[#1D2A26] sm:text-[11px]">
+        {greeting}
       </span>
     </div>
   );
@@ -35,26 +87,13 @@ function WelcomeVisual() {
 function TimeVisual({ time }: { time: string }) {
   return (
     <div className="flex items-center gap-2">
-      <span className="h-1.5 w-1.5 rounded-full bg-[#4E8D66] animate-pulse" />
-      <span className="font-mono text-[10px] font-medium tracking-[0.08em] text-[#1D2A26]">
+      <span className="relative flex h-1.5 w-1.5 shrink-0">
+        <span className="absolute inset-0 rounded-full bg-[#4E8D66] animate-ping opacity-40" />
+        <span className="relative h-1.5 w-1.5 rounded-full bg-[#4E8D66]" />
+      </span>
+
+      <span className="font-mono text-[9px] font-medium tracking-[0.08em] text-[#1D2A26] sm:text-[10px]">
         {time} WAT
-      </span>
-    </div>
-  );
-}
-
-function CoordinatesVisual() {
-  return (
-    <div className="flex items-center gap-2">
-      <span className="relative flex h-4 w-4 items-center justify-center">
-        <span className="absolute h-3.5 w-3.5 rounded-full border border-[#DDD6C8]" />
-        <span className="absolute h-px w-4 bg-[#DDD6C8]" />
-        <span className="absolute h-4 w-px bg-[#DDD6C8]" />
-        <span className="h-1 w-1 rounded-full bg-[#2F5D50]" />
-      </span>
-
-      <span className="font-mono text-[9px] font-medium tracking-[0.04em] text-[#6B7280]">
-        06°31′N 03°23′E
       </span>
     </div>
   );
@@ -67,27 +106,40 @@ function DataVisual() {
         DATA
       </span>
 
-      <span className="flex h-4 items-end gap-[2px]">
+      <span
+        className="flex h-4 items-end gap-[2px]"
+        aria-label="Animated data signal"
+      >
         <span className="navbar-data-bar h-[5px] w-[2px] rounded-full bg-[#2F5D50]" />
+
         <span
           className="navbar-data-bar h-[10px] w-[2px] rounded-full bg-[#2F5D50]"
           style={{ animationDelay: '120ms' }}
         />
+
         <span
           className="navbar-data-bar h-[7px] w-[2px] rounded-full bg-[#2F5D50]"
           style={{ animationDelay: '240ms' }}
         />
+
         <span
           className="navbar-data-bar h-[14px] w-[2px] rounded-full bg-[#D97745]"
           style={{ animationDelay: '360ms' }}
         />
+
         <span
           className="navbar-data-bar h-[8px] w-[2px] rounded-full bg-[#2F5D50]"
           style={{ animationDelay: '480ms' }}
         />
+
         <span
           className="navbar-data-bar h-[11px] w-[2px] rounded-full bg-[#2F5D50]"
           style={{ animationDelay: '600ms' }}
+        />
+
+        <span
+          className="navbar-data-bar h-[6px] w-[2px] rounded-full bg-[#2F5D50]"
+          style={{ animationDelay: '720ms' }}
         />
       </span>
     </div>
@@ -117,6 +169,7 @@ function AIVisual() {
           r="2"
           fill="#2F5D50"
         />
+
         <circle
           className="navbar-ai-node"
           cx="13"
@@ -125,6 +178,7 @@ function AIVisual() {
           fill="#D97745"
           style={{ animationDelay: '180ms' }}
         />
+
         <circle
           className="navbar-ai-node"
           cx="22"
@@ -133,6 +187,7 @@ function AIVisual() {
           fill="#2F5D50"
           style={{ animationDelay: '360ms' }}
         />
+
         <circle
           className="navbar-ai-node"
           cx="4"
@@ -141,6 +196,7 @@ function AIVisual() {
           fill="#2F5D50"
           style={{ animationDelay: '540ms' }}
         />
+
         <circle
           className="navbar-ai-node"
           cx="13"
@@ -149,6 +205,7 @@ function AIVisual() {
           fill="#2F5D50"
           style={{ animationDelay: '720ms' }}
         />
+
         <circle
           className="navbar-ai-node"
           cx="22"
@@ -168,13 +225,13 @@ function AIVisual() {
 
 function RotatingNavbarVisual() {
   const [visualIndex, setVisualIndex] = useState(0);
+
   const [currentTime, setCurrentTime] = useState(() =>
-    new Intl.DateTimeFormat('en-NG', {
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: false,
-      timeZone: 'Africa/Lagos',
-    }).format(new Date())
+    getLagosTime()
+  );
+
+  const [greeting, setGreeting] = useState(() =>
+    getTimeGreeting()
   );
 
   useEffect(() => {
@@ -188,34 +245,24 @@ function RotatingNavbarVisual() {
   }, []);
 
   useEffect(() => {
-    if (visualIndex !== 1) {
-      return;
-    }
-
-    const updateTime = () => {
-      setCurrentTime(
-        new Intl.DateTimeFormat('en-NG', {
-          hour: '2-digit',
-          minute: '2-digit',
-          hour12: false,
-          timeZone: 'Africa/Lagos',
-        }).format(new Date())
-      );
+    const updateTimeState = () => {
+      setCurrentTime(getLagosTime());
+      setGreeting(getTimeGreeting());
     };
 
-    updateTime();
+    updateTimeState();
 
-    const timeTimer = window.setInterval(updateTime, 1000);
+    const timeTimer = window.setInterval(updateTimeState, 1000);
 
     return () => {
       window.clearInterval(timeTimer);
     };
-  }, [visualIndex]);
+  }, []);
 
   const visuals = [
     <WelcomeVisual key="welcome" />,
+    <GreetingVisual key="greeting" greeting={greeting} />,
     <TimeVisual key="time" time={currentTime} />,
-    <CoordinatesVisual key="coordinates" />,
     <DataVisual key="data" />,
     <AIVisual key="ai" />,
   ];
@@ -229,6 +276,7 @@ function RotatingNavbarVisual() {
               transform: scaleY(0.55);
               opacity: 0.55;
             }
+
             50% {
               transform: scaleY(1);
               opacity: 1;
@@ -240,6 +288,7 @@ function RotatingNavbarVisual() {
               transform: scale(0.8);
               opacity: 0.55;
             }
+
             50% {
               transform: scale(1.15);
               opacity: 1;
@@ -266,13 +315,22 @@ function RotatingNavbarVisual() {
         `}
       </style>
 
-      <div className="w-[112px] shrink-0 sm:w-[140px] lg:w-[150px]">
+      <div className="w-[100px] shrink-0 sm:w-[140px] lg:w-[150px]">
         <AnimatePresence mode="wait" initial={false}>
           <motion.div
             key={visualIndex}
-            initial={{ opacity: 0, y: 5 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -5 }}
+            initial={{
+              opacity: 0,
+              y: 5,
+            }}
+            animate={{
+              opacity: 1,
+              y: 0,
+            }}
+            exit={{
+              opacity: 0,
+              y: -5,
+            }}
             transition={{
               duration: 0.28,
               ease: [0.16, 1, 0.3, 1],
@@ -298,7 +356,9 @@ export default function Navbar({ activeSection }: NavbarProps) {
 
     handleScroll();
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('scroll', handleScroll, {
+      passive: true,
+    });
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
@@ -320,16 +380,8 @@ export default function Navbar({ activeSection }: NavbarProps) {
 
     setMobileMenuOpen(false);
 
-    /*
-     * Change the URL without reloading the SPA.
-     * pushState does NOT move the page, so we control the scroll ourselves.
-     */
     window.history.pushState({}, '', path);
 
-    /*
-     * Wait for the mobile menu to close before measuring the target.
-     * Two animation frames ensure React has committed the state update.
-     */
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         const targetPosition =
@@ -345,10 +397,13 @@ export default function Navbar({ activeSection }: NavbarProps) {
     });
   };
 
-  const goHome = (event: React.MouseEvent<HTMLAnchorElement>) => {
+  const goHome = (
+    event: React.MouseEvent<HTMLAnchorElement>
+  ) => {
     event.preventDefault();
 
     setMobileMenuOpen(false);
+
     window.history.pushState({}, '', '/');
 
     window.scrollTo({
@@ -370,8 +425,8 @@ export default function Navbar({ activeSection }: NavbarProps) {
         <a
           href="/"
           onClick={goHome}
-          aria-label="Go to homepage"
-          className="group flex items-center"
+          aria-label={`${personalInfo.name} — Go to homepage`}
+          className="group flex min-w-0 items-center"
         >
           <RotatingNavbarVisual />
         </a>
@@ -386,7 +441,11 @@ export default function Navbar({ activeSection }: NavbarProps) {
                 key={link.name}
                 href={link.path}
                 onClick={(event) =>
-                  scrollToSection(event, link.path, link.id)
+                  scrollToSection(
+                    event,
+                    link.path,
+                    link.id
+                  )
                 }
                 className={`relative py-2 text-xs font-medium transition-colors duration-200 ${
                   isActive
@@ -417,7 +476,11 @@ export default function Navbar({ activeSection }: NavbarProps) {
           <a
             href="/contact"
             onClick={(event) =>
-              scrollToSection(event, '/contact', 'contact')
+              scrollToSection(
+                event,
+                '/contact',
+                'contact'
+              )
             }
             className="inline-flex items-center gap-1.5 rounded-lg bg-[#2F5D50] px-4 py-2 text-xs font-semibold text-white transition-colors duration-200 hover:bg-[#244A40]"
           >
@@ -431,9 +494,13 @@ export default function Navbar({ activeSection }: NavbarProps) {
           <a
             href="/contact"
             onClick={(event) =>
-              scrollToSection(event, '/contact', 'contact')
+              scrollToSection(
+                event,
+                '/contact',
+                'contact'
+              )
             }
-            className="inline-flex items-center gap-1 rounded-lg bg-[#2F5D50] px-3.5 py-2 text-xs font-semibold text-white transition-colors duration-200 hover:bg-[#244A40]"
+            className="inline-flex items-center gap-1 rounded-lg bg-[#2F5D50] px-3 py-2 text-[11px] font-semibold text-white transition-colors duration-200 hover:bg-[#244A40] sm:px-3.5 sm:text-xs"
           >
             <span>Hire Me</span>
             <ArrowUpRight className="h-3.5 w-3.5" />
@@ -441,10 +508,16 @@ export default function Navbar({ activeSection }: NavbarProps) {
 
           <button
             type="button"
-            onClick={() => setMobileMenuOpen((open) => !open)}
-            aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
+            onClick={() =>
+              setMobileMenuOpen((open) => !open)
+            }
+            aria-label={
+              mobileMenuOpen
+                ? 'Close menu'
+                : 'Open menu'
+            }
             aria-expanded={mobileMenuOpen}
-            className="flex h-9 w-9 items-center justify-center rounded-lg border border-[#DDD6C8] bg-[#FCFAF6] text-[#1D2A26] transition-colors duration-200 hover:border-[#2F5D50] hover:text-[#2F5D50]"
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[#DDD6C8] bg-[#FCFAF6] text-[#1D2A26] transition-colors duration-200 hover:border-[#2F5D50] hover:text-[#2F5D50]"
           >
             {mobileMenuOpen ? (
               <X className="h-4 w-4" />
@@ -459,9 +532,18 @@ export default function Navbar({ activeSection }: NavbarProps) {
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
+            initial={{
+              opacity: 0,
+              height: 0,
+            }}
+            animate={{
+              opacity: 1,
+              height: 'auto',
+            }}
+            exit={{
+              opacity: 0,
+              height: 0,
+            }}
             transition={{
               duration: 0.2,
               ease: [0.16, 1, 0.3, 1],
@@ -471,14 +553,19 @@ export default function Navbar({ activeSection }: NavbarProps) {
             <nav className="mx-auto max-w-7xl px-4 py-4 sm:px-6">
               <div className="divide-y divide-[#DDD6C8] border-y border-[#DDD6C8]">
                 {navLinks.map((link) => {
-                  const isActive = activeSection === link.id;
+                  const isActive =
+                    activeSection === link.id;
 
                   return (
                     <a
                       key={link.name}
                       href={link.path}
                       onClick={(event) =>
-                        scrollToSection(event, link.path, link.id)
+                        scrollToSection(
+                          event,
+                          link.path,
+                          link.id
+                        )
                       }
                       className={`flex items-center justify-between py-3.5 text-sm font-medium transition-colors duration-200 ${
                         isActive
