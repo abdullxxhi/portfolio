@@ -20,7 +20,7 @@ export default function FloatingContact() {
   const whatsappUrl = `https://wa.me/${whatsappNumber}`;
 
   return (
-    <div className="fixed bottom-5 right-4 z-[90] sm:bottom-6 sm:right-6">
+    <div className="fixed bottom-[76px] right-6 z-[90]">
       <AnimatePresence>
         {isOpen && (
           <motion.div
