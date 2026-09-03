@@ -158,7 +158,7 @@ export default function Contact({
               </div>
 
               <p className="max-w-md text-sm leading-6 text-[#4B5563]">
-                Let's connect and turn data, analysis, and automation into practical solutions that make work smarter and more efficient.
+               Whether you need data analyst for your team, a Power BI dashboard, a custom Google Workspace automation, or an AI agent, I'm ready to collaborate.
               </p>
             </div>
 
