@@ -1,4 +1,10 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type TouchEvent,
+} from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import {
@@ -8,12 +14,15 @@ import {
   ChevronDown,
   ExternalLink,
   Filter,
-  FolderGit2,
   Github,
   Maximize2,
   X,
 } from 'lucide-react';
 
+import {
+  projectApplePerformanceDashboardImg,
+  projectAppleProfitabilityAnalysisImg,
+} from '../data/powerBIProject';
 import { projectsData } from '../data/portfolioData';
 import { Project } from '../types';
 
@@ -24,58 +33,131 @@ interface ProjectsProps {
 const PROJECTS_PER_LOAD = 4;
 const SWIPE_THRESHOLD = 60;
 
-export default function Projects({
-  onOpenLightbox,
-}: ProjectsProps) {
+/*
+ * Projects intentionally excluded from the portfolio:
+ *
+ * - Sales Performance Analysis
+ * - Sales Performance Dashboard
+ * - Company Performance Dashboard
+ * - UFC Fighter Data Analysis (Islam Makhachev)
+ */
+const EXCLUDED_PROJECT_TITLES = new Set([
+  'Sales Performance Analysis',
+  'Sales Performance Dashboard',
+  'Company Performance Dashboard',
+  'UFC Fighter Data Analysis (Islam Makhachev)',
+]);
+
+const powerBIProject: Project = {
+  id: 'power-bi-apple-financial',
+  title: 'Apple Financial Performance Dashboard',
+  category: 'Data Analysis',
+  featured: true,
+  description:
+    "Built an interactive Power BI dashboard to analyze Apple's financial performance across sales, profit, products, countries, business segments, and time. The project demonstrates practical data cleaning and transformation, data modeling, DAX, KPI development, interactive dashboard design, geographic analysis, and business insight generation.",
+  tags: [
+    'Power BI',
+    'Power Query',
+    'DAX',
+    'Data Modeling',
+    'Data Visualization',
+    'Financial Analysis',
+    'Dashboard Design',
+    'Business Intelligence',
+    'Data Storytelling',
+  ],
+  mediaUrl: projectApplePerformanceDashboardImg,
+  demoUrl: '',
+  githubUrl: '',
+  keyHighlights: [
+    'Analyzed overall sales, profitability, products, countries, business segments, and sales trends over time.',
+    'Built an Executive Overview page featuring Total Sales, Total Profit, Total Units Sold, Profit Margin, sales trends, country performance, product performance, and segment analysis.',
+    'Built a dedicated Profitability Analysis page covering profit by country, profit by product, profit margin by segment, and Sales vs. Profit analysis.',
+    'Used Power Query for data cleaning and transformation, Power BI data modeling, and DAX measures for analytical calculations.',
+    'Identified approximately $118.73M in total sales, $16.89M in total profit, and an overall profit margin of approximately 14.23%.',
+    'Identified Paseo as the strongest product by both sales and total profit.',
+    'Found Government to be the highest-sales business segment and Channel Partners to have the highest profit margin.',
+    'Identified negative profitability in the Enterprise segment despite substantial sales, highlighting the need for further profitability investigation.',
+    'Identified October as the strongest month for sales and France as the country with the highest total profit.',
+    'Demonstrated that strong sales performance does not necessarily translate into strong profitability.',
+  ],
+  automationScreenshots: [
+    {
+      image: projectApplePerformanceDashboardImg,
+      title: 'Apple Financial Performance Dashboard',
+      caption:
+        'Executive Overview page showing total sales, total profit, total units sold, profit margin, sales trends, sales by country, sales by product, sales by segment, and interactive Country, Segment, and Year filters.',
+    },
+    {
+      image: projectAppleProfitabilityAnalysisImg,
+      title: 'Profitability Analysis',
+      caption:
+        'Second Power BI page focusing on profitability, including profit by country, profit by product, profit margin by segment, Sales vs. Profit analysis, and interactive filters.',
+    },
+  ],
+};
+
+export default function Projects({ onOpenLightbox }: ProjectsProps) {
   const [activeFilter, setActiveFilter] = useState('All');
-  const [visibleCount, setVisibleCount] =
-    useState(PROJECTS_PER_LOAD);
-  const [selectedProject, setSelectedProject] =
-    useState<Project | null>(null);
-  const [activeProjectIndex, setActiveProjectIndex] =
-    useState(0);
-  const [isProjectInView, setIsProjectInView] =
-    useState(false);
-
-  const projectRefs = useRef<Map<string, HTMLElement>>(
-    new Map()
+  const [visibleCount, setVisibleCount] = useState(PROJECTS_PER_LOAD);
+  const [selectedProject, setSelectedProject] = useState<Project | null>(
+    null
   );
+  const [isProjectInView, setIsProjectInView] = useState(false);
 
+  const projectRefs = useRef<Map<string, HTMLElement>>(new Map());
   const touchStartX = useRef<number | null>(null);
   const touchStartY = useRef<number | null>(null);
 
   /*
-   * Keep the existing project ordering,
-   * but remove project #4: Sales Performance Analysis.
+   * Build the portfolio list:
+   * 1. Restore the Power BI project.
+   * 2. Remove the projects the user explicitly requested removed.
+   * 3. Keep every other existing project untouched.
    */
+  const portfolioProjects = useMemo(() => {
+    const existingProjects = projectsData.filter(
+      (project) => !EXCLUDED_PROJECT_TITLES.has(project.title)
+    );
+
+    const alreadyExists = existingProjects.some(
+      (project) => project.title === powerBIProject.title
+    );
+
+    return alreadyExists
+      ? existingProjects
+      : [...existingProjects, powerBIProject];
+  }, []);
+
   const orderedProjects = useMemo(
     () =>
-      projectsData
-        .filter((project) => project.id !== 'proj-4')
-        .sort((a, b) => {
-          const aIsData =
-            a.category === 'Data Analysis';
-          const bIsData =
-            b.category === 'Data Analysis';
+      [...portfolioProjects].sort((a, b) => {
+        const aIsData =
+          a.category === 'Data Analysis' ||
+          a.title === 'Apple Financial Performance Dashboard';
 
-          if (aIsData === bIsData) {
-            return 0;
-          }
+        const bIsData =
+          b.category === 'Data Analysis' ||
+          b.title === 'Apple Financial Performance Dashboard';
 
+        if (a.featured !== b.featured) {
+          return a.featured ? -1 : 1;
+        }
+
+        if (aIsData !== bIsData) {
           return aIsData ? -1 : 1;
-        }),
-    []
+        }
+
+        return 0;
+      }),
+    [portfolioProjects]
   );
 
   const categories = useMemo(
     () => [
       'All',
       ...Array.from(
-        new Set(
-          orderedProjects.map(
-            (project) => project.category
-          )
-        )
+        new Set(orderedProjects.map((project) => project.category))
       ),
     ],
     [orderedProjects]
@@ -87,36 +169,27 @@ export default function Projects({
     }
 
     return orderedProjects.filter(
-      (project) =>
-        project.category === activeFilter
+      (project) => project.category === activeFilter
     );
   }, [activeFilter, orderedProjects]);
 
-  const visibleProjects = filteredProjects.slice(
-    0,
-    visibleCount
-  );
+  const visibleProjects = filteredProjects.slice(0, visibleCount);
 
-  const hasMoreProjects =
-    visibleCount < filteredProjects.length;
+  const hasMoreProjects = visibleCount < filteredProjects.length;
 
   const remainingProjects =
     filteredProjects.length - visibleCount;
 
   const selectedProjectIndex = selectedProject
     ? filteredProjects.findIndex(
-        (project) =>
-          project.id === selectedProject.id
+        (project) => project.id === selectedProject.id
       )
     : -1;
 
   const selectedProjectNumber =
-    selectedProjectIndex >= 0
-      ? selectedProjectIndex + 1
-      : 0;
+    selectedProjectIndex >= 0 ? selectedProjectIndex + 1 : 0;
 
-  const totalProjectCount =
-    filteredProjects.length;
+  const totalProjectCount = filteredProjects.length;
 
   const handleLoadMore = () => {
     setVisibleCount((current) =>
@@ -127,19 +200,13 @@ export default function Projects({
     );
   };
 
-  const handleFilterChange = (
-    category: string
-  ) => {
+  const handleFilterChange = (category: string) => {
     setActiveFilter(category);
     setVisibleCount(PROJECTS_PER_LOAD);
     setSelectedProject(null);
-    setActiveProjectIndex(0);
-    setIsProjectInView(false);
   };
 
-  const openProjectDetails = (
-    project: Project
-  ) => {
+  const openProjectDetails = (project: Project) => {
     setSelectedProject(project);
   };
 
@@ -147,21 +214,14 @@ export default function Projects({
     setSelectedProject(null);
   };
 
-  const navigateProject = (
-    direction: 'next' | 'previous'
-  ) => {
-    if (
-      !selectedProject ||
-      filteredProjects.length === 0
-    ) {
+  const navigateProject = (direction: 'next' | 'previous') => {
+    if (!selectedProject || filteredProjects.length === 0) {
       return;
     }
 
-    const currentIndex =
-      filteredProjects.findIndex(
-        (project) =>
-          project.id === selectedProject.id
-      );
+    const currentIndex = filteredProjects.findIndex(
+      (project) => project.id === selectedProject.id
+    );
 
     if (currentIndex === -1) {
       return;
@@ -169,78 +229,47 @@ export default function Projects({
 
     const nextIndex =
       direction === 'next'
-        ? (currentIndex + 1) %
-          filteredProjects.length
-        : (currentIndex - 1 +
-            filteredProjects.length) %
+        ? (currentIndex + 1) % filteredProjects.length
+        : (currentIndex - 1 + filteredProjects.length) %
           filteredProjects.length;
 
-    setSelectedProject(
-      filteredProjects[nextIndex]
-    );
+    setSelectedProject(filteredProjects[nextIndex]);
   };
 
   /*
-   * Optional mobile swipe support.
-   * Previous / Next buttons remain the primary controls.
-   */
-  const handleTouchStart = (
-    event: React.TouchEvent<HTMLDivElement>
-  ) => {
-    const touch = event.touches[0];
-
-    touchStartX.current = touch.clientX;
-    touchStartY.current = touch.clientY;
-  };
-
-  const handleTouchEnd = (
-    event: React.TouchEvent<HTMLDivElement>
-  ) => {
-    if (
-      touchStartX.current === null ||
-      touchStartY.current === null ||
-      !selectedProject
-    ) {
-      return;
-    }
-
-    const touch = event.changedTouches[0];
-
-    const deltaX =
-      touch.clientX - touchStartX.current;
-
-    const deltaY =
-      touch.clientY - touchStartY.current;
-
-    touchStartX.current = null;
-    touchStartY.current = null;
-
-    if (Math.abs(deltaY) > Math.abs(deltaX)) {
-      return;
-    }
-
-    if (Math.abs(deltaX) < SWIPE_THRESHOLD) {
-      return;
-    }
-
-    if (deltaX < 0) {
-      navigateProject('next');
-    } else {
-      navigateProject('previous');
-    }
-  };
-
-  /*
-   * Keyboard controls and body scroll lock.
+   * When navigating with Previous / Next, ensure the destination
+   * project has already been loaded into the visible list.
    */
   useEffect(() => {
     if (!selectedProject) {
       return;
     }
 
-    const handleKeyDown = (
-      event: KeyboardEvent
-    ) => {
+    if (selectedProjectIndex >= visibleCount) {
+      setVisibleCount(
+        Math.min(
+          Math.ceil((selectedProjectIndex + 1) / PROJECTS_PER_LOAD) *
+            PROJECTS_PER_LOAD,
+          filteredProjects.length
+        )
+      );
+    }
+  }, [
+    selectedProject,
+    selectedProjectIndex,
+    visibleCount,
+    filteredProjects.length,
+  ]);
+
+  /*
+   * Keyboard navigation for the project popup.
+   */
+  useEffect(() => {
+    if (!selectedProject) {
+      return;
+    }
+
+    const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         closeProjectDetails();
       }
@@ -254,1232 +283,737 @@ export default function Projects({
       }
     };
 
-    const originalOverflow =
-      document.body.style.overflow;
+    window.addEventListener('keydown', handleKeyDown);
 
+    const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
 
-    window.addEventListener(
-      'keydown',
-      handleKeyDown
-    );
-
     return () => {
-      document.body.style.overflow =
-        originalOverflow;
-
-      window.removeEventListener(
-        'keydown',
-        handleKeyDown
-      );
+      window.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = previousOverflow;
     };
-  }, [
-    selectedProject,
-    filteredProjects,
-  ]);
+  }, [selectedProject, filteredProjects]);
 
   /*
-   * Detect the project currently being viewed.
+   * Project viewport observer.
    */
   useEffect(() => {
-    if (visibleProjects.length === 0) {
+    const elements = Array.from(projectRefs.current.values());
+
+    if (!elements.length) {
       return;
     }
 
-    const elements = Array.from(
-      projectRefs.current.values()
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries.some((entry) => entry.isIntersecting);
+        setIsProjectInView(visible);
+      },
+      {
+        threshold: 0.2,
+        rootMargin: '-40px 0px -40px 0px',
+      }
     );
 
-    if (elements.length === 0) {
-      return;
-    }
+    elements.forEach((element) => observer.observe(element));
 
-    const observer =
-      new IntersectionObserver(
-        (entries) => {
-          const visibleEntries = entries
-            .filter(
-              (entry) => entry.isIntersecting
-            )
-            .sort(
-              (a, b) =>
-                b.intersectionRatio -
-                a.intersectionRatio
-            );
+    return () => observer.disconnect();
+  }, [visibleProjects]);
 
-          if (visibleEntries.length === 0) {
-            return;
-          }
-
-          const activeElement =
-            visibleEntries[0]
-              .target as HTMLElement;
-
-          const projectIndex = Number(
-            activeElement.dataset.projectIndex
-          );
-
-          if (!Number.isNaN(projectIndex)) {
-            setActiveProjectIndex(
-              projectIndex
-            );
-            setIsProjectInView(true);
-          }
-        },
-        {
-          threshold: [0.2, 0.4, 0.6, 0.8],
-          rootMargin:
-            '-25% 0px -25% 0px',
-        }
-      );
-
-    elements.forEach((element) =>
-      observer.observe(element)
-    );
-
-    return () => {
-      observer.disconnect();
-    };
-  }, [visibleProjects, activeFilter]);
-
-  const registerProjectRef = (
+  const setProjectRef = (
     projectId: string,
     element: HTMLElement | null
   ) => {
-    if (element) {
-      projectRefs.current.set(
-        projectId,
-        element
-      );
-    } else {
+    if (!element) {
       projectRefs.current.delete(projectId);
+      return;
     }
+
+    projectRefs.current.set(projectId, element);
+  };
+
+  const handleTouchStart = (event: TouchEvent<HTMLDivElement>) => {
+    touchStartX.current = event.touches[0]?.clientX ?? null;
+    touchStartY.current = event.touches[0]?.clientY ?? null;
+  };
+
+  const handleTouchEnd = (event: TouchEvent<HTMLDivElement>) => {
+    if (
+      touchStartX.current === null ||
+      touchStartY.current === null
+    ) {
+      return;
+    }
+
+    const endX = event.changedTouches[0]?.clientX ?? touchStartX.current;
+    const endY = event.changedTouches[0]?.clientY ?? touchStartY.current;
+
+    const deltaX = endX - touchStartX.current;
+    const deltaY = endY - touchStartY.current;
+
+    touchStartX.current = null;
+    touchStartY.current = null;
+
+    if (Math.abs(deltaX) < SWIPE_THRESHOLD) {
+      return;
+    }
+
+    if (Math.abs(deltaX) < Math.abs(deltaY)) {
+      return;
+    }
+
+    navigateProject(deltaX < 0 ? 'next' : 'previous');
   };
 
   return (
-    <section
-      id="projects"
-      className="relative z-10 bg-[#F5F1E8] py-20 sm:py-24 lg:py-28"
-    >
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-
-        {/* Section Header */}
-        <motion.div
-          initial={{
-            opacity: 0,
-            y: 16,
-          }}
-          whileInView={{
-            opacity: 1,
-            y: 0,
-          }}
-          viewport={{
-            once: true,
-            margin: '-60px',
-          }}
-          transition={{
-            duration: 0.45,
-          }}
-          className="mb-9 max-w-3xl sm:mb-10"
-        >
-          <div className="mb-4 flex items-center gap-3">
-            <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-[#2F5D50] sm:text-xs">
-              03 / Projects
-            </span>
-
-            <span className="h-px w-10 bg-[#DDD6C8]" />
-          </div>
-
-          <h2 className="font-display text-3xl font-bold tracking-tight text-[#1D2A26] sm:text-4xl">
-            Selected work.
-          </h2>
-
-          <p className="mt-4 max-w-2xl text-sm leading-6 text-[#4B5563] sm:text-base sm:leading-7">
-            A selection of data analysis, business
-            intelligence, forecasting, and automation
-            projects built to solve practical problems.
-          </p>
-        </motion.div>
-
-        {/* Project Index + Waveform */}
-        <motion.div
-          initial={{
-            opacity: 0,
-            y: 10,
-          }}
-          whileInView={{
-            opacity: 1,
-            y: 0,
-          }}
-          viewport={{
-            once: true,
-          }}
-          transition={{
-            duration: 0.4,
-          }}
-          className="mb-7 border-y border-[#DDD6C8] py-3 sm:mb-8"
-        >
-          <div className="flex items-center justify-between gap-4">
-            <div className="flex min-w-0 items-center gap-3">
-              <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#6B7280]">
-                Current project
+    <>
+      <section
+        id="projects"
+        className="relative z-10 bg-[#F5F1E8] py-24 sm:py-28"
+      >
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          {/* Section header */}
+          <div className="mb-12 max-w-3xl">
+            <div className="mb-4 flex items-center gap-3">
+              <span className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-[#2F5D50]">
+                03 / Projects
               </span>
 
-              <span className="h-px w-5 bg-[#DDD6C8]" />
-
-              <span className="font-mono text-xs font-semibold text-[#2F5D50]">
-                {String(
-                  Math.min(
-                    activeProjectIndex + 1,
-                    Math.max(
-                      filteredProjects.length,
-                      1
-                    )
-                  )
-                ).padStart(2, '0')}
-
-                <span className="mx-1 text-[#B8B0A2]">
-                  /
-                </span>
-
-                {String(
-                  filteredProjects.length
-                ).padStart(2, '0')}
-              </span>
+              <span className="h-px w-10 bg-[#DDD6C8]" />
             </div>
 
-            <div
-              className={`flex h-5 items-end gap-[2px] transition-opacity duration-300 ${
-                isProjectInView
-                  ? 'opacity-100'
-                  : 'opacity-40'
-              }`}
-              aria-label="Live project data signal"
-            >
-              {[5, 10, 7, 14, 8, 12, 6, 11].map(
-                (height, index) => (
-                  <span
-                    key={index}
-                    className={`project-index-wave w-[2px] rounded-full ${
-                      index === 3
-                        ? 'bg-[#D97745]'
-                        : 'bg-[#2F5D50]'
-                    }`}
-                    style={{
-                      height: `${height}px`,
-                      animationDelay: `${
-                        index * 90
-                      }ms`,
-                    }}
-                  />
-                )
-              )}
-            </div>
+            <h2 className="font-display text-3xl font-bold tracking-tight text-[#1D2A26] sm:text-4xl">
+              Selected work.
+            </h2>
+
+            <p className="mt-4 max-w-2xl text-base leading-7 text-[#4B5563]">
+              A selection of data analysis, business intelligence,
+              automation, and web development projects built to solve
+              practical problems.
+            </p>
           </div>
-        </motion.div>
 
-        {/* Filters */}
-        <motion.div
-          initial={{
-            opacity: 0,
-            y: 12,
-          }}
-          whileInView={{
-            opacity: 1,
-            y: 0,
-          }}
-          viewport={{
-            once: true,
-            margin: '-60px',
-          }}
-          transition={{
-            duration: 0.4,
-          }}
-          className="mb-10 overflow-x-auto pb-1 sm:mb-12"
-        >
-          <div className="flex min-w-max items-center gap-5 border-y border-[#DDD6C8] py-3">
-            <div className="flex items-center gap-2 pr-2 text-xs font-medium text-[#6B7280]">
-              <Filter className="h-3.5 w-3.5" />
-
-              <span className="hidden sm:inline">
-                Filter
-              </span>
+          {/* Filters */}
+          <div className="mb-10 flex flex-wrap items-center gap-2">
+            <div className="mr-2 flex items-center gap-2 text-sm font-medium text-[#6B7280]">
+              <Filter className="h-4 w-4" />
+              <span>Filter</span>
             </div>
 
             {categories.map((category) => {
-              const isActive =
-                activeFilter === category;
+              const isActive = activeFilter === category;
 
               return (
                 <button
                   key={category}
                   type="button"
-                  onClick={() =>
-                    handleFilterChange(category)
-                  }
-                  className={`relative whitespace-nowrap py-1 text-xs font-semibold transition-colors duration-200 ${
+                  onClick={() => handleFilterChange(category)}
+                  className={`rounded-lg border px-3.5 py-2 text-sm font-medium transition-colors ${
                     isActive
-                      ? 'text-[#2F5D50]'
-                      : 'text-[#6B7280] hover:text-[#1D2A26]'
+                      ? 'border-[#2F5D50] bg-[#2F5D50] text-white'
+                      : 'border-[#DDD6C8] bg-[#FCFAF6] text-[#4B5563] hover:border-[#2F5D50]/40 hover:text-[#2F5D50]'
                   }`}
                 >
                   {category}
-
-                  {isActive && (
-                    <motion.span
-                      layoutId="projectFilterIndicator"
-                      className="absolute -bottom-3 left-0 right-0 h-px bg-[#2F5D50]"
-                      transition={{
-                        type: 'spring',
-                        stiffness: 380,
-                        damping: 30,
-                      }}
-                    />
-                  )}
                 </button>
               );
             })}
           </div>
-        </motion.div>
 
-        {/* Archive Header */}
-        <div className="mb-7 flex items-end justify-between gap-4">
-          <div>
-            <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#6B7280]">
-              Project archive
-            </p>
-
-            <h3 className="mt-1 font-display text-xl font-bold text-[#1D2A26] sm:text-2xl">
-              Recent work
-            </h3>
-          </div>
-
-          <span className="font-mono text-[10px] text-[#6B7280] sm:text-xs">
-            {filteredProjects.length}{' '}
-            {filteredProjects.length === 1
-              ? 'project'
-              : 'projects'}
-          </span>
-        </div>
-
-        {/* Project List */}
-        {visibleProjects.length > 0 ? (
+          {/* Project list */}
           <div className="border-y border-[#DDD6C8]">
-            <AnimatePresence
-              initial={false}
-              mode="popLayout"
-            >
-              {visibleProjects.map(
-                (project, index) => {
-                  const actualProjectIndex =
-                    filteredProjects.findIndex(
-                      (item) =>
-                        item.id === project.id
-                    );
+            {visibleProjects.map((project, index) => {
+              const actualIndex = filteredProjects.findIndex(
+                (item) => item.id === project.id
+              );
 
-                  const isActive =
-                    activeProjectIndex ===
-                    actualProjectIndex;
+              const projectNumber =
+                String(actualIndex + 1).padStart(2, '0');
 
-                  const shortDescription =
-                    project.description.length >
-                    190
-                      ? `${project.description
-                          .slice(0, 187)
-                          .trimEnd()}…`
-                      : project.description;
+              const description =
+                project.description.length > 220
+                  ? `${project.description.slice(0, 220).trim()}…`
+                  : project.description;
 
-                  return (
-                    <motion.article
-                      key={project.id}
-                      ref={(element) =>
-                        registerProjectRef(
-                          project.id,
-                          element
-                        )
-                      }
-                      data-project-index={
-                        actualProjectIndex
-                      }
-                      initial={{
-                        opacity: 0,
-                        y: 18,
-                      }}
-                      animate={{
-                        opacity: 1,
-                        y: 0,
-                      }}
-                      exit={{
-                        opacity: 0,
-                        y: -12,
-                      }}
-                      transition={{
-                        duration: 0.4,
-                        delay:
-                          (index %
-                            PROJECTS_PER_LOAD) *
-                          0.05,
-                        ease: [
-                          0.16,
-                          1,
-                          0.3,
-                          1,
-                        ],
-                      }}
-                      className={`group border-b border-[#DDD6C8] last:border-b-0 ${
-                        isActive
-                          ? 'bg-[#FCFAF6]/35'
-                          : ''
-                      }`}
-                    >
-                      <div className="py-8 sm:py-10">
+              const visibleTags = project.tags.slice(0, 4);
+              const remainingTags =
+                project.tags.length - visibleTags.length;
 
-                        {/* Project Top Row */}
-                        <div className="mb-5 flex items-center justify-between gap-4">
-                          <div className="flex items-center gap-3">
-                            <span
-                              className={`font-mono text-xs font-semibold transition-colors duration-300 ${
-                                isActive
-                                  ? 'text-[#2F5D50]'
-                                  : 'text-[#6B7280]'
-                              }`}
-                            >
-                              {String(
-                                actualProjectIndex +
-                                  1
-                              ).padStart(2, '0')}
+              return (
+                <motion.article
+                  key={project.id}
+                  ref={(element) =>
+                    setProjectRef(project.id, element)
+                  }
+                  initial={{ opacity: 0, y: 18 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{
+                    once: true,
+                    margin: '-70px',
+                  }}
+                  transition={{
+                    duration: 0.5,
+                    delay: index * 0.05,
+                    ease: [0.16, 1, 0.3, 1],
+                  }}
+                  className="group border-b border-[#DDD6C8] last:border-b-0"
+                >
+                  <button
+                    type="button"
+                    onClick={() => openProjectDetails(project)}
+                    className="block w-full text-left"
+                  >
+                    <div className="grid gap-7 py-9 lg:grid-cols-[80px_minmax(0,1fr)_280px] lg:gap-10 lg:py-11">
+                      {/* Project number */}
+                      <div className="flex items-start">
+                        <span className="font-mono text-sm font-semibold tracking-wide text-[#6B7280] transition-colors group-hover:text-[#2F5D50]">
+                          {projectNumber}
+                        </span>
+                      </div>
+
+                      {/* Main project information */}
+                      <div>
+                        <div className="mb-3 flex flex-wrap items-center gap-3">
+                          <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-[#2F5D50]">
+                            {project.category}
+                          </span>
+
+                          {project.featured && (
+                            <span className="rounded-full border border-[#D97745]/30 bg-[#D97745]/5 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-[#D97745]">
+                              Featured
                             </span>
-
-                            <span
-                              className={`h-px transition-all duration-300 ${
-                                isActive
-                                  ? 'w-8 bg-[#2F5D50]'
-                                  : 'w-4 bg-[#DDD6C8]'
-                              }`}
-                            />
-                          </div>
-
-                          {/* Reactive Waveform */}
-                          <div
-                            className={`flex h-5 items-end gap-[2px] transition-opacity duration-300 ${
-                              isActive
-                                ? 'opacity-100'
-                                : 'opacity-30'
-                            }`}
-                            aria-hidden="true"
-                          >
-                            {[5, 9, 6, 13, 8, 11, 7].map(
-                              (
-                                height,
-                                waveIndex
-                              ) => (
-                                <span
-                                  key={waveIndex}
-                                  className={`project-wave-bar w-[2px] rounded-full ${
-                                    waveIndex === 3
-                                      ? 'bg-[#D97745]'
-                                      : 'bg-[#2F5D50]'
-                                  }`}
-                                  style={{
-                                    height: `${height}px`,
-                                    animationDelay: `${
-                                      waveIndex * 100
-                                    }ms`,
-                                    animationPlayState:
-                                      isActive
-                                        ? 'running'
-                                        : 'paused',
-                                  }}
-                                />
-                              )
-                            )}
-                          </div>
+                          )}
                         </div>
 
-                        {/* Main Project Layout */}
-                        <div className="grid gap-6 sm:grid-cols-[64px_minmax(0,1fr)_220px_auto] sm:items-center sm:gap-7">
+                        <div className="flex items-start gap-3">
+                          <h3 className="font-display text-2xl font-bold tracking-tight text-[#1D2A26] transition-colors group-hover:text-[#2F5D50] sm:text-3xl">
+                            {project.title}
+                          </h3>
 
-                          {/* Index */}
-                          <div className="hidden sm:block">
+                          <ArrowUpRight className="mt-1 h-5 w-5 shrink-0 text-[#6B7280] transition-all duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-[#2F5D50]" />
+                        </div>
+
+                        <p className="mt-4 max-w-3xl text-sm leading-7 text-[#4B5563] sm:text-base">
+                          {description}
+                        </p>
+
+                        <div className="mt-5 flex flex-wrap items-center gap-2">
+                          {visibleTags.map((tag) => (
                             <span
-                              className={`font-mono text-xs font-semibold transition-colors duration-300 ${
-                                isActive
-                                  ? 'text-[#2F5D50]'
-                                  : 'text-[#6B7280]'
-                              }`}
+                              key={tag}
+                              className="rounded-full border border-[#DDD6C8] bg-[#FCFAF6] px-2.5 py-1 text-xs font-medium text-[#6B7280]"
                             >
-                              {String(
-                                actualProjectIndex +
-                                  1
-                              ).padStart(2, '0')}
+                              {tag}
                             </span>
-                          </div>
+                          ))}
 
-                          {/* Project Details */}
-                          <div className="min-w-0">
-                            <div className="mb-2.5 flex flex-wrap items-center gap-x-3 gap-y-2">
-                              <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#D97745]">
-                                {project.category}
-                              </span>
-
-                              {project.featured && (
-                                <>
-                                  <span className="h-1 w-1 rounded-full bg-[#2F5D50]/40" />
-
-                                  <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-[#6B7280]">
-                                    Featured
-                                  </span>
-                                </>
-                              )}
-                            </div>
-
-                            <button
-                              type="button"
-                              onClick={() =>
-                                openProjectDetails(
-                                  project
-                                )
-                              }
-                              className="text-left"
-                            >
-                              <h3 className="font-display text-xl font-bold leading-tight tracking-tight text-[#1D2A26] transition-colors duration-200 group-hover:text-[#2F5D50] sm:text-2xl">
-                                {project.title}
-                              </h3>
-                            </button>
-
-                            <p className="mt-3 max-w-3xl text-sm leading-6 text-[#6B7280]">
-                              {shortDescription}
-                            </p>
-
-                            {/* Tags */}
-                            <div className="mt-4 flex flex-wrap items-center gap-x-2 gap-y-1.5">
-                              {project.tags
-                                .slice(0, 4)
-                                .map(
-                                  (
-                                    tag,
-                                    tagIndex
-                                  ) => (
-                                    <span
-                                      key={tag}
-                                      className="flex items-center gap-2 text-[11px] font-medium text-[#6B7280]"
-                                    >
-                                      {tagIndex >
-                                        0 && (
-                                        <span className="text-[#C8C1B5]">
-                                          ·
-                                        </span>
-                                      )}
-
-                                      {tag}
-                                    </span>
-                                  )
-                                )}
-
-                              {project.tags.length >
-                                4 && (
-                                <>
-                                  <span className="text-[#C8C1B5]">
-                                    ·
-                                  </span>
-
-                                  <span className="text-[11px] font-medium text-[#9A9388]">
-                                    +
-                                    {project.tags
-                                      .length - 4}
-                                  </span>
-                                </>
-                              )}
-                            </div>
-                          </div>
-
-                          {/* Project Image */}
-                          {project.mediaUrl && (
-                            <button
-                              type="button"
-                              onClick={() =>
-                                openProjectDetails(
-                                  project
-                                )
-                              }
-                              className="group/media relative hidden aspect-[16/10] w-full overflow-hidden rounded-xl border border-[#DDD6C8] bg-[#EDE7DA] text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2F5D50] focus-visible:ring-offset-2 sm:block"
-                              aria-label={`Open ${project.title}`}
-                            >
-                              {project.isVideo &&
-                              project.videoUrl ? (
-                                <video
-                                  src={
-                                    project.videoUrl
-                                  }
-                                  poster={
-                                    project.mediaUrl
-                                  }
-                                  muted
-                                  playsInline
-                                  preload="metadata"
-                                  className="h-full w-full object-cover transition-transform duration-500 group-hover/media:scale-[1.02]"
-                                />
-                              ) : (
-                                <img
-                                  src={
-                                    project.mediaUrl
-                                  }
-                                  alt={
-                                    project.title
-                                  }
-                                  loading="lazy"
-                                  decoding="async"
-                                  referrerPolicy="no-referrer"
-                                  className="h-full w-full object-cover transition-transform duration-500 group-hover/media:scale-[1.02]"
-                                />
-                              )}
-
-                              <span className="absolute bottom-3 right-3 flex h-8 w-8 items-center justify-center rounded-lg bg-[#FCFAF6]/90 text-[#2F5D50] opacity-0 shadow-sm backdrop-blur-sm transition-opacity duration-200 group-hover/media:opacity-100">
-                                <Maximize2 className="h-3.5 w-3.5" />
-                              </span>
-                            </button>
+                          {remainingTags > 0 && (
+                            <span className="px-1 text-xs font-medium text-[#6B7280]">
+                              +{remainingTags}
+                            </span>
                           )}
+                        </div>
 
-                          {/* Open Case Study */}
-                          <button
-                            type="button"
-                            onClick={() =>
-                              openProjectDetails(
-                                project
-                              )
-                            }
-                            className="group/action inline-flex items-center justify-between gap-4 text-left sm:justify-end"
-                            aria-label={`View details for ${project.title}`}
-                          >
-                            <span className="text-xs font-semibold text-[#2F5D50] transition-colors group-hover/action:text-[#1D2A26]">
-                              View case study
-                            </span>
-
-                            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[#DDD6C8] bg-[#FCFAF6] text-[#2F5D50] transition-all duration-200 group-hover/action:border-[#2F5D50] group-hover/action:bg-[#2F5D50] group-hover/action:text-white">
-                              <ArrowUpRight className="h-4 w-4" />
-                            </span>
-                          </button>
+                        <div className="mt-6 flex items-center gap-2 text-sm font-semibold text-[#2F5D50]">
+                          <span>View case study</span>
+                          <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
                         </div>
                       </div>
-                    </motion.article>
-                  );
-                }
-              )}
-            </AnimatePresence>
+
+                      {/* Project media */}
+                      <div className="hidden lg:block">
+                        <div className="overflow-hidden rounded-xl border border-[#DDD6C8] bg-[#FCFAF6]">
+                          <div className="relative aspect-[16/10] overflow-hidden">
+                            {project.isVideo ? (
+                              <video
+                                src={project.videoUrl}
+                                muted
+                                playsInline
+                                preload="metadata"
+                                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+                              />
+                            ) : (
+                              <img
+                                src={project.mediaUrl}
+                                alt={project.title}
+                                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+                              />
+                            )}
+
+                            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#1D2A26]/10 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </button>
+                </motion.article>
+              );
+            })}
           </div>
-        ) : (
-          <motion.div
-            initial={{
-              opacity: 0,
-              y: 16,
-            }}
-            animate={{
-              opacity: 1,
-              y: 0,
-            }}
-            transition={{
-              duration: 0.4,
-            }}
-            className="border-y border-[#DDD6C8] py-16 text-center sm:py-20"
-          >
-            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-lg border border-[#DDD6C8] bg-[#FCFAF6]">
-              <FolderGit2 className="h-5 w-5 text-[#2F5D50]" />
+
+          {/* Empty state */}
+          {visibleProjects.length === 0 && (
+            <div className="border-b border-[#DDD6C8] py-16 text-center">
+              <p className="text-sm text-[#6B7280]">
+                No projects found in this category.
+              </p>
             </div>
-
-            <p className="text-base text-[#6B7280]">
-              No projects found for this category.
-            </p>
-
-            <button
-              type="button"
-              onClick={() =>
-                handleFilterChange('All')
-              }
-              className="mt-5 rounded-lg bg-[#2F5D50] px-4 py-2.5 text-xs font-semibold text-white transition-colors hover:bg-[#244A40]"
-            >
-              Reset Filter
-            </button>
-          </motion.div>
-        )}
-
-        {/* Load More */}
-        {hasMoreProjects && (
-          <motion.div
-            initial={{
-              opacity: 0,
-              y: 14,
-            }}
-            whileInView={{
-              opacity: 1,
-              y: 0,
-            }}
-            viewport={{
-              once: true,
-              amount: 0.2,
-            }}
-            transition={{
-              duration: 0.45,
-              delay: 0.05,
-            }}
-            className="mt-12 flex flex-col items-center sm:mt-14"
-          >
-            <motion.button
-              type="button"
-              onClick={handleLoadMore}
-              whileHover={{
-                y: -2,
-              }}
-              whileTap={{
-                scale: 0.98,
-              }}
-              className="inline-flex items-center gap-3 rounded-lg border border-[#2F5D50] bg-[#FCFAF6] px-6 py-3 text-sm font-semibold text-[#2F5D50] transition-colors duration-200 hover:bg-[#2F5D50] hover:text-white"
-            >
-              <span>
-                Load More Projects
-              </span>
-
-              <ChevronDown className="h-4 w-4" />
-            </motion.button>
-
-            <p className="mt-3 font-mono text-[11px] text-[#6B7280]">
-              {remainingProjects}{' '}
-              {remainingProjects === 1
-                ? 'more project'
-                : 'more projects'}{' '}
-              to explore
-            </p>
-          </motion.div>
-        )}
-
-        {/* All Projects Viewed */}
-        {!hasMoreProjects &&
-          filteredProjects.length > 4 && (
-            <motion.div
-              initial={{
-                opacity: 0,
-              }}
-              animate={{
-                opacity: 1,
-              }}
-              transition={{
-                duration: 0.45,
-              }}
-              className="mt-12 flex items-center justify-center gap-3 sm:mt-14"
-            >
-              <span className="h-px w-10 bg-[#DDD6C8] sm:w-12" />
-
-              <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#6B7280] sm:text-xs">
-                All projects explored
-              </span>
-
-              <span className="h-px w-10 bg-[#DDD6C8] sm:w-12" />
-            </motion.div>
           )}
-      </div>
 
-      {/* Project Details Modal */}
+          {/* Load more */}
+          {hasMoreProjects && (
+            <div className="flex justify-center pt-10">
+              <button
+                type="button"
+                onClick={handleLoadMore}
+                className="group inline-flex items-center gap-2 rounded-lg border border-[#DDD6C8] bg-[#FCFAF6] px-5 py-3 text-sm font-semibold text-[#1D2A26] transition-all duration-200 hover:border-[#2F5D50]/40 hover:text-[#2F5D50]"
+              >
+                <span>
+                  Load more
+                  {remainingProjects > 0
+                    ? ` (${remainingProjects})`
+                    : ''}
+                </span>
+
+                <ChevronDown className="h-4 w-4 transition-transform duration-200 group-hover:translate-y-0.5" />
+              </button>
+            </div>
+          )}
+
+          {/* Project count + waveform */}
+          <div className="mt-12 flex items-center justify-between border-t border-[#DDD6C8] pt-5">
+            <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-[#6B7280]">
+              {filteredProjects.length} projects
+            </span>
+
+            <div
+              className={`data-waveform ${
+                isProjectInView ? 'is-active' : ''
+              }`}
+              aria-hidden="true"
+            >
+              <span />
+              <span />
+              <span />
+              <span />
+              <span />
+              <span />
+              <span />
+              <span />
+              <span />
+              <span />
+              <span />
+              <span />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Project case-study modal */}
       {typeof document !== 'undefined' &&
         createPortal(
           <AnimatePresence>
             {selectedProject && (
               <motion.div
-                className="fixed inset-0 z-[9999] flex items-center justify-center bg-[#1D2A26]/60 p-0 sm:p-6"
-                initial={{
-                  opacity: 0,
-                }}
-                animate={{
-                  opacity: 1,
-                }}
-                exit={{
-                  opacity: 0,
-                }}
+                key={selectedProject.id}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="fixed inset-0 z-[100] overflow-y-auto bg-[#1D2A26]/45 p-4 sm:p-6 lg:p-10"
                 onMouseDown={(event) => {
-                  if (
-                    event.target ===
-                    event.currentTarget
-                  ) {
+                  if (event.target === event.currentTarget) {
                     closeProjectDetails();
                   }
                 }}
+                onTouchStart={handleTouchStart}
+                onTouchEnd={handleTouchEnd}
               >
-                <motion.div
-                  role="dialog"
-                  aria-modal="true"
-                  aria-labelledby="project-modal-title"
-                  initial={{
-                    opacity: 0,
-                    y: 20,
-                    scale: 0.985,
-                  }}
-                  animate={{
-                    opacity: 1,
-                    y: 0,
-                    scale: 1,
-                  }}
-                  exit={{
-                    opacity: 0,
-                    y: 16,
-                    scale: 0.985,
-                  }}
-                  transition={{
-                    duration: 0.3,
-                    ease: [
-                      0.16,
-                      1,
-                      0.3,
-                      1,
-                    ],
-                  }}
-                  className="relative flex h-[100dvh] max-h-[100dvh] w-full flex-col overflow-hidden bg-[#FCFAF6] sm:h-[94vh] sm:max-h-[94vh] sm:max-w-6xl sm:rounded-[16px] sm:border sm:border-[#DDD6C8]"
-                  onTouchStart={
-                    handleTouchStart
-                  }
-                  onTouchEnd={handleTouchEnd}
-                >
-
-                  {/* Modal Header */}
-                  <div className="flex shrink-0 items-center justify-between border-b border-[#DDD6C8] bg-[#FCFAF6] px-4 py-3 sm:px-7 sm:py-4">
-                    <div className="min-w-0 pr-3">
-                      <div className="flex items-center gap-2">
-                        <span className="font-mono text-[9px] font-semibold uppercase tracking-[0.16em] text-[#2F5D50]">
-                          {String(
-                            selectedProjectNumber
-                          ).padStart(2, '0')}{' '}
-                          /{' '}
-                          {String(
-                            totalProjectCount
-                          ).padStart(2, '0')}
+                <div className="mx-auto flex min-h-full max-w-5xl items-center justify-center">
+                  <motion.div
+                    initial={{ opacity: 0, y: 20, scale: 0.985 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 20, scale: 0.985 }}
+                    transition={{
+                      duration: 0.35,
+                      ease: [0.16, 1, 0.3, 1],
+                    }}
+                    className="w-full overflow-hidden rounded-2xl border border-[#DDD6C8] bg-[#FCFAF6]"
+                  >
+                    {/* Modal header */}
+                    <div className="flex items-center justify-between gap-4 border-b border-[#DDD6C8] px-5 py-4 sm:px-7">
+                      <div className="flex min-w-0 items-center gap-3">
+                        <span className="shrink-0 font-mono text-xs font-semibold text-[#2F5D50]">
+                          {String(selectedProjectNumber).padStart(
+                            2,
+                            '0'
+                          )}{' '}
+                          / {String(totalProjectCount).padStart(2, '0')}
                         </span>
 
-                        <span className="h-1 w-1 rounded-full bg-[#D97745]" />
+                        <span className="h-4 w-px bg-[#DDD6C8]" />
 
-                        <span className="font-mono text-[9px] uppercase tracking-[0.14em] text-[#6B7280]">
-                          Case study
+                        <span className="truncate font-mono text-[10px] font-semibold uppercase tracking-[0.15em] text-[#6B7280]">
+                          {selectedProject.category}
                         </span>
                       </div>
 
-                      <h2
-                        id="project-modal-title"
-                        className="mt-1 truncate font-display text-base font-bold text-[#1D2A26] sm:text-xl"
+                      <button
+                        type="button"
+                        onClick={closeProjectDetails}
+                        className="inline-flex shrink-0 items-center gap-2 rounded-lg border border-[#DDD6C8] px-3 py-2 text-sm font-semibold text-[#4B5563] transition-colors hover:border-[#2F5D50]/40 hover:text-[#2F5D50]"
+                        aria-label="Close project details"
                       >
-                        {selectedProject.title}
-                      </h2>
+                        <X className="h-4 w-4" />
+                        <span className="hidden sm:inline">
+                          Close
+                        </span>
+                      </button>
                     </div>
 
-                    <button
-                      type="button"
-                      onClick={
-                        closeProjectDetails
-                      }
-                      aria-label="Close project details"
-                      className="group flex h-10 shrink-0 items-center justify-center rounded-lg border border-[#DDD6C8] bg-[#FCFAF6] px-3 text-[#1D2A26] transition-colors hover:border-[#2F5D50] hover:text-[#2F5D50] sm:w-10 sm:px-0"
-                    >
-                      <X className="h-5 w-5 transition-transform duration-200 group-hover:rotate-90" />
-
-                      <span className="ml-2 text-xs font-semibold sm:hidden">
-                        Close
-                      </span>
-                    </button>
-                  </div>
-
-                  {/* Previous / Next */}
-                  <div className="flex shrink-0 items-center justify-between border-b border-[#DDD6C8] px-4 py-3 sm:px-7">
-                    <button
-                      type="button"
-                      onClick={() =>
-                        navigateProject(
-                          'previous'
-                        )
-                      }
-                      className="inline-flex items-center gap-2 rounded-lg border border-[#DDD6C8] bg-[#FCFAF6] px-3 py-2.5 text-xs font-semibold text-[#4B5563] transition-colors hover:border-[#2F5D50] hover:text-[#2F5D50]"
-                    >
-                      <ArrowLeft className="h-3.5 w-3.5" />
-                      Previous
-                    </button>
-
-                    <span className="font-mono text-[10px] text-[#9A9388]">
-                      {String(
-                        selectedProjectNumber
-                      ).padStart(2, '0')}
-                      {' / '}
-                      {String(
-                        totalProjectCount
-                      ).padStart(2, '0')}
-                    </span>
-
-                    <button
-                      type="button"
-                      onClick={() =>
-                        navigateProject(
-                          'next'
-                        )
-                      }
-                      className="inline-flex items-center gap-2 rounded-lg bg-[#2F5D50] px-3 py-2.5 text-xs font-semibold text-white transition-colors hover:bg-[#244A40]"
-                    >
-                      Next
-                      <ArrowRight className="h-3.5 w-3.5" />
-                    </button>
-                  </div>
-
-                  {/* Modal Content */}
-                  <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain">
-                    <div className="p-5 sm:p-7 lg:p-9">
-                      <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_300px] lg:gap-14">
-
-                        {/* Main Content */}
-                        <div className="min-w-0">
-
-                          {/* Main Image */}
-                          {selectedProject.mediaUrl && (
-                            <button
-                              type="button"
-                              onClick={() =>
-                                onOpenLightbox(
-                                  selectedProject
-                                )
-                              }
-                              className="group mb-7 block w-full overflow-hidden rounded-xl border border-[#DDD6C8] bg-[#F5F1E8] text-left sm:mb-8"
-                              aria-label={`Open ${selectedProject.title} images`}
-                            >
-                              <div className="relative overflow-hidden">
-                                {selectedProject.isVideo &&
-                                selectedProject.videoUrl ? (
-                                  <video
-                                    src={
-                                      selectedProject.videoUrl
-                                    }
-                                    poster={
-                                      selectedProject.mediaUrl
-                                    }
-                                    controls
-                                    playsInline
-                                    className="block max-h-[520px] w-full object-cover"
-                                    onClick={(event) =>
-                                      event.stopPropagation()
-                                    }
-                                  />
-                                ) : (
-                                  <img
-                                    src={
-                                      selectedProject.mediaUrl
-                                    }
-                                    alt={`${selectedProject.title} project preview`}
-                                    referrerPolicy="no-referrer"
-                                    className="block max-h-[520px] w-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.015]"
-                                  />
-                                )}
-
-                                <span className="absolute bottom-3 right-3 flex h-9 w-9 items-center justify-center rounded-lg bg-[#FCFAF6]/90 text-[#2F5D50] shadow-sm backdrop-blur-sm sm:bottom-4 sm:right-4">
-                                  <Maximize2 className="h-3.5 w-3.5" />
-                                </span>
-                              </div>
-                            </button>
-                          )}
-
-                          {/* About */}
-                          <div className="mb-9 sm:mb-10">
-                            <p className="mb-3 font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#6B7280]">
-                              About the project
-                            </p>
-
-                            <p className="max-w-3xl text-sm leading-7 text-[#4B5563] sm:text-base">
-                              {
-                                selectedProject.description
-                              }
-                            </p>
-                          </div>
-
-                          {/* Highlights */}
-                          {selectedProject.keyHighlights &&
-                            selectedProject.keyHighlights.length >
-                              0 && (
-                              <div className="mb-9 sm:mb-10">
-                                <p className="mb-4 font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#6B7280]">
-                                  What I did
-                                </p>
-
-                                <div className="divide-y divide-[#DDD6C8] border-y border-[#DDD6C8]">
-                                  {selectedProject.keyHighlights.map(
-                                    (
-                                      highlight,
-                                      highlightIndex
-                                    ) => (
-                                      <div
-                                        key={
-                                          highlightIndex
-                                        }
-                                        className="flex items-start gap-4 py-4"
-                                      >
-                                        <span className="mt-1 font-mono text-[10px] font-semibold text-[#2F5D50]">
-                                          {String(
-                                            highlightIndex +
-                                              1
-                                          ).padStart(
-                                            2,
-                                            '0'
-                                          )}
-                                        </span>
-
-                                        <p className="text-sm leading-6 text-[#4B5563]">
-                                          {highlight}
-                                        </p>
-                                      </div>
-                                    )
-                                  )}
-                                </div>
-                              </div>
-                            )}
-
-                          {/* Screenshots */}
-                          {selectedProject.automationScreenshots &&
-                            selectedProject.automationScreenshots.length >
-                              0 && (
-                              <div className="mb-9 sm:mb-10">
-                                <div className="mb-4">
-                                  <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#6B7280]">
-                                    Project visuals
-                                  </p>
-
-                                  <p className="mt-1 text-sm text-[#4B5563]">
-                                    A closer look at
-                                    the work behind
-                                    this project.
-                                  </p>
-                                </div>
-
-                                <div className="grid gap-5 sm:grid-cols-2">
-                                  {selectedProject.automationScreenshots.map(
-                                    (
-                                      screenshot,
-                                      screenshotIndex
-                                    ) => (
-                                      <button
-                                        key={`${screenshot.title}-${screenshotIndex}`}
-                                        type="button"
-                                        onClick={() =>
-                                          onOpenLightbox(
-                                            selectedProject
-                                          )
-                                        }
-                                        className="group overflow-hidden rounded-xl border border-[#DDD6C8] bg-[#FCFAF6] text-left"
-                                      >
-                                        <div className="overflow-hidden bg-[#F5F1E8]">
-                                          <img
-                                            src={
-                                              screenshot.image
-                                            }
-                                            alt={
-                                              screenshot.title
-                                            }
-                                            loading="lazy"
-                                            decoding="async"
-                                            className="block h-48 w-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.02]"
-                                          />
-                                        </div>
-
-                                        <div className="border-t border-[#DDD6C8] p-4">
-                                          <p className="text-sm font-semibold text-[#1D2A26]">
-                                            {
-                                              screenshot.title
-                                            }
-                                          </p>
-
-                                          {screenshot.caption && (
-                                            <p className="mt-1.5 text-xs leading-5 text-[#6B7280]">
-                                              {
-                                                screenshot.caption
-                                              }
-                                            </p>
-                                          )}
-                                        </div>
-                                      </button>
-                                    )
-                                  )}
-                                </div>
-                              </div>
-                            )}
-
-                          {/* Video */}
-                          {selectedProject.videoUrl && (
-                            <div>
-                              <p className="mb-4 font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#6B7280]">
-                                Project walkthrough
-                              </p>
-
-                              <div className="overflow-hidden rounded-xl border border-[#DDD6C8] bg-[#F5F1E8]">
+                    {/* Modal content */}
+                    <div className="max-h-[calc(100vh-140px)] overflow-y-auto">
+                      <div className="grid lg:grid-cols-[1.15fr_0.85fr]">
+                        {/* Media */}
+                        <div className="border-b border-[#DDD6C8] bg-[#F5F1E8] p-4 sm:p-6 lg:border-b-0 lg:border-r">
+                          <div className="overflow-hidden rounded-xl border border-[#DDD6C8] bg-[#FCFAF6]">
+                            <div className="relative aspect-[16/10]">
+                              {selectedProject.isVideo ? (
                                 <video
-                                  src={
-                                    selectedProject.videoUrl
-                                  }
+                                  src={selectedProject.videoUrl}
                                   controls
                                   playsInline
-                                  className="block w-full"
+                                  className="h-full w-full object-cover"
                                 />
-                              </div>
+                              ) : (
+                                <img
+                                  src={selectedProject.mediaUrl}
+                                  alt={selectedProject.title}
+                                  className="h-full w-full object-cover"
+                                />
+                              )}
+
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  onOpenLightbox(selectedProject)
+                                }
+                                className="absolute bottom-3 right-3 inline-flex items-center gap-2 rounded-lg border border-white/60 bg-[#FCFAF6]/90 px-3 py-2 text-xs font-semibold text-[#1D2A26] backdrop-blur-sm transition-colors hover:bg-white"
+                              >
+                                <Maximize2 className="h-3.5 w-3.5" />
+                                <span>View media</span>
+                              </button>
                             </div>
-                          )}
+                          </div>
                         </div>
 
-                        {/* Project Meta */}
-                        <aside>
-                          <div className="lg:sticky lg:top-0">
+                        {/* Details */}
+                        <div className="p-5 sm:p-7 lg:p-8">
+                          <div className="mb-5">
+                            <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#2F5D50]">
+                              Case Study
+                            </span>
 
-                            {/* Category */}
-                            <div className="mb-7">
-                              <p className="mb-3 font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#6B7280]">
-                                Category
-                              </p>
+                            <h2 className="mt-2 font-display text-2xl font-bold tracking-tight text-[#1D2A26] sm:text-3xl">
+                              {selectedProject.title}
+                            </h2>
+                          </div>
 
-                              <span className="inline-flex rounded-full border border-[#DDD6C8] bg-[#F5F1E8] px-3 py-1.5 text-xs font-medium text-[#4B5563]">
-                                {
-                                  selectedProject.category
-                                }
-                              </span>
-                            </div>
+                          <p className="text-sm leading-7 text-[#4B5563]">
+                            {selectedProject.description}
+                          </p>
 
-                            {/* Tools */}
-                            <div className="mb-7">
-                              <p className="mb-3 font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#6B7280]">
-                                Tools & skills
-                              </p>
+                          {/* Highlights */}
+                          {selectedProject.keyHighlights?.length ? (
+                            <div className="mt-7 border-t border-[#DDD6C8] pt-6">
+                              <h3 className="font-display text-sm font-bold uppercase tracking-wide text-[#1D2A26]">
+                                Key highlights
+                              </h3>
 
-                              <div className="flex flex-wrap gap-2">
-                                {selectedProject.tags.map(
-                                  (tag) => (
-                                    <span
-                                      key={tag}
-                                      className="rounded-full border border-[#DDD6C8] bg-[#F5F1E8] px-2.5 py-1.5 text-[11px] font-medium text-[#4B5563]"
+                              <div className="mt-4 space-y-3">
+                                {selectedProject.keyHighlights.map(
+                                  (highlight, index) => (
+                                    <div
+                                      key={index}
+                                      className="flex items-start gap-3"
                                     >
-                                      {tag}
-                                    </span>
+                                      <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#4E8D66]" />
+
+                                      <p className="text-sm leading-6 text-[#4B5563]">
+                                        {highlight}
+                                      </p>
+                                    </div>
                                   )
                                 )}
                               </div>
                             </div>
+                          ) : null}
 
-                            {/* Links */}
-                            <div className="border-y border-[#DDD6C8]">
+                          {/* Technologies */}
+                          <div className="mt-7 border-t border-[#DDD6C8] pt-6">
+                            <h3 className="font-display text-sm font-bold uppercase tracking-wide text-[#1D2A26]">
+                              Technologies
+                            </h3>
+
+                            <div className="mt-4 flex flex-wrap gap-2">
+                              {selectedProject.tags.map((tag) => (
+                                <span
+                                  key={tag}
+                                  className="rounded-full border border-[#DDD6C8] bg-[#F5F1E8] px-2.5 py-1 text-xs font-medium text-[#6B7280]"
+                                >
+                                  {tag}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+
+                          {/* Links */}
+                          {(selectedProject.githubUrl ||
+                            selectedProject.demoUrl) && (
+                            <div className="mt-7 flex flex-wrap gap-3 border-t border-[#DDD6C8] pt-6">
                               {selectedProject.githubUrl && (
                                 <a
-                                  href={
-                                    selectedProject.githubUrl
-                                  }
+                                  href={selectedProject.githubUrl}
                                   target="_blank"
-                                  rel="noreferrer"
-                                  className="flex items-center justify-between gap-4 py-4 text-sm font-semibold text-[#2F5D50] transition-colors hover:text-[#1D2A26]"
+                                  rel="noopener noreferrer"
+                                  className="inline-flex items-center gap-2 rounded-lg border border-[#DDD6C8] px-4 py-2.5 text-sm font-semibold text-[#1D2A26] transition-colors hover:border-[#2F5D50]/40 hover:text-[#2F5D50]"
                                 >
-                                  <span className="flex items-center gap-2">
-                                    <Github className="h-4 w-4" />
-                                    GitHub
-                                  </span>
-
+                                  <Github className="h-4 w-4" />
+                                  GitHub
                                   <ExternalLink className="h-3.5 w-3.5" />
                                 </a>
                               )}
 
                               {selectedProject.demoUrl && (
                                 <a
-                                  href={
-                                    selectedProject.demoUrl
-                                  }
+                                  href={selectedProject.demoUrl}
                                   target="_blank"
-                                  rel="noreferrer"
-                                  className="flex items-center justify-between gap-4 border-t border-[#DDD6C8] py-4 text-sm font-semibold text-[#2F5D50] transition-colors hover:text-[#1D2A26]"
+                                  rel="noopener noreferrer"
+                                  className="inline-flex items-center gap-2 rounded-lg bg-[#2F5D50] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#24493f]"
                                 >
-                                  <span className="flex items-center gap-2">
-                                    <ExternalLink className="h-4 w-4" />
-                                    Live / Demo
-                                  </span>
-
-                                  <ExternalLink className="h-3.5 w-3.5" />
+                                  Live Demo
+                                  <ArrowUpRight className="h-4 w-4" />
                                 </a>
                               )}
                             </div>
+                          )}
+                        </div>
+                      </div>
 
-                            {/* Previous / Next */}
-                            <div className="mt-6 grid grid-cols-2 gap-2">
-                              <button
-                                type="button"
-                                onClick={() =>
-                                  navigateProject(
-                                    'previous'
-                                  )
-                                }
-                                className="inline-flex items-center justify-center gap-2 rounded-lg border border-[#DDD6C8] bg-[#FCFAF6] px-3 py-3 text-xs font-semibold text-[#4B5563] transition-colors hover:border-[#2F5D50] hover:text-[#2F5D50]"
-                              >
-                                <ArrowLeft className="h-3.5 w-3.5" />
-                                Previous
-                              </button>
+                      {/* Screenshots */}
+                      {selectedProject.automationScreenshots?.length ? (
+                        <div className="border-t border-[#DDD6C8] px-5 py-7 sm:px-7 sm:py-8">
+                          <div className="mb-6 flex items-end justify-between gap-4">
+                            <div>
+                              <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#2F5D50]">
+                                Project media
+                              </span>
 
-                              <button
-                                type="button"
-                                onClick={() =>
-                                  navigateProject(
-                                    'next'
-                                  )
-                                }
-                                className="inline-flex items-center justify-center gap-2 rounded-lg border border-[#2F5D50] bg-[#2F5D50] px-3 py-3 text-xs font-semibold text-white transition-colors hover:bg-[#244A40]"
-                              >
-                                Next
-                                <ArrowRight className="h-3.5 w-3.5" />
-                              </button>
+                              <h3 className="mt-1 font-display text-xl font-bold text-[#1D2A26]">
+                                Screenshots & details
+                              </h3>
                             </div>
 
-                            {/* Close */}
-                            <button
-                              type="button"
-                              onClick={
-                                closeProjectDetails
-                              }
-                              className="mt-3 flex w-full items-center justify-center gap-2 rounded-lg border border-[#DDD6C8] bg-[#FCFAF6] px-4 py-3 text-sm font-semibold text-[#4B5563] transition-colors hover:border-[#2F5D50] hover:text-[#2F5D50]"
-                            >
-                              <X className="h-4 w-4" />
-                              Close
-                            </button>
+                            <span className="font-mono text-xs text-[#6B7280]">
+                              {selectedProject.automationScreenshots.length}{' '}
+                              views
+                            </span>
                           </div>
-                        </aside>
+
+                          <div className="grid gap-5 sm:grid-cols-2">
+                            {selectedProject.automationScreenshots.map(
+                              (screenshot, index) => (
+                                <button
+                                  key={`${screenshot.title}-${index}`}
+                                  type="button"
+                                  onClick={() =>
+                                    onOpenLightbox(selectedProject)
+                                  }
+                                  className="group overflow-hidden rounded-xl border border-[#DDD6C8] bg-[#F5F1E8] text-left transition-colors hover:border-[#2F5D50]/35"
+                                >
+                                  <div className="aspect-video overflow-hidden bg-[#FCFAF6]">
+                                    <img
+                                      src={screenshot.image}
+                                      alt={screenshot.title}
+                                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+                                    />
+                                  </div>
+
+                                  <div className="border-t border-[#DDD6C8] p-4">
+                                    <div className="flex items-start justify-between gap-3">
+                                      <div>
+                                        <h4 className="font-display text-sm font-bold text-[#1D2A26]">
+                                          {screenshot.title}
+                                        </h4>
+
+                                        <p className="mt-1 text-xs leading-5 text-[#6B7280]">
+                                          {screenshot.caption}
+                                        </p>
+                                      </div>
+
+                                      <Maximize2 className="mt-0.5 h-4 w-4 shrink-0 text-[#6B7280] transition-colors group-hover:text-[#2F5D50]" />
+                                    </div>
+                                  </div>
+                                </button>
+                              )
+                            )}
+                          </div>
+                        </div>
+                      ) : null}
+                    </div>
+
+                    {/* Previous / Next / Close controls */}
+                    <div className="flex flex-col-reverse gap-3 border-t border-[#DDD6C8] px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-7">
+                      <button
+                        type="button"
+                        onClick={closeProjectDetails}
+                        className="inline-flex items-center justify-center gap-2 rounded-lg border border-[#DDD6C8] px-4 py-2.5 text-sm font-semibold text-[#4B5563] transition-colors hover:border-[#2F5D50]/40 hover:text-[#2F5D50]"
+                      >
+                        <X className="h-4 w-4" />
+                        Close
+                      </button>
+
+                      <div className="flex items-center justify-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() =>
+                            navigateProject('previous')
+                          }
+                          className="inline-flex items-center gap-2 rounded-lg border border-[#DDD6C8] px-4 py-2.5 text-sm font-semibold text-[#1D2A26] transition-colors hover:border-[#2F5D50]/40 hover:text-[#2F5D50]"
+                        >
+                          <ArrowLeft className="h-4 w-4" />
+                          <span>Previous</span>
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => navigateProject('next')}
+                          className="inline-flex items-center gap-2 rounded-lg bg-[#2F5D50] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#24493f]"
+                        >
+                          <span>Next</span>
+                          <ArrowRight className="h-4 w-4" />
+                        </button>
                       </div>
                     </div>
-                  </div>
-                </motion.div>
+                  </motion.div>
+                </div>
               </motion.div>
             )}
           </AnimatePresence>,
           document.body
         )}
-
-      <style>
-        {`
-          @keyframes projectWave {
-            0%, 100% {
-              transform: scaleY(0.45);
-              opacity: 0.45;
-            }
-
-            50% {
-              transform: scaleY(1);
-              opacity: 1;
-            }
-          }
-
-          .project-wave-bar {
-            transform-origin: bottom;
-            animation: projectWave 1.1s ease-in-out infinite;
-          }
-
-          .project-index-wave {
-            transform-origin: bottom;
-            animation: projectWave 1.2s ease-in-out infinite;
-          }
-
-          @media (prefers-reduced-motion: reduce) {
-            .project-wave-bar,
-            .project-index-wave {
-              animation: none !important;
-            }
-          }
-        `}
-      </style>
-    </section>
+    </>
   );
+}
+
+/*
+ * Tiny editorial data waveform.
+ * It is deliberately subtle and only animates when projects enter
+ * the viewport.
+ */
+const waveformStyles = `
+.data-waveform {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 2px;
+  width: 58px;
+  height: 18px;
+  opacity: 0.45;
+}
+
+.data-waveform span {
+  display: block;
+  width: 2px;
+  height: 5px;
+  border-radius: 999px;
+  background: #2F5D50;
+  transform-origin: center;
+}
+
+.data-waveform.is-active span:nth-child(1) {
+  animation: dataWave 1.2s ease-in-out infinite;
+  animation-delay: 0s;
+}
+
+.data-waveform.is-active span:nth-child(2) {
+  animation: dataWave 1.2s ease-in-out infinite;
+  animation-delay: 0.08s;
+}
+
+.data-waveform.is-active span:nth-child(3) {
+  animation: dataWave 1.2s ease-in-out infinite;
+  animation-delay: 0.16s;
+}
+
+.data-waveform.is-active span:nth-child(4) {
+  animation: dataWave 1.2s ease-in-out infinite;
+  animation-delay: 0.24s;
+}
+
+.data-waveform.is-active span:nth-child(5) {
+  animation: dataWave 1.2s ease-in-out infinite;
+  animation-delay: 0.32s;
+}
+
+.data-waveform.is-active span:nth-child(6) {
+  animation: dataWave 1.2s ease-in-out infinite;
+  animation-delay: 0.4s;
+}
+
+.data-waveform.is-active span:nth-child(7) {
+  animation: dataWave 1.2s ease-in-out infinite;
+  animation-delay: 0.48s;
+}
+
+.data-waveform.is-active span:nth-child(8) {
+  animation: dataWave 1.2s ease-in-out infinite;
+  animation-delay: 0.56s;
+}
+
+.data-waveform.is-active span:nth-child(9) {
+  animation: dataWave 1.2s ease-in-out infinite;
+  animation-delay: 0.64s;
+}
+
+.data-waveform.is-active span:nth-child(10) {
+  animation: dataWave 1.2s ease-in-out infinite;
+  animation-delay: 0.72s;
+}
+
+.data-waveform.is-active span:nth-child(11) {
+  animation: dataWave 1.2s ease-in-out infinite;
+  animation-delay: 0.8s;
+}
+
+.data-waveform.is-active span:nth-child(12) {
+  animation: dataWave 1.2s ease-in-out infinite;
+  animation-delay: 0.88s;
+}
+
+@keyframes dataWave {
+  0%,
+  100% {
+    height: 4px;
+  }
+
+  50% {
+    height: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .data-waveform.is-active span {
+    animation: none !important;
+  }
+}
+`;
+
+if (
+  typeof document !== 'undefined' &&
+  !document.getElementById('projects-waveform-styles')
+) {
+  const style = document.createElement('style');
+  style.id = 'projects-waveform-styles';
+  style.textContent = waveformStyles;
+  document.head.appendChild(style);
 }
