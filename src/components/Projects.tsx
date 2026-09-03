@@ -24,25 +24,37 @@ export default function Projects({
     PROJECTS_PER_LOAD
   );
 
+  const orderedProjects = useMemo(
+    () =>
+      [...projectsData].sort((a, b) => {
+        const aIsData = a.category === 'Data Analysis';
+        const bIsData = b.category === 'Data Analysis';
+
+        if (aIsData === bIsData) return 0;
+        return aIsData ? -1 : 1;
+      }),
+    []
+  );
+
   const categories = useMemo(
     () => [
       'All',
       ...Array.from(
-        new Set(projectsData.map((project) => project.category))
+        new Set(orderedProjects.map((project) => project.category))
       ),
     ],
-    []
+    [orderedProjects]
   );
 
   const filteredProjects = useMemo(() => {
     if (activeFilter === 'All') {
-      return projectsData;
+      return orderedProjects;
     }
 
-    return projectsData.filter(
+    return orderedProjects.filter(
       (project) => project.category === activeFilter
     );
-  }, [activeFilter]);
+  }, [activeFilter, orderedProjects]);
 
   const visibleProjects = filteredProjects.slice(
     0,
@@ -100,8 +112,8 @@ export default function Projects({
           </h2>
 
           <p className="mt-4 max-w-2xl text-base leading-7 text-[#4B5563]">
-            A selection of data analysis, automation, forecasting,
-            and technical projects built to solve practical problems.
+            A selection of data analysis, business intelligence, forecasting,
+            and automation projects built to solve practical problems.
           </p>
         </motion.div>
 
