@@ -24,27 +24,46 @@ interface ProjectsProps {
 const PROJECTS_PER_LOAD = 4;
 const SWIPE_THRESHOLD = 60;
 
-export default function Projects({ onOpenLightbox }: ProjectsProps) {
+export default function Projects({
+  onOpenLightbox,
+}: ProjectsProps) {
   const [activeFilter, setActiveFilter] = useState('All');
-  const [visibleCount, setVisibleCount] = useState(PROJECTS_PER_LOAD);
-  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
-  const [activeProjectIndex, setActiveProjectIndex] = useState(0);
-  const [isProjectInView, setIsProjectInView] = useState(false);
+  const [visibleCount, setVisibleCount] =
+    useState(PROJECTS_PER_LOAD);
+  const [selectedProject, setSelectedProject] =
+    useState<Project | null>(null);
+  const [activeProjectIndex, setActiveProjectIndex] =
+    useState(0);
+  const [isProjectInView, setIsProjectInView] =
+    useState(false);
 
-  const projectRefs = useRef<Map<string, HTMLElement>>(new Map());
+  const projectRefs = useRef<Map<string, HTMLElement>>(
+    new Map()
+  );
+
   const touchStartX = useRef<number | null>(null);
   const touchStartY = useRef<number | null>(null);
 
+  /*
+   * Keep the existing project ordering,
+   * but remove project #4: Sales Performance Analysis.
+   */
   const orderedProjects = useMemo(
     () =>
-      [...projectsData].sort((a, b) => {
-        const aIsData = a.category === 'Data Analysis';
-        const bIsData = b.category === 'Data Analysis';
+      projectsData
+        .filter((project) => project.id !== 'proj-4')
+        .sort((a, b) => {
+          const aIsData =
+            a.category === 'Data Analysis';
+          const bIsData =
+            b.category === 'Data Analysis';
 
-        if (aIsData === bIsData) return 0;
+          if (aIsData === bIsData) {
+            return 0;
+          }
 
-        return aIsData ? -1 : 1;
-      }),
+          return aIsData ? -1 : 1;
+        }),
     []
   );
 
@@ -52,7 +71,11 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
     () => [
       'All',
       ...Array.from(
-        new Set(orderedProjects.map((project) => project.category))
+        new Set(
+          orderedProjects.map(
+            (project) => project.category
+          )
+        )
       ),
     ],
     [orderedProjects]
@@ -64,20 +87,26 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
     }
 
     return orderedProjects.filter(
-      (project) => project.category === activeFilter
+      (project) =>
+        project.category === activeFilter
     );
   }, [activeFilter, orderedProjects]);
 
-  const visibleProjects = filteredProjects.slice(0, visibleCount);
+  const visibleProjects = filteredProjects.slice(
+    0,
+    visibleCount
+  );
 
-  const hasMoreProjects = visibleCount < filteredProjects.length;
+  const hasMoreProjects =
+    visibleCount < filteredProjects.length;
 
   const remainingProjects =
     filteredProjects.length - visibleCount;
 
   const selectedProjectIndex = selectedProject
     ? filteredProjects.findIndex(
-        (project) => project.id === selectedProject.id
+        (project) =>
+          project.id === selectedProject.id
       )
     : -1;
 
@@ -86,7 +115,8 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
       ? selectedProjectIndex + 1
       : 0;
 
-  const totalProjectCount = filteredProjects.length;
+  const totalProjectCount =
+    filteredProjects.length;
 
   const handleLoadMore = () => {
     setVisibleCount((current) =>
@@ -97,14 +127,19 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
     );
   };
 
-  const handleFilterChange = (category: string) => {
+  const handleFilterChange = (
+    category: string
+  ) => {
     setActiveFilter(category);
     setVisibleCount(PROJECTS_PER_LOAD);
     setSelectedProject(null);
     setActiveProjectIndex(0);
+    setIsProjectInView(false);
   };
 
-  const openProjectDetails = (project: Project) => {
+  const openProjectDetails = (
+    project: Project
+  ) => {
     setSelectedProject(project);
   };
 
@@ -112,14 +147,21 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
     setSelectedProject(null);
   };
 
-  const navigateProject = (direction: 'next' | 'previous') => {
-    if (!selectedProject || filteredProjects.length === 0) {
+  const navigateProject = (
+    direction: 'next' | 'previous'
+  ) => {
+    if (
+      !selectedProject ||
+      filteredProjects.length === 0
+    ) {
       return;
     }
 
-    const currentIndex = filteredProjects.findIndex(
-      (project) => project.id === selectedProject.id
-    );
+    const currentIndex =
+      filteredProjects.findIndex(
+        (project) =>
+          project.id === selectedProject.id
+      );
 
     if (currentIndex === -1) {
       return;
@@ -127,13 +169,21 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
 
     const nextIndex =
       direction === 'next'
-        ? (currentIndex + 1) % filteredProjects.length
-        : (currentIndex - 1 + filteredProjects.length) %
+        ? (currentIndex + 1) %
+          filteredProjects.length
+        : (currentIndex - 1 +
+            filteredProjects.length) %
           filteredProjects.length;
 
-    setSelectedProject(filteredProjects[nextIndex]);
+    setSelectedProject(
+      filteredProjects[nextIndex]
+    );
   };
 
+  /*
+   * Optional mobile swipe support.
+   * Previous / Next buttons remain the primary controls.
+   */
   const handleTouchStart = (
     event: React.TouchEvent<HTMLDivElement>
   ) => {
@@ -165,11 +215,6 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
     touchStartX.current = null;
     touchStartY.current = null;
 
-    /*
-     * Ignore vertical gestures.
-     * This prevents normal mobile scrolling from
-     * accidentally changing projects.
-     */
     if (Math.abs(deltaY) > Math.abs(deltaX)) {
       return;
     }
@@ -186,14 +231,16 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
   };
 
   /*
-   * Keep the document behind the project modal locked.
+   * Keyboard controls and body scroll lock.
    */
   useEffect(() => {
     if (!selectedProject) {
       return;
     }
 
-    const handleKeyDown = (event: KeyboardEvent) => {
+    const handleKeyDown = (
+      event: KeyboardEvent
+    ) => {
       if (event.key === 'Escape') {
         closeProjectDetails();
       }
@@ -226,13 +273,13 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
         handleKeyDown
       );
     };
-  }, [selectedProject, filteredProjects]);
+  }, [
+    selectedProject,
+    filteredProjects,
+  ]);
 
   /*
-   * Observe project rows as they enter the viewport.
-   *
-   * The active project is whichever row is closest to
-   * the center of the viewport.
+   * Detect the project currently being viewed.
    */
   useEffect(() => {
     if (visibleProjects.length === 0) {
@@ -247,37 +294,44 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
       return;
     }
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visibleEntries = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort(
-            (a, b) =>
-              b.intersectionRatio -
-              a.intersectionRatio
+    const observer =
+      new IntersectionObserver(
+        (entries) => {
+          const visibleEntries = entries
+            .filter(
+              (entry) => entry.isIntersecting
+            )
+            .sort(
+              (a, b) =>
+                b.intersectionRatio -
+                a.intersectionRatio
+            );
+
+          if (visibleEntries.length === 0) {
+            return;
+          }
+
+          const activeElement =
+            visibleEntries[0]
+              .target as HTMLElement;
+
+          const projectIndex = Number(
+            activeElement.dataset.projectIndex
           );
 
-        if (visibleEntries.length === 0) {
-          return;
+          if (!Number.isNaN(projectIndex)) {
+            setActiveProjectIndex(
+              projectIndex
+            );
+            setIsProjectInView(true);
+          }
+        },
+        {
+          threshold: [0.2, 0.4, 0.6, 0.8],
+          rootMargin:
+            '-25% 0px -25% 0px',
         }
-
-        const activeElement =
-          visibleEntries[0].target as HTMLElement;
-
-        const projectIndex = Number(
-          activeElement.dataset.projectIndex
-        );
-
-        if (!Number.isNaN(projectIndex)) {
-          setActiveProjectIndex(projectIndex);
-          setIsProjectInView(true);
-        }
-      },
-      {
-        threshold: [0.2, 0.4, 0.6, 0.8],
-        rootMargin: '-25% 0px -25% 0px',
-      }
-    );
+      );
 
     elements.forEach((element) =>
       observer.observe(element)
@@ -288,17 +342,6 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
     };
   }, [visibleProjects, activeFilter]);
 
-  /*
-   * Reset the active project when filtering changes.
-   */
-  useEffect(() => {
-    setActiveProjectIndex(0);
-    setIsProjectInView(false);
-  }, [activeFilter]);
-
-  /*
-   * Register a project element.
-   */
   const registerProjectRef = (
     projectId: string,
     element: HTMLElement | null
@@ -352,13 +395,13 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
           </h2>
 
           <p className="mt-4 max-w-2xl text-sm leading-6 text-[#4B5563] sm:text-base sm:leading-7">
-            A selection of data analysis, business intelligence,
-            forecasting, and automation projects built to solve
-            practical problems.
+            A selection of data analysis, business
+            intelligence, forecasting, and automation
+            projects built to solve practical problems.
           </p>
         </motion.div>
 
-        {/* Mobile / Desktop Project Signal */}
+        {/* Project Index + Waveform */}
         <motion.div
           initial={{
             opacity: 0,
@@ -388,12 +431,17 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
                 {String(
                   Math.min(
                     activeProjectIndex + 1,
-                    Math.max(filteredProjects.length, 1)
+                    Math.max(
+                      filteredProjects.length,
+                      1
+                    )
                   )
                 ).padStart(2, '0')}
+
                 <span className="mx-1 text-[#B8B0A2]">
                   /
                 </span>
+
                 {String(
                   filteredProjects.length
                 ).padStart(2, '0')}
@@ -401,7 +449,7 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
             </div>
 
             <div
-              className={`flex items-end gap-[2px] transition-opacity duration-300 ${
+              className={`flex h-5 items-end gap-[2px] transition-opacity duration-300 ${
                 isProjectInView
                   ? 'opacity-100'
                   : 'opacity-40'
@@ -412,14 +460,16 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
                 (height, index) => (
                   <span
                     key={index}
-                    className={`project-index-wave h-[${height}px] w-[2px] rounded-full ${
+                    className={`project-index-wave w-[2px] rounded-full ${
                       index === 3
                         ? 'bg-[#D97745]'
                         : 'bg-[#2F5D50]'
                     }`}
                     style={{
                       height: `${height}px`,
-                      animationDelay: `${index * 90}ms`,
+                      animationDelay: `${
+                        index * 90
+                      }ms`,
                     }}
                   />
                 )
@@ -551,7 +601,6 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
                       data-project-index={
                         actualProjectIndex
                       }
-                      layout
                       initial={{
                         opacity: 0,
                         y: 18,
@@ -584,6 +633,7 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
                       }`}
                     >
                       <div className="py-8 sm:py-10">
+
                         {/* Project Top Row */}
                         <div className="mb-5 flex items-center justify-between gap-4">
                           <div className="flex items-center gap-3">
@@ -609,7 +659,7 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
                             />
                           </div>
 
-                          {/* Reactive waveform */}
+                          {/* Reactive Waveform */}
                           <div
                             className={`flex h-5 items-end gap-[2px] transition-opacity duration-300 ${
                               isActive
@@ -618,10 +668,7 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
                             }`}
                             aria-hidden="true"
                           >
-                            {[
-                              5, 9, 6, 13, 8, 11,
-                              7,
-                            ].map(
+                            {[5, 9, 6, 13, 8, 11, 7].map(
                               (
                                 height,
                                 waveIndex
@@ -636,8 +683,7 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
                                   style={{
                                     height: `${height}px`,
                                     animationDelay: `${
-                                      waveIndex *
-                                      100
+                                      waveIndex * 100
                                     }ms`,
                                     animationPlayState:
                                       isActive
@@ -650,62 +696,10 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
                           </div>
                         </div>
 
-                        {/* Mobile-first project image */}
-                        {project.mediaUrl && (
-                          <button
-                            type="button"
-                            onClick={() =>
-                              openProjectDetails(
-                                project
-                              )
-                            }
-                            className="group/media mb-6 block w-full overflow-hidden rounded-xl border border-[#DDD6C8] bg-[#EDE7DA] text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2F5D50] focus-visible:ring-offset-2 sm:hidden"
-                            aria-label={`Open ${project.title}`}
-                          >
-                            <div className="relative aspect-[16/10] overflow-hidden">
-                              {project.isVideo &&
-                              project.videoUrl ? (
-                                <video
-                                  src={
-                                    project.videoUrl
-                                  }
-                                  poster={
-                                    project.mediaUrl
-                                  }
-                                  muted
-                                  playsInline
-                                  preload="metadata"
-                                  className="h-full w-full object-cover"
-                                />
-                              ) : (
-                                <img
-                                  src={
-                                    project.mediaUrl
-                                  }
-                                  alt={
-                                    project.title
-                                  }
-                                  loading={
-                                    index === 0
-                                      ? 'eager'
-                                      : 'lazy'
-                                  }
-                                  decoding="async"
-                                  referrerPolicy="no-referrer"
-                                  className="h-full w-full object-cover transition-transform duration-500 group-hover/media:scale-[1.02]"
-                                />
-                              )}
-
-                              <span className="absolute bottom-3 right-3 flex h-9 w-9 items-center justify-center rounded-lg bg-[#FCFAF6]/90 text-[#2F5D50] shadow-sm backdrop-blur-sm">
-                                <Maximize2 className="h-3.5 w-3.5" />
-                              </span>
-                            </div>
-                          </button>
-                        )}
-
-                        {/* Main Project Grid */}
+                        {/* Main Project Layout */}
                         <div className="grid gap-6 sm:grid-cols-[64px_minmax(0,1fr)_220px_auto] sm:items-center sm:gap-7">
-                          {/* Desktop index */}
+
+                          {/* Index */}
                           <div className="hidden sm:block">
                             <span
                               className={`font-mono text-xs font-semibold transition-colors duration-300 ${
@@ -721,10 +715,10 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
                             </span>
                           </div>
 
-                          {/* Project Content */}
+                          {/* Project Details */}
                           <div className="min-w-0">
                             <div className="mb-2.5 flex flex-wrap items-center gap-x-3 gap-y-2">
-                              <span className="text-[10px] font-mono font-semibold uppercase tracking-[0.16em] text-[#D97745]">
+                              <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#D97745]">
                                 {project.category}
                               </span>
 
@@ -732,16 +726,26 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
                                 <>
                                   <span className="h-1 w-1 rounded-full bg-[#2F5D50]/40" />
 
-                                  <span className="text-[10px] font-mono uppercase tracking-[0.12em] text-[#6B7280]">
+                                  <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-[#6B7280]">
                                     Featured
                                   </span>
                                 </>
                               )}
                             </div>
 
-                            <h3 className="font-display text-xl font-bold leading-tight tracking-tight text-[#1D2A26] transition-colors duration-200 group-hover:text-[#2F5D50] sm:text-2xl">
-                              {project.title}
-                            </h3>
+                            <button
+                              type="button"
+                              onClick={() =>
+                                openProjectDetails(
+                                  project
+                                )
+                              }
+                              className="text-left"
+                            >
+                              <h3 className="font-display text-xl font-bold leading-tight tracking-tight text-[#1D2A26] transition-colors duration-200 group-hover:text-[#2F5D50] sm:text-2xl">
+                                {project.title}
+                              </h3>
+                            </button>
 
                             <p className="mt-3 max-w-3xl text-sm leading-6 text-[#6B7280]">
                               {shortDescription}
@@ -782,15 +786,14 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
                                   <span className="text-[11px] font-medium text-[#9A9388]">
                                     +
                                     {project.tags
-                                      .length -
-                                      4}
+                                      .length - 4}
                                   </span>
                                 </>
                               )}
                             </div>
                           </div>
 
-                          {/* Desktop Project Image */}
+                          {/* Project Image */}
                           {project.mediaUrl && (
                             <button
                               type="button"
@@ -799,7 +802,7 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
                                   project
                                 )
                               }
-                              className="group/desktop-media relative hidden aspect-[16/10] w-full overflow-hidden rounded-xl border border-[#DDD6C8] bg-[#EDE7DA] text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2F5D50] focus-visible:ring-offset-2 sm:block"
+                              className="group/media relative hidden aspect-[16/10] w-full overflow-hidden rounded-xl border border-[#DDD6C8] bg-[#EDE7DA] text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2F5D50] focus-visible:ring-offset-2 sm:block"
                               aria-label={`Open ${project.title}`}
                             >
                               {project.isVideo &&
@@ -814,7 +817,7 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
                                   muted
                                   playsInline
                                   preload="metadata"
-                                  className="h-full w-full object-cover transition-transform duration-500 group-hover/desktop-media:scale-[1.02]"
+                                  className="h-full w-full object-cover transition-transform duration-500 group-hover/media:scale-[1.02]"
                                 />
                               ) : (
                                 <img
@@ -827,17 +830,17 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
                                   loading="lazy"
                                   decoding="async"
                                   referrerPolicy="no-referrer"
-                                  className="h-full w-full object-cover transition-transform duration-500 group-hover/desktop-media:scale-[1.02]"
+                                  className="h-full w-full object-cover transition-transform duration-500 group-hover/media:scale-[1.02]"
                                 />
                               )}
 
-                              <span className="absolute bottom-3 right-3 flex h-8 w-8 items-center justify-center rounded-lg bg-[#FCFAF6]/90 text-[#2F5D50] opacity-0 shadow-sm backdrop-blur-sm transition-opacity duration-200 group-hover/desktop-media:opacity-100">
+                              <span className="absolute bottom-3 right-3 flex h-8 w-8 items-center justify-center rounded-lg bg-[#FCFAF6]/90 text-[#2F5D50] opacity-0 shadow-sm backdrop-blur-sm transition-opacity duration-200 group-hover/media:opacity-100">
                                 <Maximize2 className="h-3.5 w-3.5" />
                               </span>
                             </button>
                           )}
 
-                          {/* Action */}
+                          {/* Open Case Study */}
                           <button
                             type="button"
                             onClick={() =>
@@ -974,7 +977,7 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
           )}
       </div>
 
-      {/* Swipeable Project Case Study */}
+      {/* Project Details Modal */}
       {typeof document !== 'undefined' &&
         createPortal(
           <AnimatePresence>
@@ -1033,8 +1036,9 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
                   }
                   onTouchEnd={handleTouchEnd}
                 >
+
                   {/* Modal Header */}
-                  <div className="relative z-30 flex shrink-0 items-center justify-between border-b border-[#DDD6C8] bg-[#FCFAF6] px-4 py-3 sm:px-7 sm:py-4">
+                  <div className="flex shrink-0 items-center justify-between border-b border-[#DDD6C8] bg-[#FCFAF6] px-4 py-3 sm:px-7 sm:py-4">
                     <div className="min-w-0 pr-3">
                       <div className="flex items-center gap-2">
                         <span className="font-mono text-[9px] font-semibold uppercase tracking-[0.16em] text-[#2F5D50]">
@@ -1078,8 +1082,8 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
                     </button>
                   </div>
 
-                  {/* Mobile Swipe Hint */}
-                  <div className="flex shrink-0 items-center justify-between border-b border-[#DDD6C8] px-4 py-2.5 sm:hidden">
+                  {/* Previous / Next */}
+                  <div className="flex shrink-0 items-center justify-between border-b border-[#DDD6C8] px-4 py-3 sm:px-7">
                     <button
                       type="button"
                       onClick={() =>
@@ -1087,24 +1091,30 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
                           'previous'
                         )
                       }
-                      className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-[#6B7280]"
-                      aria-label="Previous project"
+                      className="inline-flex items-center gap-2 rounded-lg border border-[#DDD6C8] bg-[#FCFAF6] px-3 py-2.5 text-xs font-semibold text-[#4B5563] transition-colors hover:border-[#2F5D50] hover:text-[#2F5D50]"
                     >
                       <ArrowLeft className="h-3.5 w-3.5" />
-                      Prev
+                      Previous
                     </button>
 
-                    <span className="font-mono text-[9px] text-[#9A9388]">
-                      Swipe to explore
+                    <span className="font-mono text-[10px] text-[#9A9388]">
+                      {String(
+                        selectedProjectNumber
+                      ).padStart(2, '0')}
+                      {' / '}
+                      {String(
+                        totalProjectCount
+                      ).padStart(2, '0')}
                     </span>
 
                     <button
                       type="button"
                       onClick={() =>
-                        navigateProject('next')
+                        navigateProject(
+                          'next'
+                        )
                       }
-                      className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-[#6B7280]"
-                      aria-label="Next project"
+                      className="inline-flex items-center gap-2 rounded-lg bg-[#2F5D50] px-3 py-2.5 text-xs font-semibold text-white transition-colors hover:bg-[#244A40]"
                     >
                       Next
                       <ArrowRight className="h-3.5 w-3.5" />
@@ -1119,7 +1129,7 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
                         {/* Main Content */}
                         <div className="min-w-0">
 
-                          {/* Main Project Image */}
+                          {/* Main Image */}
                           {selectedProject.mediaUrl && (
                             <button
                               type="button"
@@ -1173,116 +1183,121 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
                             </p>
 
                             <p className="max-w-3xl text-sm leading-7 text-[#4B5563] sm:text-base">
-                              {selectedProject.description}
+                              {
+                                selectedProject.description
+                              }
                             </p>
                           </div>
 
-                          {/* Key Highlights */}
-                          {selectedProject.keyHighlights?.length >
-                            0 && (
-                            <div className="mb-9 sm:mb-10">
-                              <p className="mb-4 font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#6B7280]">
-                                What I did
-                              </p>
+                          {/* Highlights */}
+                          {selectedProject.keyHighlights &&
+                            selectedProject.keyHighlights.length >
+                              0 && (
+                              <div className="mb-9 sm:mb-10">
+                                <p className="mb-4 font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#6B7280]">
+                                  What I did
+                                </p>
 
-                              <div className="divide-y divide-[#DDD6C8] border-y border-[#DDD6C8]">
-                                {selectedProject.keyHighlights.map(
-                                  (
-                                    highlight,
-                                    highlightIndex
-                                  ) => (
-                                    <div
-                                      key={
-                                        highlightIndex
-                                      }
-                                      className="flex items-start gap-4 py-4"
-                                    >
-                                      <span className="mt-1 font-mono text-[10px] font-semibold text-[#2F5D50]">
-                                        {String(
-                                          highlightIndex +
-                                            1
-                                        ).padStart(
-                                          2,
-                                          '0'
-                                        )}
-                                      </span>
+                                <div className="divide-y divide-[#DDD6C8] border-y border-[#DDD6C8]">
+                                  {selectedProject.keyHighlights.map(
+                                    (
+                                      highlight,
+                                      highlightIndex
+                                    ) => (
+                                      <div
+                                        key={
+                                          highlightIndex
+                                        }
+                                        className="flex items-start gap-4 py-4"
+                                      >
+                                        <span className="mt-1 font-mono text-[10px] font-semibold text-[#2F5D50]">
+                                          {String(
+                                            highlightIndex +
+                                              1
+                                          ).padStart(
+                                            2,
+                                            '0'
+                                          )}
+                                        </span>
 
-                                      <p className="text-sm leading-6 text-[#4B5563]">
-                                        {highlight}
-                                      </p>
-                                    </div>
-                                  )
-                                )}
+                                        <p className="text-sm leading-6 text-[#4B5563]">
+                                          {highlight}
+                                        </p>
+                                      </div>
+                                    )
+                                  )}
+                                </div>
                               </div>
-                            </div>
-                          )}
+                            )}
 
                           {/* Screenshots */}
-                          {selectedProject.automationScreenshots?.length >
-                            0 && (
-                            <div className="mb-9 sm:mb-10">
-                              <div className="mb-4">
-                                <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#6B7280]">
-                                  Project visuals
-                                </p>
+                          {selectedProject.automationScreenshots &&
+                            selectedProject.automationScreenshots.length >
+                              0 && (
+                              <div className="mb-9 sm:mb-10">
+                                <div className="mb-4">
+                                  <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#6B7280]">
+                                    Project visuals
+                                  </p>
 
-                                <p className="mt-1 text-sm text-[#4B5563]">
-                                  A closer look at the work behind
-                                  this project.
-                                </p>
-                              </div>
+                                  <p className="mt-1 text-sm text-[#4B5563]">
+                                    A closer look at
+                                    the work behind
+                                    this project.
+                                  </p>
+                                </div>
 
-                              <div className="grid gap-5 sm:grid-cols-2">
-                                {selectedProject.automationScreenshots.map(
-                                  (
-                                    screenshot,
-                                    screenshotIndex
-                                  ) => (
-                                    <button
-                                      key={`${screenshot.title}-${screenshotIndex}`}
-                                      type="button"
-                                      onClick={() =>
-                                        onOpenLightbox(
-                                          selectedProject
-                                        )
-                                      }
-                                      className="group overflow-hidden rounded-xl border border-[#DDD6C8] bg-[#FCFAF6] text-left"
-                                    >
-                                      <div className="overflow-hidden bg-[#F5F1E8]">
-                                        <img
-                                          src={
-                                            screenshot.image
-                                          }
-                                          alt={
-                                            screenshot.title
-                                          }
-                                          loading="lazy"
-                                          decoding="async"
-                                          className="block h-48 w-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.02]"
-                                        />
-                                      </div>
+                                <div className="grid gap-5 sm:grid-cols-2">
+                                  {selectedProject.automationScreenshots.map(
+                                    (
+                                      screenshot,
+                                      screenshotIndex
+                                    ) => (
+                                      <button
+                                        key={`${screenshot.title}-${screenshotIndex}`}
+                                        type="button"
+                                        onClick={() =>
+                                          onOpenLightbox(
+                                            selectedProject
+                                          )
+                                        }
+                                        className="group overflow-hidden rounded-xl border border-[#DDD6C8] bg-[#FCFAF6] text-left"
+                                      >
+                                        <div className="overflow-hidden bg-[#F5F1E8]">
+                                          <img
+                                            src={
+                                              screenshot.image
+                                            }
+                                            alt={
+                                              screenshot.title
+                                            }
+                                            loading="lazy"
+                                            decoding="async"
+                                            className="block h-48 w-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.02]"
+                                          />
+                                        </div>
 
-                                      <div className="border-t border-[#DDD6C8] p-4">
-                                        <p className="text-sm font-semibold text-[#1D2A26]">
-                                          {
-                                            screenshot.title
-                                          }
-                                        </p>
-
-                                        {screenshot.caption && (
-                                          <p className="mt-1.5 text-xs leading-5 text-[#6B7280]">
+                                        <div className="border-t border-[#DDD6C8] p-4">
+                                          <p className="text-sm font-semibold text-[#1D2A26]">
                                             {
-                                              screenshot.caption
+                                              screenshot.title
                                             }
                                           </p>
-                                        )}
-                                      </div>
-                                    </button>
-                                  )
-                                )}
+
+                                          {screenshot.caption && (
+                                            <p className="mt-1.5 text-xs leading-5 text-[#6B7280]">
+                                              {
+                                                screenshot.caption
+                                              }
+                                            </p>
+                                          )}
+                                        </div>
+                                      </button>
+                                    )
+                                  )}
+                                </div>
                               </div>
-                            </div>
-                          )}
+                            )}
 
                           {/* Video */}
                           {selectedProject.videoUrl && (
@@ -1381,8 +1396,8 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
                               )}
                             </div>
 
-                            {/* Desktop Previous / Next */}
-                            <div className="mt-6 hidden grid-cols-2 gap-2 sm:grid">
+                            {/* Previous / Next */}
+                            <div className="mt-6 grid grid-cols-2 gap-2">
                               <button
                                 type="button"
                                 onClick={() =>
@@ -1410,7 +1425,7 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
                               </button>
                             </div>
 
-                            {/* Hide Details */}
+                            {/* Close */}
                             <button
                               type="button"
                               onClick={
@@ -1419,7 +1434,7 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
                               className="mt-3 flex w-full items-center justify-center gap-2 rounded-lg border border-[#DDD6C8] bg-[#FCFAF6] px-4 py-3 text-sm font-semibold text-[#4B5563] transition-colors hover:border-[#2F5D50] hover:text-[#2F5D50]"
                             >
                               <X className="h-4 w-4" />
-                              Hide details
+                              Close
                             </button>
                           </div>
                         </aside>
