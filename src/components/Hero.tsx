@@ -136,7 +136,7 @@ export default function Hero({ onCopyEmail }: HeroProps) {
               <span className="h-1.5 w-1.5 rounded-full bg-[#4E8D66]" />
 
               <span className="text-[11px] font-medium uppercase tracking-[0.16em] text-[#6B7280]">
-                AI Automation & Data Analytics
+                Data Analytics & AI Automation
               </span>
             </motion.div>
 
