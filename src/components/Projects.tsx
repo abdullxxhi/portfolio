@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   ChevronDown,
@@ -328,10 +329,12 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
       </div>
 
       {/* Project Details Modal */}
-      <AnimatePresence>
+      {typeof document !== 'undefined' &&
+        createPortal(
+          <AnimatePresence>
         {selectedProject && (
           <motion.div
-            className="fixed inset-0 z-[120] flex items-center justify-center bg-[#1D2A26]/55 p-3 sm:p-6"
+            className="fixed inset-0 z-[9999] flex items-center justify-center bg-[#1D2A26]/55 p-3 sm:p-6"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -594,7 +597,9 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
             </motion.div>
           </motion.div>
         )}
-      </AnimatePresence>
+          </AnimatePresence>,
+          document.body
+        )
     </section>
   );
 }
