@@ -136,7 +136,7 @@ export default function Hero({ onCopyEmail }: HeroProps) {
               <span className="h-1.5 w-1.5 rounded-full bg-[#4E8D66]" />
 
               <span className="text-[11px] font-medium uppercase tracking-[0.16em] text-[#6B7280]">
-                Data Analytics & AI Automation
+                Data Analysis & AI Automation
               </span>
             </motion.div>
 
@@ -453,7 +453,7 @@ export default function Hero({ onCopyEmail }: HeroProps) {
                 {/* Footer */}
                 <div className="mt-4 flex items-center justify-between border-t border-[#DDD6C8] pt-4">
                   <span className="text-[10px] uppercase tracking-[0.14em] text-[#9A9388]">
-                    Analysis + Automation
+                    Data Analysis + Automation
                   </span>
 
                   <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#2F5D50]">
