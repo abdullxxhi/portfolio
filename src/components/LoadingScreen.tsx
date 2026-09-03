@@ -15,12 +15,19 @@ export default function LoadingScreen() {
     return () => clearTimeout(timer);
   }, []);
 
-  const rows = [
-    { month: 'JAN', revenue: '24,500', growth: '+8.2%' },
-    { month: 'FEB', revenue: '27,300', growth: '+11.4%' },
-    { month: 'MAR', revenue: '31,800', growth: '+16.5%' },
-    { month: 'APR', revenue: '29,400', growth: '+9.8%' },
+  const dataPoints = [
+    { x: 4, y: 72 },
+    { x: 18, y: 61 },
+    { x: 31, y: 66 },
+    { x: 45, y: 47 },
+    { x: 59, y: 51 },
+    { x: 73, y: 31 },
+    { x: 88, y: 20 },
   ];
+
+  const points = dataPoints
+    .map((point) => `${point.x},${point.y}`)
+    .join(' ');
 
   return (
     <AnimatePresence>
@@ -37,12 +44,8 @@ export default function LoadingScreen() {
         >
           {/* Subtle atmosphere */}
           <motion.div
-            initial={{
-              opacity: 0,
-            }}
-            animate={{
-              opacity: 1,
-            }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
             transition={{
               duration: 2,
               ease: 'easeOut',
@@ -51,125 +54,116 @@ export default function LoadingScreen() {
           />
 
           <div className="relative z-10 flex flex-col items-center">
-            {/* Data Table */}
-            <div className="mb-6 w-[280px] overflow-hidden rounded-xl border border-[#DDD6C8] bg-[#FCFAF6] shadow-[0_8px_30px_rgba(47,93,80,0.06)]">
-              {/* Table Header */}
+            {/* Data Visualization */}
+            <div className="relative mb-7 h-28 w-64">
+              {/* Chart baseline */}
+              <div className="absolute bottom-3 left-0 right-0 h-px bg-[#DDD6C8]" />
+
+              {/* Chart area */}
+              <svg
+                viewBox="0 0 100 100"
+                preserveAspectRatio="none"
+                className="absolute inset-0 h-full w-full overflow-visible"
+              >
+                {/* Horizontal reference lines */}
+                <line
+                  x1="0"
+                  y1="25"
+                  x2="100"
+                  y2="25"
+                  stroke="#DDD6C8"
+                  strokeWidth="0.5"
+                  strokeDasharray="2 3"
+                />
+
+                <line
+                  x1="0"
+                  y1="50"
+                  x2="100"
+                  y2="50"
+                  stroke="#DDD6C8"
+                  strokeWidth="0.5"
+                  strokeDasharray="2 3"
+                />
+
+                <line
+                  x1="0"
+                  y1="75"
+                  x2="100"
+                  y2="75"
+                  stroke="#DDD6C8"
+                  strokeWidth="0.5"
+                  strokeDasharray="2 3"
+                />
+
+                {/* Animated trend line */}
+                <motion.polyline
+                  points={points}
+                  fill="none"
+                  stroke="#2F5D50"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  initial={{
+                    pathLength: 0,
+                  }}
+                  animate={{
+                    pathLength: 1,
+                  }}
+                  transition={{
+                    duration: 2,
+                    ease: 'easeInOut',
+                  }}
+                />
+              </svg>
+
+              {/* Data points */}
+              {dataPoints.map((point, index) => (
+                <motion.div
+                  key={index}
+                  initial={{
+                    opacity: 0,
+                    scale: 0,
+                  }}
+                  animate={{
+                    opacity: 1,
+                    scale: 1,
+                  }}
+                  transition={{
+                    duration: 0.35,
+                    delay: index * 0.18,
+                    ease: 'easeOut',
+                  }}
+                  className="absolute h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-[#F5F1E8] bg-[#2F5D50]"
+                  style={{
+                    left: `${point.x}%`,
+                    top: `${point.y}%`,
+                  }}
+                />
+              ))}
+
+              {/* Final trend indicator */}
               <motion.div
                 initial={{
                   opacity: 0,
-                  y: -8,
+                  scale: 0.7,
+                  y: 5,
                 }}
                 animate={{
                   opacity: 1,
+                  scale: 1,
                   y: 0,
                 }}
                 transition={{
-                  duration: 0.4,
+                  duration: 0.5,
+                  delay: 1.35,
+                  ease: 'easeOut',
                 }}
-                className="grid grid-cols-3 border-b border-[#DDD6C8] bg-[#F5F1E8]/70 px-4 py-2.5 text-[9px] font-semibold tracking-[0.12em] text-[#6B7280]"
+                className="absolute -right-2 -top-2 flex h-8 w-8 items-center justify-center rounded-full border border-[#DDD6C8] bg-[#FCFAF6]"
               >
-                <span>MONTH</span>
-                <span className="text-right">REVENUE</span>
-                <span className="text-right">GROWTH</span>
+                <TrendingUp className="h-4 w-4 text-[#2F5D50]" />
               </motion.div>
-
-              {/* Table Rows */}
-              <div className="divide-y divide-[#DDD6C8]/70">
-                {rows.map((row, index) => (
-                  <motion.div
-                    key={row.month}
-                    initial={{
-                      opacity: 0,
-                      x: -10,
-                    }}
-                    animate={{
-                      opacity: 1,
-                      x: 0,
-                    }}
-                    transition={{
-                      duration: 0.45,
-                      delay: 0.25 + index * 0.18,
-                      ease: 'easeOut',
-                    }}
-                    className={`relative grid grid-cols-3 px-4 py-2.5 text-[11px] ${
-                      index === 2
-                        ? 'bg-[#2F5D50]/[0.055]'
-                        : 'bg-transparent'
-                    }`}
-                  >
-                    {/* Highlight sweep */}
-                    {index === 2 && (
-                      <motion.div
-                        initial={{
-                          scaleX: 0,
-                          opacity: 0,
-                        }}
-                        animate={{
-                          scaleX: 1,
-                          opacity: 1,
-                        }}
-                        transition={{
-                          duration: 0.6,
-                          delay: 1.15,
-                          ease: 'easeOut',
-                        }}
-                        className="absolute inset-0 origin-left bg-[#D97745]/[0.06]"
-                      />
-                    )}
-
-                    <span className="relative z-10 font-medium text-[#4B5563]">
-                      {row.month}
-                    </span>
-
-                    <span className="relative z-10 text-right font-mono text-[#1D2A26]">
-                      {row.revenue}
-                    </span>
-
-                    <span
-                      className={`relative z-10 text-right font-mono ${
-                        index === 2
-                          ? 'font-semibold text-[#D97745]'
-                          : 'text-[#6B7280]'
-                      }`}
-                    >
-                      {row.growth}
-                    </span>
-                  </motion.div>
-                ))}
-              </div>
             </div>
-
-            {/* Insight */}
-            <motion.div
-              initial={{
-                opacity: 0,
-                y: 8,
-              }}
-              animate={{
-                opacity: 1,
-                y: 0,
-              }}
-              transition={{
-                duration: 0.6,
-                delay: 1.25,
-                ease: 'easeOut',
-              }}
-              className="mb-5 flex items-center gap-2 rounded-lg border border-[#DDD6C8] bg-[#FCFAF6] px-3 py-2"
-            >
-              <div className="flex h-6 w-6 items-center justify-center rounded-md bg-[#2F5D50]/[0.08]">
-                <TrendingUp className="h-3.5 w-3.5 text-[#2F5D50]" />
-              </div>
-
-              <div>
-                <p className="text-[9px] font-medium uppercase tracking-[0.12em] text-[#6B7280]">
-                  Insight detected
-                </p>
-
-                <p className="mt-0.5 font-mono text-xs font-semibold text-[#1D2A26]">
-                  Growth +16.5%
-                </p>
-              </div>
-            </motion.div>
 
             {/* Name + status */}
             <motion.div
