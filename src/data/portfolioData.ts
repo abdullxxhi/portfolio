@@ -39,10 +39,10 @@ import projectOrderPickupImg from '../assets/images/02-pickup-order-workflow.png
 import projectOrderOtherImg from '../assets/images/03-other-order-workflow.png';
 import projectOrderIncompleteImg from '../assets/images/04-incomplete-order-workflow.png';
 import projectOrderSheetImg from '../assets/images/05-order-management-sheet.png';
-import projectOrderTelegramDeliveryImg from '../assets/images/06-telegram-delivery-notification.png';
-import projectOrderTelegramPickupImg from '../assets/images/07-telegram-pickup-notification.png';
-import projectOrderTelegramHumanImg from '../assets/images/08-telegram-human-intervention.png';
-import projectOrderTelegramClarificationImg from '../assets/images/09-telegram-order-clarification.png';
+import projectOrderTelegramDeliveryImg from '../assets/images/06-delivery-order-workflow.png';
+import projectOrderTelegramPickupImg from '../assets/images/07-pickup-order-workflow.png';
+import projectOrderTelegramHumanImg from '../assets/images/08-human-intervention.png';
+import projectOrderTelegramClarificationImg from '../assets/images/09-order-clarification.png';
 
 // AI Email Triage & Response System images
 import projectEmailTriageOverviewImg from '../assets/images/01-workflow-overview.png';
@@ -75,6 +75,13 @@ import projectForecastEtsImg from '../assets/images/04-ets-forecast.png';
 import projectWeeklyForecastDashboardImg from '../assets/images/dashbordAI.png';
 import projectWeeklyForecastDataImg from '../assets/images/sales-transac-data.png';
 import projectWeeklyForecastMovingAverageImg from '../assets/images/moving-average.png';
+
+// A.M. BIBIRE NIG LIMITED Website images
+import projectBibire1Img from '../assets/images/bibire1.png';
+import projectBibire2Img from '../assets/images/bibire2.png';
+import projectBibire3Img from '../assets/images/bibire3.png';
+import projectBibire4Img from '../assets/images/bibire4.png';
+import projectBibire5Img from '../assets/images/bibire5.jpeg';
 
 
 export const personalInfo: PersonalInfo = {
@@ -132,7 +139,7 @@ export const statsData: StatItem[] = [
 ];
 
 export const skillCategories: SkillCategory[] = [
-{
+  {
     title: "Data Analysis",
     icon: "BarChart3",
     description: "Transforming raw data into actionable executive insights through exploratory analysis, data cleaning, and BI reporting.",
@@ -147,7 +154,7 @@ export const skillCategories: SkillCategory[] = [
       "Reporting"
     ]
   },
-{
+  {
     title: "Advanced Excel",
     icon: "FileSpreadsheet",
     description: "Mastery over complex formulas, dynamic array functions, pivot modeling, and custom conditional logic.",
@@ -162,7 +169,7 @@ export const skillCategories: SkillCategory[] = [
       "Data Validation"
     ]
   },
-{
+  {
     title: "Programming & Databases",
     icon: "Code",
     description: "Scripting custom automated triggers and querying relational database architectures.",
@@ -173,7 +180,7 @@ export const skillCategories: SkillCategory[] = [
       "PostgreSQL"
     ]
   },
-{
+  {
     title: "AI Automation",
     icon: "Bot",
     description: "Designing autonomous workflow automations, intelligent AI agents, and automated Google Workspace pipelines.",
@@ -188,7 +195,7 @@ export const skillCategories: SkillCategory[] = [
       "Email Automation"
     ]
   },
-{
+  {
     title: "Google Workspace & Productivity",
     icon: "Layers",
     description: "Seamless integration across Google Cloud productivity applications for serverless automation.",
@@ -200,7 +207,7 @@ export const skillCategories: SkillCategory[] = [
       "Gmail Automation"
     ]
   },
-{
+  {
     title: "Soft Skills & Mindset",
     icon: "Sparkles",
     description: "Methodical statistical approach combined with high attention to detail and continuous learning.",
@@ -834,6 +841,63 @@ export const projectsData: Project[] = [
         image: projectQualityControlReportImg,
         title: "Data Quality Report",
         caption: "Shows the generated quality report summarizing records processed, corrections made, data-quality issues identified, and records requiring human review."
+      }
+    ]
+  },
+
+  {
+    id: "proj-15",
+    title: "A.M. BIBIRE NIG LIMITED Website",
+    category: "WEB DEVELOPMENT",
+    featured: false,
+    description: "Designed and deployed a professional responsive business website for A.M. BIBIRE NIG LIMITED, an industrial and building materials supplier, steel stockist, and general contractor in Lagos, Nigeria. The website presents the company's products and services through a practical catalogue while making it easy for potential customers to enquire directly.",
+    tags: [
+      "React",
+      "TypeScript",
+      "Responsive Design",
+      "WhatsApp Integration",
+      "Frontend Development",
+      "SEO",
+      "GitHub",
+      "Vercel"
+    ],
+    mediaUrl: projectBibire1Img,
+    demoUrl: "https://ambibire.vercel.app/",
+    githubUrl: "",
+    keyHighlights: [
+      "Built a professional responsive business website for an industrial and building materials supplier and general contractor.",
+      "Created a categorized product catalogue with individual product cards, descriptions, and product images.",
+      "Added direct WhatsApp enquiry functionality for individual products so customers can enquire about specific items.",
+      "Connected the Request a Quote call-to-action directly to WhatsApp for easier customer enquiries.",
+      "Designed responsive navigation and layouts for mobile, tablet, and desktop users.",
+      "Added company information, contact details, opening hours, SEO metadata, and a favicon.",
+      "Used GitHub for version control and deployed the finished website with Vercel."
+    ],
+    automationScreenshots: [
+      {
+        image: projectBibire1Img,
+        title: "A.M. BIBIRE Website — Landing Page",
+        caption: "The main landing page introducing A.M. BIBIRE NIG LIMITED, its services, and its building and industrial materials offering."
+      },
+      {
+        image: projectBibire2Img,
+        title: "Product Catalogue",
+        caption: "Shows the product catalogue with building and industrial materials presented in a clear, accessible layout."
+      },
+      {
+        image: projectBibire3Img,
+        title: "Website Content & Company Details",
+        caption: "Shows additional sections of the website presenting company information, services, and other relevant business details."
+      },
+      {
+        image: projectBibire4Img,
+        title: "Business Website Details",
+        caption: "Shows additional website content and interface details designed to help visitors understand the company's offerings and get in touch."
+      },
+      {
+        image: projectBibire5Img,
+        title: "Mobile Responsive View",
+        caption: "Shows the responsive landing page optimized for mobile devices."
       }
     ]
   }
