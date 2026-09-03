@@ -52,6 +52,7 @@ export interface Project {
   githubUrl?: string;
   keyHighlights?: string[];
   automationScreenshots?: AutomationScreenshot[];
+  complexity: number;
 }
 
 export interface Certification {
