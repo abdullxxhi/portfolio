@@ -144,6 +144,23 @@ export const skillCategories: SkillCategory[] = [
       "Reporting"
     ]
   },
+
+    {
+    title: "Advanced Excel",
+    icon: "FileSpreadsheet",
+    description: "Mastery over complex formulas, dynamic array functions, pivot modeling, and custom conditional logic.",
+    skills: [
+      "Pivot Tables",
+      "Pivot Charts",
+      "XLOOKUP",
+      "VLOOKUP",
+      "INDEX/MATCH",
+      "SUMPRODUCT",
+      "Conditional Formatting",
+      "Data Validation"
+    ]
+  },
+  
   {
     title: "AI Automation",
     icon: "Bot",
@@ -160,21 +177,7 @@ export const skillCategories: SkillCategory[] = [
     ]
   },
 
-  {
-    title: "Advanced Excel",
-    icon: "FileSpreadsheet",
-    description: "Mastery over complex formulas, dynamic array functions, pivot modeling, and custom conditional logic.",
-    skills: [
-      "Pivot Tables",
-      "Pivot Charts",
-      "XLOOKUP",
-      "VLOOKUP",
-      "INDEX/MATCH",
-      "SUMPRODUCT",
-      "Conditional Formatting",
-      "Data Validation"
-    ]
-  },
+
   {
     title: "Programming & Databases",
     icon: "Code",
