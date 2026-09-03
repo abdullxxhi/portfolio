@@ -50,6 +50,48 @@ const PROJECT_ORDER = [
   'A.M. BIBIRE NIG LIMITED Website',
 ];
 
+/*
+ * Project complexity indicator.
+ *
+ * Displays a subtle 1–5 visual scale without making
+ * the project list feel like a dashboard.
+ */
+function ComplexityIndicator({
+  value,
+}: {
+  value: number;
+}) {
+  const level = Math.min(5, Math.max(1, value));
+
+  return (
+    <div className="flex flex-wrap items-center gap-2">
+      <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-[#6B7280]">
+        Complexity
+      </span>
+
+      <div
+        className="flex items-center gap-1"
+        aria-label={`Project complexity ${level} out of 5`}
+      >
+        {Array.from({ length: 5 }).map((_, index) => (
+          <span
+            key={index}
+            className={`h-1.5 w-3 rounded-full ${
+              index < level
+                ? 'bg-[#2F5D50]'
+                : 'bg-[#DDD6C8]'
+            }`}
+          />
+        ))}
+      </div>
+
+      <span className="font-mono text-[10px] font-semibold text-[#4B5563]">
+        {level}/5
+      </span>
+    </div>
+  );
+}
+
 export default function Projects({ onOpenLightbox }: ProjectsProps) {
   const [activeFilter, setActiveFilter] = useState('All');
   const [visibleCount, setVisibleCount] = useState(PROJECTS_PER_LOAD);
@@ -495,6 +537,13 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
                           )}
                         </div>
 
+                        {/* Complexity */}
+                        <div className="mt-5">
+                          <ComplexityIndicator
+                            value={project.complexity}
+                          />
+                        </div>
+
                         <div className="mt-6 flex items-center gap-2 text-sm font-semibold text-[#2F5D50]">
                           <span>
                             View case study
@@ -748,6 +797,15 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
                               selectedProject.description
                             }
                           </p>
+
+                          {/* Complexity */}
+                          <div className="mt-6 border-t border-[#DDD6C8] pt-5">
+                            <ComplexityIndicator
+                              value={
+                                selectedProject.complexity
+                              }
+                            />
+                          </div>
 
                           {/* Highlights */}
                           {selectedProject.keyHighlights
