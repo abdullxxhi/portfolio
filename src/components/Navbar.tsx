@@ -7,49 +7,18 @@ interface NavbarProps {
   activeSection: string;
 }
 
-export default function Navbar({
-  activeSection,
-}: NavbarProps) {
+export default function Navbar({ activeSection }: NavbarProps) {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] =
-    useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navLinks = [
-    {
-      name: 'About',
-      path: '/about',
-      id: 'about',
-    },
-    {
-      name: 'Skills',
-      path: '/skills',
-      id: 'skills',
-    },
-    {
-      name: 'Projects',
-      path: '/projects',
-      id: 'projects',
-    },
-    {
-      name: 'Certifications',
-      path: '/certifications',
-      id: 'certifications',
-    },
-    {
-      name: 'Education',
-      path: '/education',
-      id: 'education',
-    },
-    {
-      name: 'Experience',
-      path: '/experience',
-      id: 'experience',
-    },
-    {
-      name: 'Contact',
-      path: '/contact',
-      id: 'contact',
-    },
+    { name: 'About', href: '#about' },
+    { name: 'Skills', href: '#skills' },
+    { name: 'Projects', href: '#projects' },
+    { name: 'Certifications', href: '#certifications' },
+    { name: 'Education', href: '#education' },
+    { name: 'Experience', href: '#experience' },
+    { name: 'Contact', href: '#contact' },
   ];
 
   useEffect(() => {
@@ -64,43 +33,46 @@ export default function Navbar({
     });
 
     return () => {
-      window.removeEventListener(
-        'scroll',
-        handleScroll
-      );
+      window.removeEventListener('scroll', handleScroll);
     };
   }, []);
 
-  const navigateToSection = (
+  const handleNavigation = (
     event: React.MouseEvent<HTMLAnchorElement>,
-    path: string
+    href: string
   ) => {
-    event.preventDefault();
-
     setMobileMenuOpen(false);
 
-    window.dispatchEvent(
-      new CustomEvent('portfolio:navigate', {
-        detail: {
-          path,
-        },
-      })
-    );
+    /*
+     * DO NOT prevent the default browser anchor behavior.
+     *
+     * The browser handles the actual scrolling to the section.
+     * We only replace the hash with the clean path after
+     * the browser has performed the navigation.
+     */
+    window.setTimeout(() => {
+      const cleanPath = href.replace('#', '');
+
+      window.history.replaceState(
+        null,
+        '',
+        `/${cleanPath}`
+      );
+    }, 0);
   };
 
   const handleBrandClick = (
     event: React.MouseEvent<HTMLAnchorElement>
   ) => {
-    event.preventDefault();
-
     setMobileMenuOpen(false);
 
-    window.history.pushState({}, '', '/');
-
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth',
-    });
+    /*
+     * Allow the browser to return to the top naturally.
+     * Then replace #hero with the clean root URL.
+     */
+    window.setTimeout(() => {
+      window.history.replaceState(null, '', '/');
+    }, 0);
   };
 
   return (
@@ -114,7 +86,7 @@ export default function Navbar({
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Brand */}
         <a
-          href="/"
+          href="#hero"
           onClick={handleBrandClick}
           className="group flex items-center"
         >
@@ -127,17 +99,14 @@ export default function Navbar({
         <nav className="hidden items-center gap-6 lg:flex">
           {navLinks.map((link) => {
             const isActive =
-              activeSection === link.id;
+              activeSection === link.href.substring(1);
 
             return (
               <a
                 key={link.name}
-                href={link.path}
+                href={link.href}
                 onClick={(event) =>
-                  navigateToSection(
-                    event,
-                    link.path
-                  )
+                  handleNavigation(event, link.href)
                 }
                 className={`relative py-2 text-xs font-medium transition-colors duration-200 ${
                   isActive
@@ -166,17 +135,13 @@ export default function Navbar({
         {/* Desktop CTA */}
         <div className="hidden lg:flex">
           <a
-            href="/contact"
+            href="#contact"
             onClick={(event) =>
-              navigateToSection(
-                event,
-                '/contact'
-              )
+              handleNavigation(event, '#contact')
             }
             className="inline-flex items-center gap-1.5 rounded-lg bg-[#2F5D50] px-4 py-2 text-xs font-semibold text-white transition-colors duration-200 hover:bg-[#244A40]"
           >
             <span>Hire Me</span>
-
             <ArrowUpRight className="h-3.5 w-3.5" />
           </a>
         </div>
@@ -184,26 +149,20 @@ export default function Navbar({
         {/* Mobile Controls */}
         <div className="flex items-center gap-2 lg:hidden">
           <a
-            href="/contact"
+            href="#contact"
             onClick={(event) =>
-              navigateToSection(
-                event,
-                '/contact'
-              )
+              handleNavigation(event, '#contact')
             }
             className="inline-flex items-center gap-1 rounded-lg bg-[#2F5D50] px-3.5 py-2 text-xs font-semibold text-white transition-colors duration-200 hover:bg-[#244A40]"
           >
             <span>Hire Me</span>
-
             <ArrowUpRight className="h-3.5 w-3.5" />
           </a>
 
           <button
             type="button"
             onClick={() =>
-              setMobileMenuOpen(
-                (open) => !open
-              )
+              setMobileMenuOpen((open) => !open)
             }
             aria-label={
               mobileMenuOpen
@@ -248,16 +207,17 @@ export default function Navbar({
               <div className="divide-y divide-[#DDD6C8] border-y border-[#DDD6C8]">
                 {navLinks.map((link) => {
                   const isActive =
-                    activeSection === link.id;
+                    activeSection ===
+                    link.href.substring(1);
 
                   return (
                     <a
                       key={link.name}
-                      href={link.path}
+                      href={link.href}
                       onClick={(event) =>
-                        navigateToSection(
+                        handleNavigation(
                           event,
-                          link.path
+                          link.href
                         )
                       }
                       className={`flex items-center justify-between py-3.5 text-sm font-medium transition-colors duration-200 ${
