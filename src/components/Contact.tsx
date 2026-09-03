@@ -158,9 +158,7 @@ export default function Contact({
               </div>
 
               <p className="max-w-md text-sm leading-6 text-[#4B5563]">
-                Whether you need a custom Google Workspace automation,
-                an AI agent, a Power BI dashboard, or a data analyst for
-                your team, I'm ready to collaborate.
+                Let's connect and turn data, analysis, and automation into practical solutions that make work smarter and more efficient.
               </p>
             </div>
 
