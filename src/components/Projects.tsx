@@ -599,7 +599,7 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
         )}
           </AnimatePresence>,
           document.body
-        )
+        )}
     </section>
   );
 }
