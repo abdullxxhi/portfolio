@@ -7,18 +7,49 @@ interface NavbarProps {
   activeSection: string;
 }
 
-export default function Navbar({ activeSection }: NavbarProps) {
+export default function Navbar({
+  activeSection,
+}: NavbarProps) {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] =
+    useState(false);
 
   const navLinks = [
-    { name: 'About', path: '/about', id: 'about' },
-    { name: 'Skills', path: '/skills', id: 'skills' },
-    { name: 'Projects', path: '/projects', id: 'projects' },
-    { name: 'Certifications', path: '/certifications', id: 'certifications' },
-    { name: 'Education', path: '/education', id: 'education' },
-    { name: 'Experience', path: '/experience', id: 'experience' },
-    { name: 'Contact', path: '/contact', id: 'contact' },
+    {
+      name: 'About',
+      path: '/about',
+      id: 'about',
+    },
+    {
+      name: 'Skills',
+      path: '/skills',
+      id: 'skills',
+    },
+    {
+      name: 'Projects',
+      path: '/projects',
+      id: 'projects',
+    },
+    {
+      name: 'Certifications',
+      path: '/certifications',
+      id: 'certifications',
+    },
+    {
+      name: 'Education',
+      path: '/education',
+      id: 'education',
+    },
+    {
+      name: 'Experience',
+      path: '/experience',
+      id: 'experience',
+    },
+    {
+      name: 'Contact',
+      path: '/contact',
+      id: 'contact',
+    },
   ];
 
   useEffect(() => {
@@ -28,47 +59,33 @@ export default function Navbar({ activeSection }: NavbarProps) {
 
     handleScroll();
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('scroll', handleScroll, {
+      passive: true,
+    });
 
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener(
+        'scroll',
+        handleScroll
+      );
     };
   }, []);
 
-  const scrollToSection = (sectionId: string) => {
-    const target = document.getElementById(sectionId);
-
-    if (!target) {
-      return;
-    }
-
-    const navOffset = 76;
-
-    const targetPosition =
-      target.getBoundingClientRect().top +
-      window.scrollY -
-      navOffset;
-
-    window.scrollTo({
-      top: Math.max(0, targetPosition),
-      behavior: 'smooth',
-    });
-  };
-
   const navigateToSection = (
     event: React.MouseEvent<HTMLAnchorElement>,
-    path: string,
-    sectionId: string
+    path: string
   ) => {
     event.preventDefault();
 
     setMobileMenuOpen(false);
 
-    // Update the browser URL without reloading the page.
-    window.history.pushState({}, '', path);
-
-    // Scroll to the corresponding section.
-    scrollToSection(sectionId);
+    window.dispatchEvent(
+      new CustomEvent('portfolio:navigate', {
+        detail: {
+          path,
+        },
+      })
+    );
   };
 
   const handleBrandClick = (
@@ -84,12 +101,6 @@ export default function Navbar({ activeSection }: NavbarProps) {
       top: 0,
       behavior: 'smooth',
     });
-  };
-
-  const handleHireMeClick = (
-    event: React.MouseEvent<HTMLAnchorElement>
-  ) => {
-    navigateToSection(event, '/contact', 'contact');
   };
 
   return (
@@ -115,7 +126,8 @@ export default function Navbar({ activeSection }: NavbarProps) {
         {/* Desktop Navigation */}
         <nav className="hidden items-center gap-6 lg:flex">
           {navLinks.map((link) => {
-            const isActive = activeSection === link.id;
+            const isActive =
+              activeSection === link.id;
 
             return (
               <a
@@ -124,8 +136,7 @@ export default function Navbar({ activeSection }: NavbarProps) {
                 onClick={(event) =>
                   navigateToSection(
                     event,
-                    link.path,
-                    link.id
+                    link.path
                   )
                 }
                 className={`relative py-2 text-xs font-medium transition-colors duration-200 ${
@@ -156,10 +167,16 @@ export default function Navbar({ activeSection }: NavbarProps) {
         <div className="hidden lg:flex">
           <a
             href="/contact"
-            onClick={handleHireMeClick}
+            onClick={(event) =>
+              navigateToSection(
+                event,
+                '/contact'
+              )
+            }
             className="inline-flex items-center gap-1.5 rounded-lg bg-[#2F5D50] px-4 py-2 text-xs font-semibold text-white transition-colors duration-200 hover:bg-[#244A40]"
           >
             <span>Hire Me</span>
+
             <ArrowUpRight className="h-3.5 w-3.5" />
           </a>
         </div>
@@ -168,17 +185,25 @@ export default function Navbar({ activeSection }: NavbarProps) {
         <div className="flex items-center gap-2 lg:hidden">
           <a
             href="/contact"
-            onClick={handleHireMeClick}
+            onClick={(event) =>
+              navigateToSection(
+                event,
+                '/contact'
+              )
+            }
             className="inline-flex items-center gap-1 rounded-lg bg-[#2F5D50] px-3.5 py-2 text-xs font-semibold text-white transition-colors duration-200 hover:bg-[#244A40]"
           >
             <span>Hire Me</span>
+
             <ArrowUpRight className="h-3.5 w-3.5" />
           </a>
 
           <button
             type="button"
             onClick={() =>
-              setMobileMenuOpen((open) => !open)
+              setMobileMenuOpen(
+                (open) => !open
+              )
             }
             aria-label={
               mobileMenuOpen
@@ -232,8 +257,7 @@ export default function Navbar({ activeSection }: NavbarProps) {
                       onClick={(event) =>
                         navigateToSection(
                           event,
-                          link.path,
-                          link.id
+                          link.path
                         )
                       }
                       className={`flex items-center justify-between py-3.5 text-sm font-medium transition-colors duration-200 ${
