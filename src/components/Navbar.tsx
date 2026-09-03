@@ -7,19 +7,21 @@ interface NavbarProps {
   activeSection: string;
 }
 
+const navLinks = [
+  { name: 'About', path: '/about', id: 'about' },
+  { name: 'Skills', path: '/skills', id: 'skills' },
+  { name: 'Projects', path: '/projects', id: 'projects' },
+  { name: 'Certifications', path: '/certifications', id: 'certifications' },
+  { name: 'Education', path: '/education', id: 'education' },
+  { name: 'Experience', path: '/experience', id: 'experience' },
+  { name: 'Contact', path: '/contact', id: 'contact' },
+];
+
+const NAVBAR_OFFSET = 76;
+
 export default function Navbar({ activeSection }: NavbarProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  const navLinks = [
-    { name: 'About', href: '#about' },
-    { name: 'Skills', href: '#skills' },
-    { name: 'Projects', href: '#projects' },
-    { name: 'Certifications', href: '#certifications' },
-    { name: 'Education', href: '#education' },
-    { name: 'Experience', href: '#experience' },
-    { name: 'Contact', href: '#contact' },
-  ];
 
   useEffect(() => {
     const handleScroll = () => {
@@ -28,51 +30,63 @@ export default function Navbar({ activeSection }: NavbarProps) {
 
     handleScroll();
 
-    window.addEventListener('scroll', handleScroll, {
-      passive: true,
-    });
+    window.addEventListener('scroll', handleScroll, { passive: true });
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
 
-  const handleNavigation = (
+  const scrollToSection = (
     event: React.MouseEvent<HTMLAnchorElement>,
-    href: string
+    path: string,
+    sectionId: string
   ) => {
+    event.preventDefault();
+
+    const target = document.getElementById(sectionId);
+
+    if (!target) {
+      return;
+    }
+
     setMobileMenuOpen(false);
 
     /*
-     * DO NOT prevent the default browser anchor behavior.
-     *
-     * The browser handles the actual scrolling to the section.
-     * We only replace the hash with the clean path after
-     * the browser has performed the navigation.
+     * Change the URL without reloading the SPA.
+     * pushState does NOT move the page, so we control the scroll ourselves.
      */
-    window.setTimeout(() => {
-      const cleanPath = href.replace('#', '');
+    window.history.pushState({}, '', path);
 
-      window.history.replaceState(
-        null,
-        '',
-        `/${cleanPath}`
-      );
-    }, 0);
+    /*
+     * Wait for the mobile menu to close before measuring the target.
+     * Two animation frames ensure React has committed the state update.
+     */
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        const targetPosition =
+          target.getBoundingClientRect().top +
+          window.scrollY -
+          NAVBAR_OFFSET;
+
+        window.scrollTo({
+          top: Math.max(0, targetPosition),
+          behavior: 'smooth',
+        });
+      });
+    });
   };
 
-  const handleBrandClick = (
-    event: React.MouseEvent<HTMLAnchorElement>
-  ) => {
-    setMobileMenuOpen(false);
+  const goHome = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
 
-    /*
-     * Allow the browser to return to the top naturally.
-     * Then replace #hero with the clean root URL.
-     */
-    window.setTimeout(() => {
-      window.history.replaceState(null, '', '/');
-    }, 0);
+    setMobileMenuOpen(false);
+    window.history.pushState({}, '', '/');
+
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
   };
 
   return (
@@ -86,8 +100,8 @@ export default function Navbar({ activeSection }: NavbarProps) {
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Brand */}
         <a
-          href="#hero"
-          onClick={handleBrandClick}
+          href="/"
+          onClick={goHome}
           className="group flex items-center"
         >
           <span className="font-display text-sm font-bold tracking-tight text-[#1D2A26] transition-colors duration-200 group-hover:text-[#2F5D50]">
@@ -98,15 +112,14 @@ export default function Navbar({ activeSection }: NavbarProps) {
         {/* Desktop Navigation */}
         <nav className="hidden items-center gap-6 lg:flex">
           {navLinks.map((link) => {
-            const isActive =
-              activeSection === link.href.substring(1);
+            const isActive = activeSection === link.id;
 
             return (
               <a
                 key={link.name}
-                href={link.href}
+                href={link.path}
                 onClick={(event) =>
-                  handleNavigation(event, link.href)
+                  scrollToSection(event, link.path, link.id)
                 }
                 className={`relative py-2 text-xs font-medium transition-colors duration-200 ${
                   isActive
@@ -135,9 +148,9 @@ export default function Navbar({ activeSection }: NavbarProps) {
         {/* Desktop CTA */}
         <div className="hidden lg:flex">
           <a
-            href="#contact"
+            href="/contact"
             onClick={(event) =>
-              handleNavigation(event, '#contact')
+              scrollToSection(event, '/contact', 'contact')
             }
             className="inline-flex items-center gap-1.5 rounded-lg bg-[#2F5D50] px-4 py-2 text-xs font-semibold text-white transition-colors duration-200 hover:bg-[#244A40]"
           >
@@ -149,9 +162,9 @@ export default function Navbar({ activeSection }: NavbarProps) {
         {/* Mobile Controls */}
         <div className="flex items-center gap-2 lg:hidden">
           <a
-            href="#contact"
+            href="/contact"
             onClick={(event) =>
-              handleNavigation(event, '#contact')
+              scrollToSection(event, '/contact', 'contact')
             }
             className="inline-flex items-center gap-1 rounded-lg bg-[#2F5D50] px-3.5 py-2 text-xs font-semibold text-white transition-colors duration-200 hover:bg-[#244A40]"
           >
@@ -161,14 +174,8 @@ export default function Navbar({ activeSection }: NavbarProps) {
 
           <button
             type="button"
-            onClick={() =>
-              setMobileMenuOpen((open) => !open)
-            }
-            aria-label={
-              mobileMenuOpen
-                ? 'Close menu'
-                : 'Open menu'
-            }
+            onClick={() => setMobileMenuOpen((open) => !open)}
+            aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={mobileMenuOpen}
             className="flex h-9 w-9 items-center justify-center rounded-lg border border-[#DDD6C8] bg-[#FCFAF6] text-[#1D2A26] transition-colors duration-200 hover:border-[#2F5D50] hover:text-[#2F5D50]"
           >
@@ -185,18 +192,9 @@ export default function Navbar({ activeSection }: NavbarProps) {
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
-            initial={{
-              opacity: 0,
-              height: 0,
-            }}
-            animate={{
-              opacity: 1,
-              height: 'auto',
-            }}
-            exit={{
-              opacity: 0,
-              height: 0,
-            }}
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
             transition={{
               duration: 0.2,
               ease: [0.16, 1, 0.3, 1],
@@ -206,19 +204,14 @@ export default function Navbar({ activeSection }: NavbarProps) {
             <nav className="mx-auto max-w-7xl px-4 py-4 sm:px-6">
               <div className="divide-y divide-[#DDD6C8] border-y border-[#DDD6C8]">
                 {navLinks.map((link) => {
-                  const isActive =
-                    activeSection ===
-                    link.href.substring(1);
+                  const isActive = activeSection === link.id;
 
                   return (
                     <a
                       key={link.name}
-                      href={link.href}
+                      href={link.path}
                       onClick={(event) =>
-                        handleNavigation(
-                          event,
-                          link.href
-                        )
+                        scrollToSection(event, link.path, link.id)
                       }
                       className={`flex items-center justify-between py-3.5 text-sm font-medium transition-colors duration-200 ${
                         isActive
