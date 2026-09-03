@@ -14,7 +14,6 @@ import profilePic from '../assets/images/profile_portrait_1785602306698.jpg';
 import projectTicketImg from '../assets/images/project_ticket_auto_1785604298687.jpg';
 import projectSalesImg from '../assets/images/project_sales_dash_1785604311537.jpg';
 import projectPowerBiImg from '../assets/images/project_powerbi_dash_1785604325124.jpg';
-import projectUfcImg from '../assets/images/project_ufc_analys_1785604336953.jpg';
 import projectTransportImg from '../assets/images/project_transport_a_1785604349850.jpg';
 import projectSeleemImg from '../assets/images/project_seleem_bakery_1785607080040.jpg';
 import projectSeleemVideo from '../assets/images/seleem-bakery-1.mp4';
@@ -76,6 +75,13 @@ import projectWeeklyForecastDashboardImg from '../assets/images/dashbordAI.png';
 import projectWeeklyForecastDataImg from '../assets/images/sales-transac-data.png';
 import projectWeeklyForecastMovingAverageImg from '../assets/images/moving-average.png';
 
+// A.M. BIBIRE NIG LIMITED Website images
+import projectBibire1Img from '../assets/images/bibire1.png';
+import projectBibire2Img from '../assets/images/bibire2.png';
+import projectBibire3Img from '../assets/images/bibire3.png';
+import projectBibire4Img from '../assets/images/bibire4.png';
+import projectBibire5Img from '../assets/images/bibire5.jpeg';
+
 
 export const personalInfo: PersonalInfo = {
   name: "Abdullahi Damilola Abdulsalam",
@@ -84,9 +90,9 @@ export const personalInfo: PersonalInfo = {
   location: "Lagos, Nigeria",
   email: "abdulsalamabdullahi003@gmail.com",
   phone: "+234902250296",
-  github: "https://github.com/abdullxxhi",
-  linkedin: "https://www.linkedin.com/in/abdullxxhi",
-  portfolioUrl: "https://abdullxxhi.vercel.app/",
+  github: "[https://github.com/abdullxxhi](https://github.com/abdullxxhi)",
+  linkedin: "[https://www.linkedin.com/in/abdullxxhi](https://www.linkedin.com/in/abdullxxhi)",
+  portfolioUrl: "[https://abdullxxhi.vercel.app/](https://abdullxxhi.vercel.app/)",
   profilePhoto: profilePic,
   focusArea: "Data Analysis, Business Intelligence, AI Automation",
   bio: "I am a Data Analyst & AI Automation Developer with a background in Statistics and a passion for turning data into useful insights and practical solutions. I specialize in data analysis, business intelligence, dashboard development, and workflow automation. My experience spans Microsoft Excel, SQL, Power BI, Google Apps Script, and AI-powered workflow automation. I enjoy solving real-world problems by combining analytical thinking with automation to improve decision-making, reduce repetitive work, and increase productivity.",
@@ -132,7 +138,7 @@ export const statsData: StatItem[] = [
 ];
 
 export const skillCategories: SkillCategory[] = [
-{
+  {
     title: "Data Analysis",
     icon: "BarChart3",
     description: "Transforming raw data into actionable executive insights through exploratory analysis, data cleaning, and BI reporting.",
@@ -147,7 +153,7 @@ export const skillCategories: SkillCategory[] = [
       "Reporting"
     ]
   },
-{
+  {
     title: "Advanced Excel",
     icon: "FileSpreadsheet",
     description: "Mastery over complex formulas, dynamic array functions, pivot modeling, and custom conditional logic.",
@@ -162,7 +168,7 @@ export const skillCategories: SkillCategory[] = [
       "Data Validation"
     ]
   },
-{
+  {
     title: "Programming & Databases",
     icon: "Code",
     description: "Scripting custom automated triggers and querying relational database architectures.",
@@ -173,7 +179,7 @@ export const skillCategories: SkillCategory[] = [
       "PostgreSQL"
     ]
   },
-{
+  {
     title: "AI Automation",
     icon: "Bot",
     description: "Designing autonomous workflow automations, intelligent AI agents, and automated Google Workspace pipelines.",
@@ -188,7 +194,7 @@ export const skillCategories: SkillCategory[] = [
       "Email Automation"
     ]
   },
-{
+  {
     title: "Google Workspace & Productivity",
     icon: "Layers",
     description: "Seamless integration across Google Cloud productivity applications for serverless automation.",
@@ -200,7 +206,7 @@ export const skillCategories: SkillCategory[] = [
       "Gmail Automation"
     ]
   },
-{
+  {
     title: "Soft Skills & Mindset",
     icon: "Sparkles",
     description: "Methodical statistical approach combined with high attention to detail and continuous learning.",
@@ -234,7 +240,7 @@ export const projectsData: Project[] = [
     ],
     mediaUrl: projectChurnDataImg,
     demoUrl: "",
-    githubUrl: "https://github.com/abdullxxhi/Customer-Churn-Analysis",
+    githubUrl: "[https://github.com/abdullxxhi/Customer-Churn-Analysis](https://github.com/abdullxxhi/Customer-Churn-Analysis)",
     keyHighlights: [
       "Calculated an overall 36.4% customer churn rate and identified high-risk customer segments.",
       "Analyzed churn across contract type, tenure, satisfaction, monthly charges, support tickets, internet service, and Auto Pay.",
@@ -291,7 +297,7 @@ export const projectsData: Project[] = [
     ],
     mediaUrl: projectForecastTrainDataImg,
     demoUrl: "",
-    githubUrl: "https://github.com/abdullxxhi/Sales-Forecasting-and-Predictive-Analysis",
+    githubUrl: "[https://github.com/abdullxxhi/Sales-Forecasting-and-Predictive-Analysis](https://github.com/abdullxxhi/Sales-Forecasting-and-Predictive-Analysis)",
     keyHighlights: [
       "Aggregated more than 1 million sales records into monthly sales totals using Excel PivotTables.",
       "Analyzed monthly trends, month-over-month changes, and volatility across 2013 and 2014.",
@@ -343,7 +349,7 @@ export const projectsData: Project[] = [
     ],
     mediaUrl: projectWeeklyForecastDashboardImg,
     demoUrl: "",
-    githubUrl: "https://github.com/abdullxxhi/Weekly-Sales-Forecasting-Analysis",
+    githubUrl: "[https://github.com/abdullxxhi/Weekly-Sales-Forecasting-Analysis](https://github.com/abdullxxhi/Weekly-Sales-Forecasting-Analysis)",
     keyHighlights: [
       "Compared Naive Forecasting, 3-Week Moving Average, and ETS using the same testing period.",
       "Evaluated forecasting accuracy using MAE and RMSE.",
@@ -387,8 +393,8 @@ export const projectsData: Project[] = [
       "Workflow Automation"
     ],
     mediaUrl: n8nDB,
-    demoUrl: "https://github.com/abdullxxhi/clinic-booking-automation",
-    githubUrl: "https://github.com/abdullxxhi",
+    demoUrl: "[https://github.com/abdullxxhi/clinic-booking-automation](https://github.com/abdullxxhi/clinic-booking-automation)",
+    githubUrl: "[https://github.com/abdullxxhi](https://github.com/abdullxxhi)",
     keyHighlights: [
       "Automated detection of Google Form submissions & Google Sheets row triggers.",
       "Instant calendar scheduling via Google Calendar API.",
@@ -458,8 +464,8 @@ export const projectsData: Project[] = [
       "Pivot Tables"
     ],
     mediaUrl: projectSalesImg,
-    demoUrl: "https://github.com/abdullxxhi",
-    githubUrl: "https://github.com/abdullxxhi",
+    demoUrl: "[https://github.com/abdullxxhi](https://github.com/abdullxxhi)",
+    githubUrl: "[https://github.com/abdullxxhi](https://github.com/abdullxxhi)",
     keyHighlights: [
       "Dynamic slicers for real-time region, product category, and timeframe filtering.",
       "Automated KPI summaries for revenue, conversion rate, and average order value.",
@@ -480,35 +486,12 @@ export const projectsData: Project[] = [
       "DAX"
     ],
     mediaUrl: projectPowerBiImg,
-    demoUrl: "https://github.com/abdullxxhi",
-    githubUrl: "https://github.com/abdullxxhi",
+    demoUrl: "[https://github.com/abdullxxhi](https://github.com/abdullxxhi)",
+    githubUrl: "[https://github.com/abdullxxhi](https://github.com/abdullxxhi)",
     keyHighlights: [
       "Multi-tab breakdown for Revenue, Operational Efficiency, and Customer Metrics.",
       "Interactive drill-down reports with custom DAX measures.",
       "Real-time visual monitoring with intuitive warm theme."
-    ]
-  },
-
-  {
-    id: "proj-7",
-    title: "UFC Fighter Data Analysis (Islam Makhachev)",
-    category: "Data Analysis",
-    featured: false,
-    description: "Performed exploratory data analysis on UFC Lightweight Champion Islam Makhachev's fight statistics, analyzing striking accuracy, takedown efficiency, control time metrics, and fight outcomes using SQL and Excel.",
-    tags: [
-      "Islam Makhachev",
-      "UFC Analytics",
-      "SQL",
-      "Excel",
-      "Data Analysis"
-    ],
-    mediaUrl: projectUfcImg,
-    demoUrl: "https://github.com/abdullxxhi",
-    githubUrl: "https://github.com/abdullxxhi",
-    keyHighlights: [
-      "SQL data cleaning and normalization across Islam Makhachev's career fight performance records.",
-      "Statistical modeling analyzing takedown accuracy, striking defense, and control time vs. win percentage.",
-      "Comprehensive performance breakdown report highlighting career victory trajectories."
     ]
   },
 
@@ -526,8 +509,8 @@ export const projectsData: Project[] = [
       "NBS Dataset"
     ],
     mediaUrl: projectTransportImg,
-    demoUrl: "https://github.com/abdullxxhi",
-    githubUrl: "https://github.com/abdullxxhi",
+    demoUrl: "[https://github.com/abdullxxhi](https://github.com/abdullxxhi)",
+    githubUrl: "[https://github.com/abdullxxhi](https://github.com/abdullxxhi)",
     keyHighlights: [
       "Two-Way ANOVA statistical testing validating zone vs. transit mode interactions.",
       "In-depth exploratory findings based on authentic NBS macro dataset.",
@@ -553,8 +536,8 @@ export const projectsData: Project[] = [
     mediaUrl: projectSeleemImg,
     videoUrl: projectSeleemVideo,
     isVideo: true,
-    demoUrl: "https://github.com/abdullxxhi",
-    githubUrl: "https://github.com/abdullxxhi",
+    demoUrl: "[https://github.com/abdullxxhi](https://github.com/abdullxxhi)",
+    githubUrl: "[https://github.com/abdullxxhi](https://github.com/abdullxxhi)",
     keyHighlights: [
       "Fully responsive modern UI layout built with Google Studio for desktop, tablet, and mobile.",
       "AI-powered customer support chatbot powered by n8n workflows and Gemini API.",
@@ -578,8 +561,8 @@ export const projectsData: Project[] = [
       "AI Automation"
     ],
     mediaUrl: eventRegistrationImg,
-    githubUrl: "https://github.com/abdullxxhi",
-    demoUrl: "https://github.com/abdullxxhi/ai-event-registration-automation",
+    githubUrl: "[https://github.com/abdullxxhi](https://github.com/abdullxxhi)",
+    demoUrl: "[https://github.com/abdullxxhi/ai-event-registration-automation](https://github.com/abdullxxhi/ai-event-registration-automation)",
     keyHighlights: [
       "Automatically generates unique registration IDs for every submission.",
       "Validates maximum event capacity before confirming attendance.",
@@ -606,8 +589,8 @@ export const projectsData: Project[] = [
       "Workflow Automation"
     ],
     mediaUrl: projectSupportWorkflowImg,
-    demoUrl: "https://github.com/abdullxxhi/AI-Customer-Support-Bot",
-    githubUrl: "https://github.com/abdullxxhi",
+    demoUrl: "[https://github.com/abdullxxhi/AI-Customer-Support-Bot](https://github.com/abdullxxhi/AI-Customer-Support-Bot)",
+    githubUrl: "[https://github.com/abdullxxhi](https://github.com/abdullxxhi)",
     keyHighlights: [
       "AI-powered customer support using Google Gemini",
       "Company-specific knowledge retrieval using RAG and a vector store",
@@ -662,8 +645,8 @@ export const projectsData: Project[] = [
       "Order Management"
     ],
     mediaUrl: projectOrderDeliveryImg,
-    demoUrl: "https://github.com/abdullxxhi/AI-Order-Management-Fulfillment-Automation",
-    githubUrl: "https://github.com/abdullxxhi",
+    demoUrl: "[https://github.com/abdullxxhi/AI-Order-Management-Fulfillment-Automation](https://github.com/abdullxxhi/AI-Order-Management-Fulfillment-Automation)",
+    githubUrl: "[https://github.com/abdullxxhi](https://github.com/abdullxxhi)",
     keyHighlights: [
       "Uses AI to understand natural-language customer orders and extract structured order details.",
       "Validates required information before processing the order.",
@@ -740,8 +723,8 @@ export const projectsData: Project[] = [
       "Human-in-the-Loop"
     ],
     mediaUrl: projectEmailTriageOverviewImg,
-    demoUrl: "https://github.com/abdullxxhi/AI-Email-Triage-Response",
-    githubUrl: "https://github.com/abdullxxhi",
+    demoUrl: "[https://github.com/abdullxxhi/AI-Email-Triage-Response](https://github.com/abdullxxhi/AI-Email-Triage-Response)",
+    githubUrl: "[https://github.com/abdullxxhi](https://github.com/abdullxxhi)",
     keyHighlights: [
       "Automatically retrieves and processes unread Gmail messages.",
       "Uses Google Gemini to analyze email content and determine category, priority, and intent.",
@@ -803,8 +786,8 @@ export const projectsData: Project[] = [
       "Human-in-the-Loop"
     ],
     mediaUrl: projectQualityControlWorkflowImg,
-    demoUrl: "https://github.com/abdullxxhi/Product-Quality-Control-Data-Cleaning-Validation",
-    githubUrl: "https://github.com/abdullxxhi",
+    demoUrl: "[https://github.com/abdullxxhi/Product-Quality-Control-Data-Cleaning-Validation](https://github.com/abdullxxhi/Product-Quality-Control-Data-Cleaning-Validation)",
+    githubUrl: "[https://github.com/abdullxxhi](https://github.com/abdullxxhi)",
     keyHighlights: [
       "Validates CSV structure and prepares valid records for processing.",
       "Detects invalid dates, numeric values, production counts, QC results, and defect information.",
@@ -836,6 +819,63 @@ export const projectsData: Project[] = [
         caption: "Shows the generated quality report summarizing records processed, corrections made, data-quality issues identified, and records requiring human review."
       }
     ]
+  },
+
+  {
+    id: "proj-15",
+    title: "A.M. BIBIRE NIG LIMITED Website",
+    category: "WEB DEVELOPMENT",
+    featured: false,
+    description: "Designed and deployed a professional responsive business website for A.M. BIBIRE NIG LIMITED, an industrial and building materials supplier, steel stockist, and general contractor in Lagos, Nigeria. The website presents the company's products and services through a practical catalogue while making it easy for potential customers to enquire directly.",
+    tags: [
+      "React",
+      "TypeScript",
+      "Responsive Design",
+      "WhatsApp Integration",
+      "Frontend Development",
+      "SEO",
+      "GitHub",
+      "Vercel"
+    ],
+    mediaUrl: projectBibire1Img,
+    demoUrl: "https://ambibire.vercel.app/",
+    githubUrl: "",
+    keyHighlights: [
+      "Built a professional responsive business website for an industrial and building materials supplier and general contractor.",
+      "Created a categorized product catalogue with individual product cards, descriptions, and product images.",
+      "Added direct WhatsApp enquiry functionality for individual products so customers can enquire about specific items.",
+      "Connected the Request a Quote call-to-action directly to WhatsApp for easier customer enquiries.",
+      "Designed responsive navigation and layouts for mobile, tablet, and desktop users.",
+      "Added company information, contact details, opening hours, SEO metadata, and a favicon.",
+      "Used GitHub for version control and deployed the finished website with Vercel."
+    ],
+    automationScreenshots: [
+      {
+        image: projectBibire1Img,
+        title: "A.M. BIBIRE Website — Landing Page",
+        caption: "The main landing page introducing A.M. BIBIRE NIG LIMITED, its services, and its building and industrial materials offering."
+      },
+      {
+        image: projectBibire2Img,
+        title: "Product Catalogue",
+        caption: "Shows the product catalogue with building and industrial materials presented in a clear, accessible layout."
+      },
+      {
+        image: projectBibire3Img,
+        title: "Website Content & Company Details",
+        caption: "Shows additional sections of the website presenting company information, services, and other relevant business details."
+      },
+      {
+        image: projectBibire4Img,
+        title: "Business Website Details",
+        caption: "Shows additional website content and interface details designed to help visitors understand the company's offerings and get in touch."
+      },
+      {
+        image: projectBibire5Img,
+        title: "Mobile Responsive View",
+        caption: "Shows the responsive landing page optimized for mobile devices."
+      }
+    ]
   }
 ];
 
@@ -847,7 +887,7 @@ export const certificationsData: Certification[] = [
     date: "2026",
     status: "Completed",
     image: alxCertificateIMG,
-    credentialUrl: "https://savanna.alxafrica.com/certificates/59TRPhyBSL",
+    credentialUrl: "[https://savanna.alxafrica.com/certificates/59TRPhyBSL](https://savanna.alxafrica.com/certificates/59TRPhyBSL)",
     skillsLearned: [
       "SQL",
       "Data Analytics",
