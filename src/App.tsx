@@ -90,6 +90,40 @@ export default function App() {
     };
   }, []);
 
+  // Open the correct section when visiting a hashless URL directly.
+  // Example: /skills -> scroll to <section id="skills">
+  useEffect(() => {
+    const pathname = window.location.pathname.replace(/\/+$/, '') || '/';
+
+    if (pathname === '/') {
+      return;
+    }
+
+    const sectionId = pathname.slice(1);
+
+    const scrollToSectionFromPath = () => {
+      const section = document.getElementById(sectionId);
+
+      if (section) {
+        const navbarOffset = 88;
+        const sectionPosition =
+          section.getBoundingClientRect().top + window.scrollY - navbarOffset;
+
+        window.scrollTo({
+          top: Math.max(0, sectionPosition),
+          behavior: 'smooth',
+        });
+      }
+    };
+
+    // Wait briefly for the page sections to be mounted.
+    const timeoutId = window.setTimeout(scrollToSectionFromPath, 100);
+
+    return () => {
+      window.clearTimeout(timeoutId);
+    };
+  }, []);
+
   const handleCopyEmail = () => {
     navigator.clipboard.writeText(personalInfo.email);
     showToast('Email address copied to clipboard!', 'success');
