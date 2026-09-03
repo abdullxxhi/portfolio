@@ -102,9 +102,9 @@ export const statsData: StatItem[] = [
   {
     id: "stat-1",
     label: "Projects Completed",
-    value: "12",
-    numericValue: 12,
-    suffix: "",
+    value: "10+",
+    numericValue: 10,
+    suffix: "+",
     iconName: "FolderGit2",
     subtext: "Data Analysis & Automation Projects"
   },
