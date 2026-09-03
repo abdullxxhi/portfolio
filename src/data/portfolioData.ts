@@ -226,6 +226,7 @@ export const projectsData: Project[] = [
     title: "Customer Churn Analysis",
     category: "Data Analysis",
     featured: true,
+    complexity: 3,
     description: "Conducted an end-to-end customer churn analysis in Microsoft Excel 2025 for a telecommunications dataset. The project covered data validation, exploratory analysis, customer segmentation, churn-rate analysis, and a Chi-Square test examining the relationship between contract type and customer churn. The analysis identified key high-risk customer groups and translated the findings into practical retention recommendations.",
     tags: [
       "Excel",
@@ -282,6 +283,7 @@ export const projectsData: Project[] = [
     title: "Sales Forecasting & Predictive Analysis",
     category: "Data Analysis",
     featured: true,
+    complexity: 4,
     description: "Analyzed more than 1 million sales records in Microsoft Excel to identify monthly sales trends, measure volatility, and evaluate forecasting performance. Compared a naive baseline with an ETS forecasting model using MAE and RMSE to determine which approach produced more accurate predictions.",
     tags: [
       "Excel",
@@ -334,6 +336,7 @@ export const projectsData: Project[] = [
     title: "Weekly Sales Forecasting Analysis",
     category: "Data Analysis",
     featured: true,
+    complexity: 3,
     description: "Analyzed 52 weeks of sales data for Product P1 using Microsoft Excel to compare Naive Forecasting, a 3-Week Moving Average, and ETS forecasting. The analysis used a W0–W39 training period and W40–W51 testing period, evaluating each method with MAE and RMSE. An interactive forecasting dashboard was also built to present actual sales, forecasts, model accuracy, and forecasting errors in a clear business-focused format.",
     tags: [
       "Excel",
@@ -382,6 +385,7 @@ export const projectsData: Project[] = [
     title: "Apple Financial Performance Dashboard",
     category: "Data Analysis",
     featured: true,
+    complexity: 3,
     description: "Built an interactive Power BI dashboard to analyze Apple's financial performance across sales, profit, products, countries, business segments, and time. The project demonstrates practical data cleaning and transformation, data modeling, DAX, KPI development, interactive dashboard design, geographic analysis, and business insight generation.",
     tags: [
       "Power BI",
@@ -428,6 +432,7 @@ export const projectsData: Project[] = [
     title: "Clinic Appointment Automation",
     category: "AI Automation",
     featured: true,
+    complexity: 4,
     description: "Automated clinic booking and appointment management system. The complete n8n workflow automatically detects new Google Form submissions, creates a Google Calendar event, sends a confirmation email via Gmail, and delivers an instant personalized WhatsApp confirmation message to patients without manual intervention.",
     tags: [
       "n8n",
@@ -465,6 +470,7 @@ export const projectsData: Project[] = [
     title: "Seleem Bakery Website",
     category: "WEB DEVELOPMENT",
     featured: false,
+    complexity: 3,
     description: "A fully responsive, interactive bakery website built with Google Studio. The website features a modern user interface, responsive layouts for desktop, tablet, and mobile devices, and an AI-powered customer support chatbot. The chatbot is integrated using n8n workflows and responds intelligently through the Gemini API, providing customers with real-time assistance and an engaging user experience.",
     tags: [
       "Google Studio",
@@ -492,6 +498,7 @@ export const projectsData: Project[] = [
     title: "Smart Event Registration & Capacity Management Automation",
     category: "AI Automation",
     featured: false,
+    complexity: 5,
     description: "Built an end-to-end event registration workflow in n8n that automates attendee management using Google Forms, Google Sheets, Gmail, and JavaScript. The workflow automatically generates unique registration IDs, validates event capacity, routes attendees based on their location, and sends personalized confirmation or waitlist emails.",
     tags: [
       "n8n",
@@ -520,6 +527,7 @@ export const projectsData: Project[] = [
     title: "AI Customer Support Bot",
     category: "AI Automation",
     featured: true,
+    complexity: 5,
     description: "An AI-powered customer support and order management system built with n8n, Google Gemini, RAG, and Telegram. The bot answers customer questions using a company-specific knowledge base, maintains conversation context, identifies requests requiring human intervention, extracts confirmed order details, and sends important business notifications through Telegram.",
     tags: [
       "n8n",
@@ -575,6 +583,7 @@ export const projectsData: Project[] = [
     title: "AI Natural Language Order Management Automation",
     category: "AI Automation",
     featured: false,
+    complexity: 5,
     description: "Built a real-world AI-powered order management automation that allows customers to describe their orders naturally instead of filling out multiple fields. The workflow uses AI to understand and extract order details, validates the required information, routes Delivery, Pickup, and Other orders using a Switch node, stores orders in Google Sheets, sends the appropriate team Telegram notifications, escalates incomplete or unusual orders for human intervention, and sends customers an acknowledgement.",
     tags: [
       "n8n",
@@ -652,6 +661,7 @@ export const projectsData: Project[] = [
     title: "AI Email Triage & Response System",
     category: "AI Automation",
     featured: true,
+    complexity: 5,
     description: "Built an AI-powered email triage and response system in n8n that automatically retrieves unread Gmail messages, analyzes their content using Google Gemini, classifies emails as Sales, Support, Urgent, or General, determines priority and intent, routes each email based on the AI classification, generates appropriate responses, flags urgent emails for human attention, and marks processed emails as read.",
     tags: [
       "n8n",
@@ -716,6 +726,7 @@ export const projectsData: Project[] = [
     title: "Product Quality Control Data Cleaning & Validation",
     category: "Data Automation",
     featured: true,
+    complexity: 4,
     description: "Built an n8n automation workflow designed to validate, clean, standardize, and quality-check a Product Quality Control dataset. The workflow processes a messy source CSV, identifies structural and data-quality issues, applies safe corrections, flags records that require human review, generates a quality summary and report, and saves a cleaned CSV.",
     tags: [
       "n8n",
@@ -768,6 +779,7 @@ export const projectsData: Project[] = [
     title: "A.M. BIBIRE NIG LIMITED Website",
     category: "WEB DEVELOPMENT",
     featured: false,
+    complexity: 3,
     description: "Designed and deployed a professional responsive business website for A.M. BIBIRE NIG LIMITED, an industrial and building materials supplier, steel stockist, and general contractor in Lagos, Nigeria. The website presents the company's products and services through a practical catalogue while making it easy for potential customers to enquire directly.",
     tags: [
       "React",
