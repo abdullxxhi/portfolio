@@ -23,6 +23,7 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
   const [activeFilter, setActiveFilter] = useState('All');
   const [visibleCount, setVisibleCount] = useState(PROJECTS_PER_LOAD);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [activeProjectIndex, setActiveProjectIndex] = useState(0);
 
   const orderedProjects = useMemo(
     () =>
@@ -58,6 +59,45 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
   const hasMoreProjects = visibleCount < filteredProjects.length;
   const remainingProjects = filteredProjects.length - visibleCount;
 
+  useEffect(() => {
+    const elements = Array.from(
+      document.querySelectorAll<HTMLElement>('[data-project-index]')
+    );
+
+    if (!elements.length) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visibleEntry = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort(
+            (a, b) =>
+              Math.abs(a.boundingClientRect.top - window.innerHeight / 2) -
+              Math.abs(b.boundingClientRect.top - window.innerHeight / 2)
+          )[0];
+
+        if (!visibleEntry) return;
+
+        const index = Number(
+          (visibleEntry.target as HTMLElement).dataset.projectIndex
+        );
+
+        if (!Number.isNaN(index)) {
+          setActiveProjectIndex(index);
+        }
+      },
+      {
+        root: null,
+        rootMargin: '-25% 0px -45% 0px',
+        threshold: 0,
+      }
+    );
+
+    elements.forEach((element) => observer.observe(element));
+
+    return () => observer.disconnect();
+  }, [visibleProjects]);
+
   const handleLoadMore = () => {
     setVisibleCount((current) =>
       Math.min(current + PROJECTS_PER_LOAD, filteredProjects.length)
@@ -68,6 +108,7 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
     setActiveFilter(category);
     setVisibleCount(PROJECTS_PER_LOAD);
     setSelectedProject(null);
+    setActiveProjectIndex(0);
   };
 
   const openProjectDetails = (project: Project) => {
@@ -175,7 +216,7 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
           </div>
         </motion.div>
 
-        {/* Project Count */}
+        {/* Project Count + Live Index */}
         <div className="mb-7 flex items-end justify-between gap-4">
           <div>
             <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#6B7280]">
@@ -187,72 +228,133 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
             </h3>
           </div>
 
-          <span className="font-mono text-xs text-[#6B7280]">
-            {filteredProjects.length}{' '}
-            {filteredProjects.length === 1 ? 'project' : 'projects'}
-          </span>
+          <div className="flex items-center gap-4">
+            <motion.span
+              key={activeProjectIndex}
+              initial={{ opacity: 0.35 }}
+              animate={{ opacity: 1 }}
+              className="font-mono text-xs font-semibold tracking-[0.08em] text-[#2F5D50]"
+            >
+              {String(activeProjectIndex + 1).padStart(2, '0')} /{' '}
+              {String(filteredProjects.length).padStart(2, '0')}
+            </motion.span>
+
+            <span className="hidden font-mono text-xs text-[#6B7280] sm:inline">
+              {filteredProjects.length}{' '}
+              {filteredProjects.length === 1 ? 'project' : 'projects'}
+            </span>
+          </div>
         </div>
 
         {/* Editorial Project List */}
         {visibleProjects.length > 0 ? (
           <div className="border-y border-[#DDD6C8]">
             <AnimatePresence initial={false} mode="popLayout">
-              {visibleProjects.map((project, index) => (
-                <motion.article
-                  key={project.id}
-                  layout
-                  initial={{ opacity: 0, y: 18 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -12 }}
-                  transition={{
-                    duration: 0.4,
-                    delay: (index % PROJECTS_PER_LOAD) * 0.05,
-                    ease: [0.16, 1, 0.3, 1],
-                  }}
-                  className="border-b border-[#DDD6C8] last:border-b-0"
-                >
-                  <div className="grid gap-5 py-8 sm:grid-cols-[64px_1fr_auto] sm:items-center sm:gap-7 sm:py-10">
-                    <span className="font-mono text-xs font-semibold text-[#6B7280]">
-                      {String(
-                        orderedProjects.findIndex(
-                          (item) => item.id === project.id
-                        ) + 1
-                      ).padStart(2, '0')}
-                    </span>
+              {visibleProjects.map((project, index) => {
+                const projectNumber =
+                  orderedProjects.findIndex(
+                    (item) => item.id === project.id
+                  ) + 1;
 
-                    <div className="min-w-0">
-                      <div className="mb-2 flex flex-wrap items-center gap-x-3 gap-y-2">
-                        <h3 className="font-display text-xl font-bold tracking-tight text-[#1D2A26] sm:text-2xl">
-                          {project.title}
-                        </h3>
+                return (
+                  <motion.article
+                    key={project.id}
+                    data-project-index={projectNumber - 1}
+                    layout
+                    initial={{ opacity: 0, y: 18 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -12 }}
+                    transition={{
+                      duration: 0.4,
+                      delay: (index % PROJECTS_PER_LOAD) * 0.05,
+                      ease: [0.16, 1, 0.3, 1],
+                    }}
+                    className="group border-b border-[#DDD6C8] last:border-b-0"
+                  >
+                    <div className="grid gap-5 py-8 sm:grid-cols-[64px_1fr_auto] sm:items-center sm:gap-7 sm:py-10">
+                      {/* Project Index */}
+                      <div className="flex items-center gap-3">
+                        <motion.span
+                          animate={{
+                            color:
+                              activeProjectIndex === projectNumber - 1
+                                ? '#2F5D50'
+                                : '#6B7280',
+                          }}
+                          transition={{ duration: 0.2 }}
+                          className="font-mono text-xs font-semibold"
+                        >
+                          {String(projectNumber).padStart(2, '0')}
+                        </motion.span>
 
-                        <span className="rounded-full border border-[#DDD6C8] bg-[#FCFAF6] px-2.5 py-1 text-[10px] font-mono font-medium uppercase tracking-wide text-[#6B7280]">
-                          {project.category}
-                        </span>
+                        <span
+                          className={`h-px transition-all duration-300 ${
+                            activeProjectIndex === projectNumber - 1
+                              ? 'w-5 bg-[#2F5D50]'
+                              : 'w-0 bg-transparent'
+                          }`}
+                        />
                       </div>
 
-                      <p className="max-w-3xl text-sm leading-6 text-[#4B5563]">
-                        {project.description}
-                      </p>
+                      <div className="min-w-0">
+                        <div className="mb-2 flex flex-wrap items-center gap-x-3 gap-y-2">
+                          <h3 className="font-display text-xl font-bold tracking-tight text-[#1D2A26] sm:text-2xl">
+                            {project.title}
+                          </h3>
+
+                          <span className="rounded-full border border-[#DDD6C8] bg-[#FCFAF6] px-2.5 py-1 text-[10px] font-mono font-medium uppercase tracking-wide text-[#6B7280]">
+                            {project.category}
+                          </span>
+                        </div>
+
+                        <p className="max-w-3xl text-sm leading-6 text-[#4B5563]">
+                          {project.description}
+                        </p>
+
+                        {/* Tiny Animated Data Waveform */}
+                        <div
+                          className="mt-5 flex h-5 items-center gap-[3px] overflow-hidden"
+                          aria-hidden="true"
+                        >
+                          {[4, 9, 6, 13, 8, 16, 7, 11, 5, 14, 8, 12].map(
+                            (height, waveformIndex) => (
+                              <span
+                                key={waveformIndex}
+                                className="project-wave-bar w-[2px] rounded-full bg-[#2F5D50]/55"
+                                style={{
+                                  height: `${height}px`,
+                                  animationDelay: `${
+                                    waveformIndex * 90
+                                  }ms`,
+                                }}
+                              />
+                            )
+                          )}
+
+                          <span className="ml-1 font-mono text-[8px] uppercase tracking-[0.12em] text-[#9A9388]">
+                            data signal
+                          </span>
+                        </div>
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={() => openProjectDetails(project)}
+                        className="group inline-flex items-center justify-between gap-4 text-left sm:justify-end"
+                        aria-label={`View details for ${project.title}`}
+                      >
+                        <span className="text-xs font-semibold text-[#2F5D50] transition-colors group-hover:text-[#1D2A26]">
+                          View project
+                        </span>
+
+                        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[#DDD6C8] bg-[#FCFAF6] text-[#2F5D50] transition-all duration-200 group-hover:border-[#2F5D50] group-hover:bg-[#2F5D50] group-hover:text-white">
+                          <ChevronDown className="-rotate-90 h-4 w-4" />
+                        </span>
+                      </button>
                     </div>
-
-                    <button
-                      type="button"
-                      onClick={() => openProjectDetails(project)}
-                      className="group inline-flex items-center justify-between gap-4 text-left sm:justify-end"
-                      aria-label={`View details for ${project.title}`}
-                    >
-                      <span className="text-xs font-semibold text-[#2F5D50] transition-colors group-hover:text-[#1D2A26]">
-                        View project
-                      </span>
-
-                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[#DDD6C8] bg-[#FCFAF6] text-[#2F5D50] transition-all duration-200 group-hover:border-[#2F5D50] group-hover:bg-[#2F5D50] group-hover:text-white">
-                        <ChevronDown className="-rotate-90 h-4 w-4" />
-                      </span>
-                    </button>
-                  </div>
-                </motion.article>
-              ))}
+                  </motion.article>
+                );
+              })}
             </AnimatePresence>
           </div>
         ) : (
@@ -332,274 +434,281 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
       {typeof document !== 'undefined' &&
         createPortal(
           <AnimatePresence>
-        {selectedProject && (
-          <motion.div
-            className="fixed inset-0 z-[9999] flex items-center justify-center bg-[#1D2A26]/55 p-3 sm:p-6"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onMouseDown={(event) => {
-              if (event.target === event.currentTarget) {
-                closeProjectDetails();
-              }
-            }}
-          >
-            <motion.div
-              role="dialog"
-              aria-modal="true"
-              aria-labelledby="project-modal-title"
-              initial={{ opacity: 0, y: 24, scale: 0.98 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 18, scale: 0.98 }}
-              transition={{
-                duration: 0.3,
-                ease: [0.16, 1, 0.3, 1],
-              }}
-              className="relative flex h-[94vh] max-h-[94vh] w-full max-w-6xl flex-col overflow-hidden rounded-[16px] border border-[#DDD6C8] bg-[#FCFAF6]"
-            >
-              {/* Modal Header / Close */}
-              <div className="relative z-30 flex shrink-0 items-center justify-between border-b border-[#DDD6C8] bg-[#FCFAF6] px-4 py-3 sm:px-7 sm:py-4">
-                <div className="min-w-0 pr-3 sm:pr-4">
-                  <p className="font-mono text-[9px] font-semibold uppercase tracking-[0.16em] text-[#6B7280] sm:text-[10px]">
-                    Project details
-                  </p>
-                  <h2
-                    id="project-modal-title"
-                    className="mt-1 truncate font-display text-base font-bold text-[#1D2A26] sm:text-xl"
-                  >
-                    {selectedProject.title}
-                  </h2>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={closeProjectDetails}
-                  aria-label="Hide project details"
-                  className="group flex h-11 shrink-0 items-center justify-center gap-2 rounded-lg border-2 border-[#2F5D50] bg-[#FCFAF6] px-3 text-xs font-semibold text-[#2F5D50] shadow-sm transition-colors hover:bg-[#2F5D50] hover:text-white sm:h-10 sm:w-10 sm:px-0"
+            {selectedProject && (
+              <motion.div
+                className="fixed inset-0 z-[9999] flex items-center justify-center bg-[#1D2A26]/55 p-3 sm:p-6"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onMouseDown={(event) => {
+                  if (event.target === event.currentTarget) {
+                    closeProjectDetails();
+                  }
+                }}
+              >
+                <motion.div
+                  role="dialog"
+                  aria-modal="true"
+                  aria-labelledby="project-modal-title"
+                  initial={{ opacity: 0, y: 24, scale: 0.98 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 18, scale: 0.98 }}
+                  transition={{
+                    duration: 0.3,
+                    ease: [0.16, 1, 0.3, 1],
+                  }}
+                  className="relative flex h-[94vh] max-h-[94vh] w-full max-w-6xl flex-col overflow-hidden rounded-[16px] border border-[#DDD6C8] bg-[#FCFAF6]"
                 >
-                  <X className="h-5 w-5 transition-transform duration-200 group-hover:rotate-90" />
-                  <span className="sm:hidden">Hide details</span>
-                </button>
-              </div>
+                  {/* Modal Header / Close */}
+                  <div className="relative z-30 flex shrink-0 items-center justify-between border-b border-[#DDD6C8] bg-[#FCFAF6] px-4 py-3 sm:px-7 sm:py-4">
+                    <div className="min-w-0 pr-3 sm:pr-4">
+                      <p className="font-mono text-[9px] font-semibold uppercase tracking-[0.16em] text-[#6B7280] sm:text-[10px]">
+                        Project details
+                      </p>
 
-              {/* Modal Content */}
-              <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain">
-                <div className="p-5 sm:p-7 lg:p-9">
-                  <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_300px] lg:gap-14">
-                    {/* Main Content */}
-                    <div className="min-w-0">
-                      {selectedProject.mediaUrl && (
-                        <button
-                          type="button"
-                          onClick={() => onOpenLightbox(selectedProject)}
-                          className="group mb-8 block w-full overflow-hidden rounded-xl border border-[#DDD6C8] bg-[#F5F1E8] text-left"
-                          aria-label={`Open ${selectedProject.title} images`}
-                        >
-                          <div className="overflow-hidden">
-                            <img
-                              src={selectedProject.mediaUrl}
-                              alt={`${selectedProject.title} project preview`}
-                              className="block h-auto max-h-[520px] w-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.015]"
-                            />
-                          </div>
-
-                          <div className="flex items-center justify-between border-t border-[#DDD6C8] bg-[#FCFAF6] px-4 py-3">
-                            <span className="text-xs font-medium text-[#6B7280]">
-                              Open project gallery
-                            </span>
-                            <ExternalLink className="h-3.5 w-3.5 text-[#2F5D50]" />
-                          </div>
-                        </button>
-                      )}
-
-                      {/* About */}
-                      <div className="mb-10">
-                        <p className="mb-3 font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#6B7280]">
-                          About the project
-                        </p>
-                        <p className="max-w-3xl text-sm leading-7 text-[#4B5563] sm:text-base">
-                          {selectedProject.description}
-                        </p>
-                      </div>
-
-                      {/* Key Highlights */}
-                      {selectedProject.keyHighlights?.length > 0 && (
-                        <div className="mb-10">
-                          <p className="mb-4 font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#6B7280]">
-                            What I did
-                          </p>
-
-                          <div className="divide-y divide-[#DDD6C8] border-y border-[#DDD6C8]">
-                            {selectedProject.keyHighlights.map(
-                              (highlight, highlightIndex) => (
-                                <div
-                                  key={highlightIndex}
-                                  className="flex items-start gap-4 py-4"
-                                >
-                                  <span className="mt-1 font-mono text-[10px] font-semibold text-[#2F5D50]">
-                                    {String(highlightIndex + 1).padStart(2, '0')}
-                                  </span>
-
-                                  <p className="text-sm leading-6 text-[#4B5563]">
-                                    {highlight}
-                                  </p>
-                                </div>
-                              )
-                            )}
-                          </div>
-                        </div>
-                      )}
-
-                      {/* Screenshots */}
-                      {selectedProject.automationScreenshots?.length > 0 && (
-                        <div className="mb-10">
-                          <div className="mb-4">
-                            <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#6B7280]">
-                              Project visuals
-                            </p>
-                            <p className="mt-1 text-sm text-[#4B5563]">
-                              A closer look at the work behind this project.
-                            </p>
-                          </div>
-
-                          <div className="grid gap-5 sm:grid-cols-2">
-                            {selectedProject.automationScreenshots.map(
-                              (screenshot, screenshotIndex) => (
-                                <button
-                                  key={`${screenshot.title}-${screenshotIndex}`}
-                                  type="button"
-                                  onClick={() =>
-                                    onOpenLightbox(selectedProject)
-                                  }
-                                  className="group overflow-hidden rounded-xl border border-[#DDD6C8] bg-[#FCFAF6] text-left"
-                                >
-                                  <div className="overflow-hidden bg-[#F5F1E8]">
-                                    <img
-                                      src={screenshot.image}
-                                      alt={screenshot.title}
-                                      className="block h-48 w-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.02]"
-                                    />
-                                  </div>
-
-                                  <div className="border-t border-[#DDD6C8] p-4">
-                                    <p className="text-sm font-semibold text-[#1D2A26]">
-                                      {screenshot.title}
-                                    </p>
-
-                                    {screenshot.caption && (
-                                      <p className="mt-1.5 text-xs leading-5 text-[#6B7280]">
-                                        {screenshot.caption}
-                                      </p>
-                                    )}
-                                  </div>
-                                </button>
-                              )
-                            )}
-                          </div>
-                        </div>
-                      )}
-
-                      {/* Video */}
-                      {selectedProject.videoUrl && (
-                        <div>
-                          <p className="mb-4 font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#6B7280]">
-                            Project walkthrough
-                          </p>
-
-                          <div className="overflow-hidden rounded-xl border border-[#DDD6C8] bg-[#F5F1E8]">
-                            <video
-                              src={selectedProject.videoUrl}
-                              controls
-                              playsInline
-                              className="block w-full"
-                            />
-                          </div>
-                        </div>
-                      )}
+                      <h2
+                        id="project-modal-title"
+                        className="mt-1 truncate font-display text-base font-bold text-[#1D2A26] sm:text-xl"
+                      >
+                        {selectedProject.title}
+                      </h2>
                     </div>
 
-                    {/* Project Meta */}
-                    <aside>
-                      <div className="lg:sticky lg:top-0">
-                        <div className="mb-8">
-                          <p className="mb-3 font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#6B7280]">
-                            Category
-                          </p>
-
-                          <span className="inline-flex rounded-full border border-[#DDD6C8] bg-[#F5F1E8] px-3 py-1.5 text-xs font-medium text-[#4B5563]">
-                            {selectedProject.category}
-                          </span>
-                        </div>
-
-                        <div className="mb-8">
-                          <p className="mb-3 font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#6B7280]">
-                            Tools & skills
-                          </p>
-
-                          <div className="flex flex-wrap gap-2">
-                            {selectedProject.tags.map((tag) => (
-                              <span
-                                key={tag}
-                                className="rounded-full border border-[#DDD6C8] bg-[#F5F1E8] px-2.5 py-1.5 text-[11px] font-medium text-[#4B5563]"
-                              >
-                                {tag}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-
-                        <div className="border-y border-[#DDD6C8]">
-                          {selectedProject.githubUrl && (
-                            <a
-                              href={selectedProject.githubUrl}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="flex items-center justify-between gap-4 py-4 text-sm font-semibold text-[#2F5D50] transition-colors hover:text-[#1D2A26]"
-                            >
-                              <span className="flex items-center gap-2">
-                                <Github className="h-4 w-4" />
-                                GitHub
-                              </span>
-                              <ExternalLink className="h-3.5 w-3.5" />
-                            </a>
-                          )}
-
-                          {selectedProject.demoUrl && (
-                            <a
-                              href={selectedProject.demoUrl}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="flex items-center justify-between gap-4 border-t border-[#DDD6C8] py-4 text-sm font-semibold text-[#2F5D50] transition-colors hover:text-[#1D2A26]"
-                            >
-                              <span className="flex items-center gap-2">
-                                <ExternalLink className="h-4 w-4" />
-                                Live / Demo
-                              </span>
-                              <ExternalLink className="h-3.5 w-3.5" />
-                            </a>
-                          )}
-                        </div>
-
-                        {/* Hide Details */}
-                        <button
-                          type="button"
-                          onClick={closeProjectDetails}
-                          className="mt-6 flex w-full items-center justify-center gap-2 rounded-lg border border-[#2F5D50] bg-[#2F5D50] px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#244A40]"
-                        >
-                          <X className="h-4 w-4" />
-                          Hide details
-                        </button>
-                      </div>
-                    </aside>
+                    <button
+                      type="button"
+                      onClick={closeProjectDetails}
+                      aria-label="Hide project details"
+                      className="group flex h-11 shrink-0 items-center justify-center gap-2 rounded-lg border-2 border-[#2F5D50] bg-[#FCFAF6] px-3 text-xs font-semibold text-[#2F5D50] shadow-sm transition-colors hover:bg-[#2F5D50] hover:text-white sm:h-10 sm:w-10 sm:px-0"
+                    >
+                      <X className="h-5 w-5 transition-transform duration-200 group-hover:rotate-90" />
+                      <span className="sm:hidden">Hide details</span>
+                    </button>
                   </div>
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
+
+                  {/* Modal Content */}
+                  <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain">
+                    <div className="p-5 sm:p-7 lg:p-9">
+                      <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_300px] lg:gap-14">
+                        {/* Main Content */}
+                        <div className="min-w-0">
+                          {selectedProject.mediaUrl && (
+                            <button
+                              type="button"
+                              onClick={() => onOpenLightbox(selectedProject)}
+                              className="group mb-8 block w-full overflow-hidden rounded-xl border border-[#DDD6C8] bg-[#F5F1E8] text-left"
+                              aria-label={`Open ${selectedProject.title} images`}
+                            >
+                              <div className="overflow-hidden">
+                                <img
+                                  src={selectedProject.mediaUrl}
+                                  alt={`${selectedProject.title} project preview`}
+                                  className="block h-auto max-h-[520px] w-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.015]"
+                                />
+                              </div>
+
+                              <div className="flex items-center justify-between border-t border-[#DDD6C8] bg-[#FCFAF6] px-4 py-3">
+                                <span className="text-xs font-medium text-[#6B7280]">
+                                  Open project gallery
+                                </span>
+                                <ExternalLink className="h-3.5 w-3.5 text-[#2F5D50]" />
+                              </div>
+                            </button>
+                          )}
+
+                          {/* About */}
+                          <div className="mb-10">
+                            <p className="mb-3 font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#6B7280]">
+                              About the project
+                            </p>
+
+                            <p className="max-w-3xl text-sm leading-7 text-[#4B5563] sm:text-base">
+                              {selectedProject.description}
+                            </p>
+                          </div>
+
+                          {/* Key Highlights */}
+                          {selectedProject.keyHighlights?.length > 0 && (
+                            <div className="mb-10">
+                              <p className="mb-4 font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#6B7280]">
+                                What I did
+                              </p>
+
+                              <div className="divide-y divide-[#DDD6C8] border-y border-[#DDD6C8]">
+                                {selectedProject.keyHighlights.map(
+                                  (highlight, highlightIndex) => (
+                                    <div
+                                      key={highlightIndex}
+                                      className="flex items-start gap-4 py-4"
+                                    >
+                                      <span className="mt-1 font-mono text-[10px] font-semibold text-[#2F5D50]">
+                                        {String(highlightIndex + 1).padStart(
+                                          2,
+                                          '0'
+                                        )}
+                                      </span>
+
+                                      <p className="text-sm leading-6 text-[#4B5563]">
+                                        {highlight}
+                                      </p>
+                                    </div>
+                                  )
+                                )}
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Screenshots */}
+                          {selectedProject.automationScreenshots?.length > 0 && (
+                            <div className="mb-10">
+                              <div className="mb-4">
+                                <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#6B7280]">
+                                  Project visuals
+                                </p>
+
+                                <p className="mt-1 text-sm text-[#4B5563]">
+                                  A closer look at the work behind this project.
+                                </p>
+                              </div>
+
+                              <div className="grid gap-5 sm:grid-cols-2">
+                                {selectedProject.automationScreenshots.map(
+                                  (screenshot, screenshotIndex) => (
+                                    <button
+                                      key={`${screenshot.title}-${screenshotIndex}`}
+                                      type="button"
+                                      onClick={() =>
+                                        onOpenLightbox(selectedProject)
+                                      }
+                                      className="group overflow-hidden rounded-xl border border-[#DDD6C8] bg-[#FCFAF6] text-left"
+                                    >
+                                      <div className="overflow-hidden bg-[#F5F1E8]">
+                                        <img
+                                          src={screenshot.image}
+                                          alt={screenshot.title}
+                                          className="block h-48 w-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.02]"
+                                        />
+                                      </div>
+
+                                      <div className="border-t border-[#DDD6C8] p-4">
+                                        <p className="text-sm font-semibold text-[#1D2A26]">
+                                          {screenshot.title}
+                                        </p>
+
+                                        {screenshot.caption && (
+                                          <p className="mt-1.5 text-xs leading-5 text-[#6B7280]">
+                                            {screenshot.caption}
+                                          </p>
+                                        )}
+                                      </div>
+                                    </button>
+                                  )
+                                )}
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Video */}
+                          {selectedProject.videoUrl && (
+                            <div>
+                              <p className="mb-4 font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#6B7280]">
+                                Project walkthrough
+                              </p>
+
+                              <div className="overflow-hidden rounded-xl border border-[#DDD6C8] bg-[#F5F1E8]">
+                                <video
+                                  src={selectedProject.videoUrl}
+                                  controls
+                                  playsInline
+                                  className="block w-full"
+                                />
+                              </div>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Project Meta */}
+                        <aside>
+                          <div className="lg:sticky lg:top-0">
+                            <div className="mb-8">
+                              <p className="mb-3 font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#6B7280]">
+                                Category
+                              </p>
+
+                              <span className="inline-flex rounded-full border border-[#DDD6C8] bg-[#F5F1E8] px-3 py-1.5 text-xs font-medium text-[#4B5563]">
+                                {selectedProject.category}
+                              </span>
+                            </div>
+
+                            <div className="mb-8">
+                              <p className="mb-3 font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#6B7280]">
+                                Tools & skills
+                              </p>
+
+                              <div className="flex flex-wrap gap-2">
+                                {selectedProject.tags.map((tag) => (
+                                  <span
+                                    key={tag}
+                                    className="rounded-full border border-[#DDD6C8] bg-[#F5F1E8] px-2.5 py-1.5 text-[11px] font-medium text-[#4B5563]"
+                                  >
+                                    {tag}
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+
+                            <div className="border-y border-[#DDD6C8]">
+                              {selectedProject.githubUrl && (
+                                <a
+                                  href={selectedProject.githubUrl}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="flex items-center justify-between gap-4 py-4 text-sm font-semibold text-[#2F5D50] transition-colors hover:text-[#1D2A26]"
+                                >
+                                  <span className="flex items-center gap-2">
+                                    <Github className="h-4 w-4" />
+                                    GitHub
+                                  </span>
+
+                                  <ExternalLink className="h-3.5 w-3.5" />
+                                </a>
+                              )}
+
+                              {selectedProject.demoUrl && (
+                                <a
+                                  href={selectedProject.demoUrl}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="flex items-center justify-between gap-4 border-t border-[#DDD6C8] py-4 text-sm font-semibold text-[#2F5D50] transition-colors hover:text-[#1D2A26]"
+                                >
+                                  <span className="flex items-center gap-2">
+                                    <ExternalLink className="h-4 w-4" />
+                                    Live / Demo
+                                  </span>
+
+                                  <ExternalLink className="h-3.5 w-3.5" />
+                                </a>
+                              )}
+                            </div>
+
+                            <button
+                              type="button"
+                              onClick={closeProjectDetails}
+                              className="mt-6 flex w-full items-center justify-center gap-2 rounded-lg border border-[#2F5D50] bg-[#2F5D50] px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#244A40]"
+                            >
+                              <X className="h-4 w-4" />
+                              Hide details
+                            </button>
+                          </div>
+                        </aside>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              </motion.div>
+            )}
           </AnimatePresence>,
           document.body
         )}
-    </section>
+      </section>
   );
 }
