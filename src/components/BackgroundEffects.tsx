@@ -14,17 +14,57 @@ export default function BackgroundEffects() {
       {/* Base */}
       <div className="absolute inset-0 bg-[#F5F1E8]" />
 
-      {/* Very subtle paper texture */}
+      {/* Subtle data texture */}
       <div
-        className="absolute inset-0 opacity-[0.18]"
+        className="absolute inset-0 opacity-[0.12]"
         style={{
           backgroundImage: `
             radial-gradient(
-              rgba(29,42,38,0.055) 0.6px,
-              transparent 0.6px
+              circle at 12px 18px,
+              rgba(47,93,80,0.12) 0.7px,
+              transparent 0.9px
+            ),
+            radial-gradient(
+              circle at 42px 34px,
+              rgba(217,119,69,0.10) 0.55px,
+              transparent 0.8px
+            ),
+            linear-gradient(
+              118deg,
+              transparent 0%,
+              transparent 47%,
+              rgba(47,93,80,0.035) 47.2%,
+              transparent 47.45%,
+              transparent 100%
             )
           `,
-          backgroundSize: '20px 20px',
+          backgroundSize: '84px 72px, 116px 104px, 190px 190px',
+        }}
+      />
+
+      {/* Sparse analytical traces */}
+      <div
+        className="absolute inset-0 opacity-[0.07]"
+        style={{
+          backgroundImage: `
+            linear-gradient(
+              92deg,
+              transparent 0%,
+              transparent 24%,
+              rgba(47,93,80,0.08) 24.15%,
+              transparent 24.3%,
+              transparent 100%
+            ),
+            linear-gradient(
+              7deg,
+              transparent 0%,
+              transparent 67%,
+              rgba(217,119,69,0.07) 67.15%,
+              transparent 67.3%,
+              transparent 100%
+            )
+          `,
+          backgroundSize: '260px 230px, 310px 280px',
         }}
       />
 
