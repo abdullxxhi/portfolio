@@ -11,6 +11,7 @@ import {
   Check,
   MessageSquare,
   AlertCircle,
+  ArrowUpRight,
 } from 'lucide-react';
 import { personalInfo } from '../data/portfolioData';
 
@@ -108,7 +109,7 @@ export default function Contact({
   return (
     <section
       id="contact"
-      className="relative z-10 bg-[#F5F1E8] py-24 sm:py-28"
+      className="relative z-10 overflow-hidden bg-[#F5F1E8] py-24 sm:py-28 lg:py-32"
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
@@ -118,9 +119,9 @@ export default function Contact({
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-60px' }}
           transition={{ duration: 0.45 }}
-          className="mb-14 max-w-3xl"
+          className="mb-14 max-w-3xl sm:mb-16"
         >
-          <div className="mb-4 flex items-center gap-3">
+          <div className="mb-5 flex items-center gap-3">
             <span className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-[#2F5D50]">
               08 / Contact
             </span>
@@ -128,17 +129,21 @@ export default function Contact({
             <span className="h-px w-10 bg-[#DDD6C8]" />
           </div>
 
-          <h2 className="font-display text-3xl font-bold tracking-tight text-[#1D2A26] sm:text-4xl">
-            Let's build something useful.
-          </h2>
+          <div className="relative">
+            <span className="absolute -left-4 top-2 hidden h-10 w-1 rounded-full bg-[#D97745] sm:block" />
 
-          <p className="mt-4 max-w-2xl text-base leading-7 text-[#4B5563]">
+            <h2 className="font-display text-3xl font-bold tracking-tight text-[#1D2A26] sm:text-4xl lg:text-5xl">
+              Let's build something useful.
+            </h2>
+          </div>
+
+          <p className="mt-5 max-w-2xl text-base leading-7 text-[#4B5563] sm:text-lg sm:leading-8">
             {personalInfo.contactHeadline}
           </p>
         </motion.div>
 
         {/* Main Contact Layout */}
-        <div className="grid grid-cols-1 gap-14 lg:grid-cols-12 lg:gap-16">
+        <div className="grid grid-cols-1 gap-16 lg:grid-cols-12 lg:gap-20">
 
           {/* Contact Information */}
           <motion.div
@@ -149,16 +154,18 @@ export default function Contact({
             className="lg:col-span-5"
           >
             <div className="mb-8">
-              <div className="mb-3 flex items-center gap-2">
-                <MessageSquare className="h-4 w-4 text-[#2F5D50]" />
+              <div className="mb-4 flex items-center gap-3">
+                <span className="flex h-9 w-9 items-center justify-center rounded-lg border border-[#DDD6C8] bg-[#FCFAF6]">
+                  <MessageSquare className="h-4 w-4 text-[#2F5D50]" />
+                </span>
 
                 <h3 className="font-display text-xl font-bold text-[#1D2A26]">
                   Get in touch
                 </h3>
               </div>
 
-              <p className="max-w-md text-sm leading-6 text-[#4B5563]">
-               Whether you need data analyst for your team, a Power BI dashboard, a custom Google Workspace automation, or an AI agent, I'm ready to collaborate.
+              <p className="max-w-md text-sm leading-6 text-[#4B5563] sm:text-[15px]">
+                Whether you need data analyst for your team, a Power BI dashboard, a custom Google Workspace automation, or an AI agent, I'm ready to collaborate.
               </p>
             </div>
 
@@ -166,9 +173,15 @@ export default function Contact({
             <div className="border-y border-[#DDD6C8]">
 
               {/* Email */}
-              <div className="flex items-center justify-between gap-4 border-b border-[#DDD6C8] py-5">
+              <motion.div
+                whileHover={{ x: 3 }}
+                transition={{ duration: 0.2 }}
+                className="flex items-center justify-between gap-4 border-b border-[#DDD6C8] py-5"
+              >
                 <div className="flex min-w-0 items-center gap-4">
-                  <Mail className="h-5 w-5 shrink-0 text-[#2F5D50]" />
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#2F5D50]/10">
+                    <Mail className="h-5 w-5 text-[#2F5D50]" />
+                  </span>
 
                   <div className="min-w-0">
                     <p className="mb-1 font-mono text-[10px] uppercase tracking-[0.16em] text-[#6B7280]">
@@ -185,7 +198,7 @@ export default function Contact({
                   type="button"
                   onClick={handleCopy}
                   aria-label="Copy email"
-                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[#DDD6C8] bg-[#FCFAF6] text-[#4B5563] transition-colors hover:border-[#2F5D50] hover:text-[#2F5D50]"
+                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-[#DDD6C8] bg-[#FCFAF6] text-[#4B5563] transition-all duration-200 hover:-translate-y-0.5 hover:border-[#2F5D50] hover:text-[#2F5D50] focus:outline-none focus:ring-2 focus:ring-[#2F5D50]/20"
                 >
                   {copied ? (
                     <Check className="h-4 w-4 text-[#4E8D66]" />
@@ -193,29 +206,41 @@ export default function Contact({
                     <Copy className="h-4 w-4" />
                   )}
                 </button>
-              </div>
+              </motion.div>
 
               {/* Phone */}
-              <a
+              <motion.a
                 href={`tel:${personalInfo.phone}`}
-                className="flex items-center gap-4 border-b border-[#DDD6C8] py-5 transition-colors hover:text-[#2F5D50]"
+                whileHover={{ x: 3 }}
+                transition={{ duration: 0.2 }}
+                className="group flex items-center gap-4 border-b border-[#DDD6C8] py-5"
               >
-                <Phone className="h-5 w-5 shrink-0 text-[#D97745]" />
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#D97745]/10">
+                  <Phone className="h-5 w-5 text-[#D97745]" />
+                </span>
 
                 <div>
                   <p className="mb-1 font-mono text-[10px] uppercase tracking-[0.16em] text-[#6B7280]">
                     Phone / WhatsApp
                   </p>
 
-                  <p className="text-sm font-semibold text-[#1D2A26]">
+                  <p className="text-sm font-semibold text-[#1D2A26] transition-colors group-hover:text-[#2F5D50]">
                     {personalInfo.phone}
                   </p>
                 </div>
-              </a>
+
+                <ArrowUpRight className="ml-auto h-4 w-4 text-[#6B7280] opacity-0 transition-all duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100" />
+              </motion.a>
 
               {/* Location */}
-              <div className="flex items-center gap-4 py-5">
-                <MapPin className="h-5 w-5 shrink-0 text-[#4E8D66]" />
+              <motion.div
+                whileHover={{ x: 3 }}
+                transition={{ duration: 0.2 }}
+                className="flex items-center gap-4 py-5"
+              >
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#4E8D66]/10">
+                  <MapPin className="h-5 w-5 text-[#4E8D66]" />
+                </span>
 
                 <div>
                   <p className="mb-1 font-mono text-[10px] uppercase tracking-[0.16em] text-[#6B7280]">
@@ -226,7 +251,7 @@ export default function Contact({
                     {personalInfo.location}
                   </p>
                 </div>
-              </div>
+              </motion.div>
             </div>
 
             {/* Social Links */}
@@ -235,28 +260,36 @@ export default function Contact({
                 Find me online
               </p>
 
-              <div className="flex flex-wrap gap-4">
-                <a
+              <div className="flex flex-wrap gap-3">
+                <motion.a
                   href={personalInfo.github}
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex items-center gap-2 text-sm font-semibold text-[#1D2A26] transition-colors hover:text-[#2F5D50]"
+                  whileHover={{ y: -2 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="group inline-flex items-center gap-2 rounded-lg border border-[#DDD6C8] bg-[#FCFAF6] px-3.5 py-2.5 text-sm font-semibold text-[#1D2A26] transition-colors hover:border-[#2F5D50] hover:text-[#2F5D50]"
                 >
                   <Github className="h-4 w-4" />
                   GitHub
-                  <span className="text-[#6B7280]">↗</span>
-                </a>
+                  <span className="text-[#6B7280] transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
+                    ↗
+                  </span>
+                </motion.a>
 
-                <a
+                <motion.a
                   href={personalInfo.linkedin}
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex items-center gap-2 text-sm font-semibold text-[#1D2A26] transition-colors hover:text-[#2F5D50]"
+                  whileHover={{ y: -2 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="group inline-flex items-center gap-2 rounded-lg border border-[#DDD6C8] bg-[#FCFAF6] px-3.5 py-2.5 text-sm font-semibold text-[#1D2A26] transition-colors hover:border-[#2F5D50] hover:text-[#2F5D50]"
                 >
                   <Linkedin className="h-4 w-4" />
                   LinkedIn
-                  <span className="text-[#6B7280]">↗</span>
-                </a>
+                  <span className="text-[#6B7280] transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
+                    ↗
+                  </span>
+                </motion.a>
               </div>
             </div>
           </motion.div>
@@ -269,20 +302,25 @@ export default function Contact({
             transition={{ duration: 0.45 }}
             className="lg:col-span-7"
           >
-            <div className="border-t border-[#DDD6C8] pt-6 sm:pt-8">
+            <div className="relative border-t border-[#DDD6C8] pt-6 sm:pt-8">
 
-              <div className="mb-8 flex items-center justify-between gap-4">
+              {/* Small accent */}
+              <div className="absolute left-0 top-0 h-px w-20 bg-[#2F5D50]" />
+
+              <div className="mb-8 flex items-start justify-between gap-4">
                 <div>
-                  <h3 className="font-display text-xl font-bold text-[#1D2A26]">
+                  <h3 className="font-display text-xl font-bold text-[#1D2A26] sm:text-2xl">
                     Send a message
                   </h3>
 
-                  <p className="mt-1 text-sm text-[#6B7280]">
+                  <p className="mt-1.5 text-sm text-[#6B7280]">
                     Tell me a little about what you're working on.
                   </p>
                 </div>
 
-                <Send className="h-5 w-5 text-[#2F5D50]" />
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-[#DDD6C8] bg-[#FCFAF6]">
+                  <Send className="h-4 w-4 text-[#2F5D50]" />
+                </span>
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-6">
@@ -308,18 +346,22 @@ export default function Contact({
                       })
                     }
                     placeholder="John Doe"
-                    className={`w-full rounded-lg border bg-[#FCFAF6] px-4 py-3.5 text-sm text-[#1D2A26] outline-none transition-colors placeholder:text-[#6B7280]/60 ${
+                    className={`w-full rounded-lg border bg-[#FCFAF6] px-4 py-3.5 text-sm text-[#1D2A26] outline-none transition-all duration-200 placeholder:text-[#6B7280]/60 focus:bg-white focus:ring-4 focus:ring-[#2F5D50]/5 ${
                       errors.name
-                        ? 'border-red-500'
+                        ? 'border-red-500 focus:border-red-500'
                         : 'border-[#DDD6C8] focus:border-[#2F5D50]'
                     }`}
                   />
 
                   {errors.name && (
-                    <p className="mt-1.5 flex items-center gap-1 text-xs text-red-500">
+                    <motion.p
+                      initial={{ opacity: 0, y: -4 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="mt-1.5 flex items-center gap-1 text-xs text-red-500"
+                    >
                       <AlertCircle className="h-3 w-3" />
                       <span>{errors.name}</span>
-                    </p>
+                    </motion.p>
                   )}
                 </div>
 
@@ -344,18 +386,22 @@ export default function Contact({
                       })
                     }
                     placeholder="john@example.com"
-                    className={`w-full rounded-lg border bg-[#FCFAF6] px-4 py-3.5 text-sm text-[#1D2A26] outline-none transition-colors placeholder:text-[#6B7280]/60 ${
+                    className={`w-full rounded-lg border bg-[#FCFAF6] px-4 py-3.5 text-sm text-[#1D2A26] outline-none transition-all duration-200 placeholder:text-[#6B7280]/60 focus:bg-white focus:ring-4 focus:ring-[#2F5D50]/5 ${
                       errors.email
-                        ? 'border-red-500'
+                        ? 'border-red-500 focus:border-red-500'
                         : 'border-[#DDD6C8] focus:border-[#2F5D50]'
                     }`}
                   />
 
                   {errors.email && (
-                    <p className="mt-1.5 flex items-center gap-1 text-xs text-red-500">
+                    <motion.p
+                      initial={{ opacity: 0, y: -4 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="mt-1.5 flex items-center gap-1 text-xs text-red-500"
+                    >
                       <AlertCircle className="h-3 w-3" />
                       <span>{errors.email}</span>
-                    </p>
+                    </motion.p>
                   )}
                 </div>
 
@@ -380,41 +426,50 @@ export default function Contact({
                       })
                     }
                     placeholder="Tell me about your project, requirements, or inquiry..."
-                    className={`w-full resize-none rounded-lg border bg-[#FCFAF6] px-4 py-3.5 text-sm text-[#1D2A26] outline-none transition-colors placeholder:text-[#6B7280]/60 ${
+                    className={`w-full resize-none rounded-lg border bg-[#FCFAF6] px-4 py-3.5 text-sm text-[#1D2A26] outline-none transition-all duration-200 placeholder:text-[#6B7280]/60 focus:bg-white focus:ring-4 focus:ring-[#2F5D50]/5 ${
                       errors.message
-                        ? 'border-red-500'
+                        ? 'border-red-500 focus:border-red-500'
                         : 'border-[#DDD6C8] focus:border-[#2F5D50]'
                     }`}
                   />
 
                   {errors.message && (
-                    <p className="mt-1.5 flex items-center gap-1 text-xs text-red-500">
+                    <motion.p
+                      initial={{ opacity: 0, y: -4 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="mt-1.5 flex items-center gap-1 text-xs text-red-500"
+                    >
                       <AlertCircle className="h-3 w-3" />
                       <span>{errors.message}</span>
-                    </p>
+                    </motion.p>
                   )}
                 </div>
 
                 {/* Submit */}
-                <div className="flex flex-col gap-3 border-t border-[#DDD6C8] pt-6 sm:flex-row sm:items-center sm:justify-between">
-                  <p className="text-xs text-[#6B7280]">
+                <div className="flex flex-col gap-4 border-t border-[#DDD6C8] pt-6 sm:flex-row sm:items-center sm:justify-between">
+                  <p className="max-w-xs text-xs leading-5 text-[#6B7280]">
                     Your message will open in your email client.
                   </p>
 
-                  <button
+                  <motion.button
                     type="submit"
                     disabled={isSubmitting}
-                    className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#2F5D50] px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#244A40] disabled:cursor-not-allowed disabled:opacity-50"
+                    whileHover={!isSubmitting ? { y: -2 } : undefined}
+                    whileTap={!isSubmitting ? { scale: 0.98 } : undefined}
+                    className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-[#2F5D50] px-5 py-3.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[#244A40] focus:outline-none focus:ring-4 focus:ring-[#2F5D50]/15 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
                   >
                     {isSubmitting ? (
-                      <span>Opening...</span>
+                      <>
+                        <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                        <span>Opening...</span>
+                      </>
                     ) : (
                       <>
                         <span>Send Message</span>
                         <Send className="h-4 w-4" />
                       </>
                     )}
-                  </button>
+                  </motion.button>
                 </div>
 
               </form>
