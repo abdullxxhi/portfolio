@@ -110,9 +110,6 @@ export default function Projects({
   const touchStartX = useRef<number | null>(null);
   const touchStartY = useRef<number | null>(null);
 
-  /*
-   * Build the portfolio from the exact approved project list.
-   */
   const orderedProjects = useMemo(() => {
     return PROJECT_ORDER.map((title) =>
       projectsData.find(
@@ -222,10 +219,6 @@ export default function Projects({
     setSelectedProject(filteredProjects[nextIndex]);
   };
 
-  /*
-   * When navigating with Previous / Next, make sure the
-   * destination project is loaded into the visible list.
-   */
   useEffect(() => {
     if (!selectedProject) {
       return;
@@ -415,25 +408,25 @@ export default function Projects({
     <>
       <section
         id="projects"
-        className="relative z-10 bg-[#F5F1E8] py-24 sm:py-28"
+        className="relative z-10 bg-[#F5F1E8] py-20 sm:py-24 lg:py-28"
       >
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
           {/* Section header */}
-          <div className="mb-12 max-w-3xl">
+          <div className="mb-10 max-w-3xl sm:mb-12">
             <div className="mb-4 flex items-center gap-3">
-              <span className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-[#2F5D50]">
+              <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-[#2F5D50] sm:text-xs">
                 03 / Projects
               </span>
 
-              <span className="h-px w-10 bg-[#DDD6C8]" />
+              <span className="h-px w-8 bg-[#DDD6C8] sm:w-10" />
             </div>
 
             <h2 className="font-display text-3xl font-bold tracking-tight text-[#1D2A26] sm:text-4xl">
               Selected work.
             </h2>
 
-            <p className="mt-4 max-w-2xl text-base leading-7 text-[#4B5563]">
+            <p className="mt-4 max-w-2xl text-sm leading-7 text-[#4B5563] sm:text-base">
               A selection of data analysis, business intelligence,
               automation, and web development projects built to solve
               practical problems.
@@ -441,35 +434,39 @@ export default function Projects({
           </div>
 
           {/* Filters */}
-          <div className="mb-10 flex flex-wrap items-center gap-2">
-            <div className="mr-2 flex items-center gap-2 text-sm font-medium text-[#6B7280]">
+          <div className="mb-8 sm:mb-10">
+            <div className="mb-3 flex items-center gap-2 text-sm font-medium text-[#6B7280]">
               <Filter className="h-4 w-4" />
               <span>Filter</span>
             </div>
 
-            {categories.map((category) => {
-              const isActive =
-                activeFilter === category;
+            <div className="-mx-4 flex overflow-x-auto px-4 pb-1 scrollbar-none sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0">
+              <div className="flex min-w-max items-center gap-2">
+                {categories.map((category) => {
+                  const isActive =
+                    activeFilter === category;
 
-              return (
-                <button
-                  key={category}
-                  type="button"
-                  onClick={() =>
-                    handleFilterChange(
-                      category
-                    )
-                  }
-                  className={`rounded-lg border px-3.5 py-2 text-sm font-medium transition-colors ${
-                    isActive
-                      ? 'border-[#2F5D50] bg-[#2F5D50] text-white'
-                      : 'border-[#DDD6C8] bg-[#FCFAF6] text-[#4B5563] hover:border-[#2F5D50]/40 hover:text-[#2F5D50]'
-                  }`}
-                >
-                  {category}
-                </button>
-              );
-            })}
+                  return (
+                    <button
+                      key={category}
+                      type="button"
+                      onClick={() =>
+                        handleFilterChange(
+                          category
+                        )
+                      }
+                      className={`min-h-10 rounded-lg border px-3.5 py-2 text-sm font-medium transition-colors active:scale-[0.98] ${
+                        isActive
+                          ? 'border-[#2F5D50] bg-[#2F5D50] text-white'
+                          : 'border-[#DDD6C8] bg-[#FCFAF6] text-[#4B5563] hover:border-[#2F5D50]/40 hover:text-[#2F5D50]'
+                      }`}
+                    >
+                      {category}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
           </div>
 
           {/* Project list */}
@@ -544,51 +541,51 @@ export default function Projects({
                       }
                       className="block w-full text-left"
                     >
-                      <div className="grid gap-7 py-9 lg:grid-cols-[80px_minmax(0,1fr)_280px] lg:gap-10 lg:py-11">
+                      <div className="grid gap-5 py-7 sm:gap-7 sm:py-9 lg:grid-cols-[80px_minmax(0,1fr)_280px] lg:gap-10 lg:py-11">
 
                         {/* Project number */}
                         <div className="flex items-start">
-                          <span className="font-mono text-sm font-semibold tracking-wide text-[#6B7280] transition-colors group-hover:text-[#2F5D50]">
+                          <span className="font-mono text-xs font-semibold tracking-wide text-[#6B7280] transition-colors group-hover:text-[#2F5D50] sm:text-sm">
                             {projectNumber}
                           </span>
                         </div>
 
                         {/* Main project information */}
                         <div>
-                          <div className="mb-3 flex flex-wrap items-center gap-3">
-                            <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-[#2F5D50]">
+                          <div className="mb-3 flex flex-wrap items-center gap-2.5">
+                            <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#2F5D50] sm:text-[11px]">
                               {
                                 project.category
                               }
                             </span>
 
                             {project.featured && (
-                              <span className="rounded-full border border-[#D97745]/30 bg-[#D97745]/5 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-[#D97745]">
+                              <span className="rounded-full border border-[#D97745]/30 bg-[#D97745]/5 px-2.5 py-1 text-[9px] font-semibold uppercase tracking-[0.12em] text-[#D97745] sm:text-[10px]">
                                 Featured
                               </span>
                             )}
                           </div>
 
-                          <div className="flex items-start gap-3">
-                            <h3 className="font-display text-2xl font-bold tracking-tight text-[#1D2A26] transition-colors group-hover:text-[#2F5D50] sm:text-3xl">
+                          <div className="flex items-start gap-2.5 sm:gap-3">
+                            <h3 className="min-w-0 font-display text-[21px] font-bold leading-tight tracking-tight text-[#1D2A26] transition-colors group-hover:text-[#2F5D50] sm:text-2xl lg:text-3xl">
                               {
                                 project.title
                               }
                             </h3>
 
-                            <ArrowUpRight className="mt-1 h-5 w-5 shrink-0 text-[#6B7280] transition-all duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-[#2F5D50]" />
+                            <ArrowUpRight className="mt-0.5 h-4 w-4 shrink-0 text-[#6B7280] transition-all duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-[#2F5D50] sm:mt-1 sm:h-5 sm:w-5" />
                           </div>
 
-                          <p className="mt-4 max-w-3xl text-sm leading-7 text-[#4B5563] sm:text-base">
+                          <p className="mt-3 max-w-3xl text-sm leading-6 text-[#4B5563] sm:mt-4 sm:text-base sm:leading-7">
                             {description}
                           </p>
 
-                          <div className="mt-5 flex flex-wrap items-center gap-2">
+                          <div className="mt-4 flex flex-wrap items-center gap-1.5 sm:mt-5 sm:gap-2">
                             {visibleTags.map(
                               (tag) => (
                                 <span
                                   key={tag}
-                                  className="rounded-full border border-[#DDD6C8] bg-[#FCFAF6] px-2.5 py-1 text-xs font-medium text-[#6B7280]"
+                                  className="rounded-full border border-[#DDD6C8] bg-[#FCFAF6] px-2.5 py-1 text-[11px] font-medium text-[#6B7280] sm:text-xs"
                                 >
                                   {tag}
                                 </span>
@@ -597,7 +594,7 @@ export default function Projects({
 
                             {remainingTags >
                               0 && (
-                              <span className="px-1 text-xs font-medium text-[#6B7280]">
+                              <span className="px-1 text-[11px] font-medium text-[#6B7280] sm:text-xs">
                                 +
                                 {
                                   remainingTags
@@ -606,7 +603,7 @@ export default function Projects({
                             )}
                           </div>
 
-                          <div className="mt-5">
+                          <div className="mt-4 sm:mt-5">
                             <ComplexityIndicator
                               value={
                                 project.complexity
@@ -614,7 +611,7 @@ export default function Projects({
                             />
                           </div>
 
-                          <div className="mt-6 flex items-center gap-2 text-sm font-semibold text-[#2F5D50]">
+                          <div className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-[#2F5D50] sm:mt-6">
                             <span>
                               View case study
                             </span>
@@ -663,7 +660,7 @@ export default function Projects({
 
           {/* Empty state */}
           {visibleProjects.length === 0 && (
-            <div className="border-b border-[#DDD6C8] py-16 text-center">
+            <div className="border-b border-[#DDD6C8] py-14 text-center sm:py-16">
               <p className="text-sm text-[#6B7280]">
                 No projects found in this category.
               </p>
@@ -672,11 +669,11 @@ export default function Projects({
 
           {/* Load more */}
           {hasMoreProjects && (
-            <div className="flex justify-center pt-10">
+            <div className="flex justify-center pt-8 sm:pt-10">
               <button
                 type="button"
                 onClick={handleLoadMore}
-                className="group inline-flex items-center gap-2 rounded-lg border border-[#DDD6C8] bg-[#FCFAF6] px-5 py-3 text-sm font-semibold text-[#1D2A26] transition-all duration-200 hover:border-[#2F5D50]/40 hover:text-[#2F5D50]"
+                className="group inline-flex min-h-11 items-center gap-2 rounded-lg border border-[#DDD6C8] bg-[#FCFAF6] px-5 py-3 text-sm font-semibold text-[#1D2A26] transition-all duration-200 hover:border-[#2F5D50]/40 hover:text-[#2F5D50] active:scale-[0.98]"
               >
                 <span>
                   Load more
@@ -691,8 +688,8 @@ export default function Projects({
           )}
 
           {/* Project count + waveform */}
-          <div className="mt-12 flex items-center justify-between border-t border-[#DDD6C8] pt-5">
-            <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-[#6B7280]">
+          <div className="mt-10 flex items-center justify-between border-t border-[#DDD6C8] pt-5 sm:mt-12">
+            <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-[#6B7280] sm:text-[11px]">
               {filteredProjects.length}{' '}
               projects
             </span>
@@ -777,9 +774,9 @@ export default function Projects({
                     className="w-full overflow-hidden rounded-none border border-[#DDD6C8] bg-[#FCFAF6] shadow-[0_30px_80px_rgba(29,42,38,0.18)] sm:rounded-2xl"
                   >
                     {/* Modal header */}
-                    <div className="sticky top-0 z-20 flex items-center justify-between gap-4 border-b border-[#DDD6C8] bg-[#FCFAF6]/95 px-5 py-4 backdrop-blur-md sm:px-7">
-                      <div className="flex min-w-0 items-center gap-3">
-                        <span className="shrink-0 font-mono text-xs font-semibold text-[#2F5D50]">
+                    <div className="sticky top-0 z-20 flex min-h-[60px] items-center justify-between gap-3 border-b border-[#DDD6C8] bg-[#FCFAF6]/95 px-4 py-3 backdrop-blur-md sm:px-7 sm:py-4">
+                      <div className="flex min-w-0 items-center gap-2.5 sm:gap-3">
+                        <span className="shrink-0 font-mono text-[11px] font-semibold text-[#2F5D50] sm:text-xs">
                           {String(
                             selectedProjectNumber
                           ).padStart(2, '0')}{' '}
@@ -791,7 +788,7 @@ export default function Projects({
 
                         <span className="h-4 w-px bg-[#DDD6C8]" />
 
-                        <span className="truncate font-mono text-[10px] font-semibold uppercase tracking-[0.15em] text-[#6B7280]">
+                        <span className="truncate font-mono text-[9px] font-semibold uppercase tracking-[0.13em] text-[#6B7280] sm:text-[10px] sm:tracking-[0.15em]">
                           {
                             selectedProject.category
                           }
@@ -803,26 +800,26 @@ export default function Projects({
                         onClick={
                           closeProjectDetails
                         }
-                        className="inline-flex shrink-0 items-center gap-2 rounded-lg border border-[#DDD6C8] px-3 py-2 text-sm font-semibold text-[#4B5563] transition-colors hover:border-[#2F5D50]/40 hover:text-[#2F5D50]"
+                        className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-[#DDD6C8] text-[#4B5563] transition-colors hover:border-[#2F5D50]/40 hover:text-[#2F5D50]"
                         aria-label="Close project details"
                       >
                         <X className="h-4 w-4" />
 
-                        <span className="hidden sm:inline">
+                        <span className="sr-only">
                           Close
                         </span>
                       </button>
                     </div>
 
                     {/* Case study content */}
-                    <div className="max-h-[calc(100vh-80px)] overflow-y-auto">
-                      
+                    <div className="max-h-[calc(100vh-60px)] overflow-y-auto overscroll-contain sm:max-h-[calc(100vh-80px)]">
+
                       {/* Case study hero */}
                       <div className="border-b border-[#DDD6C8]">
                         <div className="grid lg:grid-cols-[1.25fr_0.75fr]">
 
                           {/* Large media */}
-                          <div className="relative bg-[#F5F1E8] p-4 sm:p-6 lg:p-8">
+                          <div className="relative bg-[#F5F1E8] p-3.5 sm:p-6 lg:p-8">
                             <div className="relative overflow-hidden rounded-xl border border-[#DDD6C8] bg-[#FCFAF6]">
                               <div className="relative aspect-[16/10]">
                                 {selectedProject.isVideo ? (
@@ -853,7 +850,7 @@ export default function Projects({
                                       selectedProject
                                     )
                                   }
-                                  className="absolute bottom-4 right-4 inline-flex items-center gap-2 rounded-lg border border-white/60 bg-[#FCFAF6]/90 px-3 py-2 text-xs font-semibold text-[#1D2A26] shadow-sm backdrop-blur-sm transition-all duration-200 hover:bg-white hover:shadow-md"
+                                  className="absolute bottom-2.5 right-2.5 inline-flex min-h-9 items-center gap-2 rounded-lg border border-white/60 bg-[#FCFAF6]/90 px-3 py-2 text-[11px] font-semibold text-[#1D2A26] shadow-sm backdrop-blur-sm transition-all duration-200 hover:bg-white hover:shadow-md sm:bottom-4 sm:right-4 sm:text-xs"
                                 >
                                   <Maximize2 className="h-3.5 w-3.5" />
 
@@ -866,21 +863,21 @@ export default function Projects({
                           </div>
 
                           {/* Project introduction */}
-                          <div className="flex flex-col justify-center border-t border-[#DDD6C8] p-6 sm:p-8 lg:border-l lg:border-t-0 lg:p-10">
+                          <div className="flex flex-col justify-center border-t border-[#DDD6C8] p-5 sm:p-8 lg:border-l lg:border-t-0 lg:p-10">
                             <div className="mb-5">
-                              <div className="flex flex-wrap items-center gap-3">
-                                <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-[#2F5D50]">
+                              <div className="flex flex-wrap items-center gap-2.5 sm:gap-3">
+                                <span className="font-mono text-[9px] font-semibold uppercase tracking-[0.16em] text-[#2F5D50] sm:text-[10px] sm:tracking-[0.18em]">
                                   Case Study
                                 </span>
 
                                 {selectedProject.featured && (
-                                  <span className="rounded-full border border-[#D97745]/30 bg-[#D97745]/5 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-[#D97745]">
+                                  <span className="rounded-full border border-[#D97745]/30 bg-[#D97745]/5 px-2.5 py-1 text-[9px] font-semibold uppercase tracking-[0.12em] text-[#D97745]">
                                     Featured
                                   </span>
                                 )}
                               </div>
 
-                              <h2 className="mt-3 font-display text-3xl font-bold tracking-tight text-[#1D2A26] sm:text-4xl">
+                              <h2 className="mt-3 break-words font-display text-[27px] font-bold leading-tight tracking-tight text-[#1D2A26] sm:text-4xl">
                                 {
                                   selectedProject.title
                                 }
@@ -893,7 +890,7 @@ export default function Projects({
                               }
                             </p>
 
-                            <div className="mt-7 border-t border-[#DDD6C8] pt-6">
+                            <div className="mt-6 border-t border-[#DDD6C8] pt-5 sm:mt-7 sm:pt-6">
                               <ComplexityIndicator
                                 value={
                                   selectedProject.complexity
@@ -903,7 +900,7 @@ export default function Projects({
 
                             {(selectedProject.githubUrl ||
                               selectedProject.demoUrl) && (
-                              <div className="mt-7 flex flex-wrap gap-3">
+                              <div className="mt-6 grid grid-cols-1 gap-2.5 sm:mt-7 sm:flex sm:flex-wrap sm:gap-3">
                                 {selectedProject.githubUrl && (
                                   <a
                                     href={
@@ -911,7 +908,7 @@ export default function Projects({
                                     }
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="inline-flex items-center gap-2 rounded-lg border border-[#DDD6C8] px-4 py-2.5 text-sm font-semibold text-[#1D2A26] transition-colors hover:border-[#2F5D50]/40 hover:text-[#2F5D50]"
+                                    className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-[#DDD6C8] px-4 py-2.5 text-sm font-semibold text-[#1D2A26] transition-colors hover:border-[#2F5D50]/40 hover:text-[#2F5D50]"
                                   >
                                     <Github className="h-4 w-4" />
 
@@ -928,7 +925,7 @@ export default function Projects({
                                     }
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="inline-flex items-center gap-2 rounded-lg bg-[#2F5D50] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#24493f]"
+                                    className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-[#2F5D50] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#24493f]"
                                   >
                                     Live Demo
 
@@ -1039,8 +1036,8 @@ export default function Projects({
                       {selectedProject
                         .automationScreenshots
                         ?.length ? (
-                        <div className="border-t border-[#DDD6C8] px-5 py-8 sm:px-8 sm:py-10">
-                          <div className="mb-7 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+                        <div className="border-t border-[#DDD6C8] px-4 py-8 sm:px-8 sm:py-10">
+                          <div className="mb-6 flex flex-col gap-2 sm:mb-7 sm:flex-row sm:items-end sm:justify-between">
                             <div>
                               <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#2F5D50]">
                                 Project media
@@ -1061,7 +1058,7 @@ export default function Projects({
                             </span>
                           </div>
 
-                          <div className="grid gap-5 sm:grid-cols-2">
+                          <div className="grid gap-4 sm:gap-5 sm:grid-cols-2">
                             {selectedProject.automationScreenshots.map(
                               (
                                 screenshot,
@@ -1075,7 +1072,7 @@ export default function Projects({
                                       selectedProject
                                     )
                                   }
-                                  className="group overflow-hidden rounded-xl border border-[#DDD6C8] bg-[#F5F1E8] text-left transition-all duration-300 hover:-translate-y-0.5 hover:border-[#2F5D50]/35 hover:shadow-sm"
+                                  className="group overflow-hidden rounded-xl border border-[#DDD6C8] bg-[#F5F1E8] text-left transition-all duration-300 hover:-translate-y-0.5 hover:border-[#2F5D50]/35 hover:shadow-sm active:scale-[0.995]"
                                 >
                                   <div className="aspect-video overflow-hidden bg-[#FCFAF6]">
                                     <img
@@ -1117,19 +1114,19 @@ export default function Projects({
                     </div>
 
                     {/* Previous / Next / Close */}
-                    <div className="sticky bottom-0 z-20 flex flex-col-reverse gap-3 border-t border-[#DDD6C8] bg-[#FCFAF6]/95 px-5 py-4 backdrop-blur-md sm:flex-row sm:items-center sm:justify-between sm:px-7">
+                    <div className="sticky bottom-0 z-20 flex flex-col-reverse gap-2.5 border-t border-[#DDD6C8] bg-[#FCFAF6]/95 px-4 py-3 backdrop-blur-md sm:flex-row sm:items-center sm:justify-between sm:px-7 sm:py-4">
                       <button
                         type="button"
                         onClick={
                           closeProjectDetails
                         }
-                        className="inline-flex items-center justify-center gap-2 rounded-lg border border-[#DDD6C8] px-4 py-2.5 text-sm font-semibold text-[#4B5563] transition-colors hover:border-[#2F5D50]/40 hover:text-[#2F5D50]"
+                        className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-lg border border-[#DDD6C8] px-4 py-2.5 text-sm font-semibold text-[#4B5563] transition-colors hover:border-[#2F5D50]/40 hover:text-[#2F5D50] sm:w-auto"
                       >
                         <X className="h-4 w-4" />
                         Close
                       </button>
 
-                      <div className="flex items-center justify-center gap-2">
+                      <div className="grid grid-cols-2 gap-2 sm:flex sm:items-center sm:justify-center sm:gap-2">
                         <button
                           type="button"
                           onClick={() =>
@@ -1137,7 +1134,7 @@ export default function Projects({
                               'previous'
                             )
                           }
-                          className="inline-flex items-center gap-2 rounded-lg border border-[#DDD6C8] px-4 py-2.5 text-sm font-semibold text-[#1D2A26] transition-colors hover:border-[#2F5D50]/40 hover:text-[#2F5D50]"
+                          className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-[#DDD6C8] px-3 py-2.5 text-sm font-semibold text-[#1D2A26] transition-colors hover:border-[#2F5D50]/40 hover:text-[#2F5D50] sm:px-4"
                         >
                           <ArrowLeft className="h-4 w-4" />
 
@@ -1153,7 +1150,7 @@ export default function Projects({
                               'next'
                             )
                           }
-                          className="inline-flex items-center gap-2 rounded-lg bg-[#2F5D50] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#24493f]"
+                          className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-[#2F5D50] px-3 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#24493f] sm:px-4"
                         >
                           <span>Next</span>
 
@@ -1270,6 +1267,15 @@ const waveformStyles = `
   .data-waveform.is-active span {
     animation: none !important;
   }
+}
+
+.scrollbar-none {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
 }
 `;
 
