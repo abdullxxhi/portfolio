@@ -109,6 +109,14 @@ export default function Hero({ onCopyEmail }: HeroProps) {
     },
   ];
 
+  const dataPoints = [
+    { x: 10, y: 70 },
+    { x: 32, y: 35 },
+    { x: 54, y: 58 },
+    { x: 76, y: 24 },
+    { x: 91, y: 42 },
+  ];
+
   return (
     <section
       id="hero"
@@ -359,7 +367,7 @@ export default function Hero({ onCopyEmail }: HeroProps) {
           </div>
 
           {/* --------------------------------------------------
-              RIGHT — WORKFLOW
+              RIGHT — DATA PATH + WORKFLOW
           -------------------------------------------------- */}
 
           <motion.div
@@ -381,7 +389,171 @@ export default function Hero({ onCopyEmail }: HeroProps) {
                 bg-[#FCFAF6]
               "
             >
-              {/* Header */}
+              {/* Data Path Visual */}
+              <div className="relative border-b border-[#DDD6C8] px-5 pb-5 pt-6 sm:px-6 sm:pb-6">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <p className="text-[10px] font-medium uppercase tracking-[0.16em] text-[#6B7280]">
+                      Data in motion
+                    </p>
+
+                    <p className="mt-2 max-w-[220px] font-display text-xl font-bold tracking-tight text-[#1D2A26] sm:text-2xl">
+                      From information
+                      <br />
+                      <span className="text-[#2F5D50]">
+                        to insight.
+                      </span>
+                    </p>
+                  </div>
+
+                  <motion.div
+                    initial={{
+                      opacity: 0,
+                      scale: 0.8,
+                    }}
+                    animate={{
+                      opacity: 1,
+                      scale: 1,
+                    }}
+                    transition={{
+                      duration: 0.5,
+                      delay: 0.8,
+                      ease: 'easeOut',
+                    }}
+                    className="flex h-8 w-8 items-center justify-center rounded-full border border-[#DDD6C8] bg-[#F5F1E8]"
+                  >
+                    <span className="h-2 w-2 rounded-full bg-[#4E8D66]" />
+                  </motion.div>
+                </div>
+
+                {/* Visualization */}
+                <div className="relative mt-5 h-32 w-full">
+                  {/* Baseline */}
+                  <div className="absolute bottom-2 left-0 right-0 h-px bg-[#DDD6C8]" />
+
+                  {/* Subtle reference lines */}
+                  <div className="absolute left-0 right-0 top-1/4 border-t border-dashed border-[#DDD6C8]/60" />
+
+                  <div className="absolute left-0 right-0 top-1/2 border-t border-dashed border-[#DDD6C8]/60" />
+
+                  <div className="absolute left-0 right-0 top-3/4 border-t border-dashed border-[#DDD6C8]/60" />
+
+                  {/* Data path */}
+                  <svg
+                    viewBox="0 0 100 100"
+                    preserveAspectRatio="none"
+                    className="absolute inset-0 h-full w-full overflow-visible"
+                    aria-hidden="true"
+                  >
+                    {/* Main rising path */}
+                    <motion.path
+                      d="M 10 70 C 18 60, 24 43, 32 35 C 39 29, 47 51, 54 58 C 61 64, 69 36, 76 24 C 82 17, 87 36, 91 42"
+                      fill="none"
+                      stroke="#2F5D50"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      initial={{
+                        pathLength: 0,
+                      }}
+                      animate={{
+                        pathLength: 1,
+                      }}
+                      transition={{
+                        duration: 2.2,
+                        delay: 0.45,
+                        ease: 'easeInOut',
+                      }}
+                    />
+
+                    {/* Secondary analytical path */}
+                    <motion.path
+                      d="M 10 70 C 25 63, 39 53, 54 58 C 68 61, 80 42, 91 42"
+                      fill="none"
+                      stroke="#D97745"
+                      strokeWidth="0.8"
+                      strokeLinecap="round"
+                      strokeDasharray="2 3"
+                      initial={{
+                        pathLength: 0,
+                        opacity: 0,
+                      }}
+                      animate={{
+                        pathLength: 1,
+                        opacity: 0.65,
+                      }}
+                      transition={{
+                        duration: 1.8,
+                        delay: 1.1,
+                        ease: 'easeOut',
+                      }}
+                    />
+                  </svg>
+
+                  {/* Data points */}
+                  {dataPoints.map((point, index) => (
+                    <motion.div
+                      key={index}
+                      initial={{
+                        opacity: 0,
+                        scale: 0,
+                      }}
+                      animate={{
+                        opacity: 1,
+                        scale: 1,
+                      }}
+                      transition={{
+                        duration: 0.35,
+                        delay: 0.65 + index * 0.3,
+                        ease: 'easeOut',
+                      }}
+                      className={`absolute h-3 w-3 -translate-x-1/2 translate-y-1/2 rounded-full border-2 border-[#FCFAF6] ${
+                        index === dataPoints.length - 1
+                          ? 'bg-[#D97745]'
+                          : 'bg-[#2F5D50]'
+                      }`}
+                      style={{
+                        left: `${point.x}%`,
+                        bottom: `${point.y}%`,
+                      }}
+                    />
+                  ))}
+
+                  {/* Small insight label */}
+                  <motion.div
+                    initial={{
+                      opacity: 0,
+                      y: 5,
+                    }}
+                    animate={{
+                      opacity: 1,
+                      y: 0,
+                    }}
+                    transition={{
+                      duration: 0.5,
+                      delay: 2.1,
+                      ease: 'easeOut',
+                    }}
+                    className="absolute right-0 top-0 rounded-md border border-[#DDD6C8] bg-[#F5F1E8] px-2 py-1"
+                  >
+                    <span className="font-mono text-[8px] font-semibold text-[#2F5D50]">
+                      INSIGHT
+                    </span>
+                  </motion.div>
+                </div>
+
+                {/* Visualization footer */}
+                <div className="mt-2 flex items-center justify-between">
+                  <span className="font-mono text-[9px] uppercase tracking-[0.12em] text-[#9A9388]">
+                    Raw data
+                  </span>
+
+                  <span className="font-mono text-[9px] uppercase tracking-[0.12em] text-[#D97745]">
+                    Useful outcome
+                  </span>
+                </div>
+              </div>
+
+              {/* Workflow Header */}
               <div className="border-b border-[#DDD6C8] px-5 py-4 sm:px-6">
                 <p className="text-[10px] font-medium uppercase tracking-[0.16em] text-[#6B7280]">
                   How I work
