@@ -3,8 +3,9 @@ import { motion, useScroll, useTransform } from 'motion/react';
 export default function BackgroundEffects() {
   const { scrollYProgress } = useScroll();
 
-  const sageY = useTransform(scrollYProgress, [0, 1], [0, -80]);
-  const terracottaY = useTransform(scrollYProgress, [0, 1], [0, 90]);
+  const sageY = useTransform(scrollYProgress, [0, 1], [0, -120]);
+  const terracottaY = useTransform(scrollYProgress, [0, 1], [0, 140]);
+  const warmY = useTransform(scrollYProgress, [0, 1], [0, -70]);
 
   return (
     <div
@@ -14,57 +15,28 @@ export default function BackgroundEffects() {
       {/* Base */}
       <div className="absolute inset-0 bg-[#F5F1E8]" />
 
-      {/* Subtle data texture */}
+      {/* Warm paper-like tonal variation */}
       <div
-        className="absolute inset-0 opacity-[0.12]"
+        className="absolute inset-0"
         style={{
-          backgroundImage: `
+          background: `
             radial-gradient(
-              circle at 12px 18px,
-              rgba(47,93,80,0.12) 0.7px,
-              transparent 0.9px
+              ellipse 75% 55% at 50% 8%,
+              rgba(252,250,246,0.72) 0%,
+              rgba(252,250,246,0.30) 38%,
+              transparent 72%
             ),
             radial-gradient(
-              circle at 42px 34px,
-              rgba(217,119,69,0.10) 0.55px,
-              transparent 0.8px
+              ellipse 65% 50% at 8% 82%,
+              rgba(217,119,69,0.045) 0%,
+              transparent 70%
             ),
-            linear-gradient(
-              118deg,
-              transparent 0%,
-              transparent 47%,
-              rgba(47,93,80,0.035) 47.2%,
-              transparent 47.45%,
-              transparent 100%
+            radial-gradient(
+              ellipse 65% 50% at 92% 18%,
+              rgba(47,93,80,0.055) 0%,
+              transparent 70%
             )
           `,
-          backgroundSize: '84px 72px, 116px 104px, 190px 190px',
-        }}
-      />
-
-      {/* Sparse analytical traces */}
-      <div
-        className="absolute inset-0 opacity-[0.07]"
-        style={{
-          backgroundImage: `
-            linear-gradient(
-              92deg,
-              transparent 0%,
-              transparent 24%,
-              rgba(47,93,80,0.08) 24.15%,
-              transparent 24.3%,
-              transparent 100%
-            ),
-            linear-gradient(
-              7deg,
-              transparent 0%,
-              transparent 67%,
-              rgba(217,119,69,0.07) 67.15%,
-              transparent 67.3%,
-              transparent 100%
-            )
-          `,
-          backgroundSize: '260px 230px, 310px 280px',
         }}
       />
 
@@ -72,14 +44,14 @@ export default function BackgroundEffects() {
       <motion.div
         className="
           absolute
-          -top-[260px]
-          -left-[220px]
-          w-[620px]
-          h-[620px]
-          sm:w-[760px]
-          sm:h-[760px]
-          lg:w-[900px]
-          lg:h-[900px]
+          -top-[320px]
+          -left-[300px]
+          w-[700px]
+          h-[700px]
+          sm:w-[850px]
+          sm:h-[850px]
+          lg:w-[1050px]
+          lg:h-[1050px]
           rounded-full
         "
         style={{
@@ -87,18 +59,21 @@ export default function BackgroundEffects() {
           background: `
             radial-gradient(
               circle,
-              rgba(47,93,80,0.13) 0%,
-              rgba(47,93,80,0.055) 42%,
+              rgba(47,93,80,0.16) 0%,
+              rgba(47,93,80,0.075) 28%,
+              rgba(47,93,80,0.025) 52%,
               transparent 72%
             )
           `,
-          filter: 'blur(45px)',
+          filter: 'blur(55px)',
         }}
         animate={{
-          scale: [1, 1.025, 1],
+          x: [0, 18, -8, 0],
+          y: [0, 12, -8, 0],
+          scale: [1, 1.035, 0.985, 1],
         }}
         transition={{
-          duration: 24,
+          duration: 30,
           repeat: Infinity,
           ease: 'easeInOut',
         }}
@@ -108,14 +83,14 @@ export default function BackgroundEffects() {
       <motion.div
         className="
           absolute
-          top-[24%]
-          -right-[280px]
-          w-[620px]
-          h-[620px]
-          sm:w-[760px]
-          sm:h-[760px]
-          lg:w-[900px]
-          lg:h-[900px]
+          top-[18%]
+          -right-[330px]
+          w-[720px]
+          h-[720px]
+          sm:w-[880px]
+          sm:h-[880px]
+          lg:w-[1080px]
+          lg:h-[1080px]
           rounded-full
         "
         style={{
@@ -123,46 +98,123 @@ export default function BackgroundEffects() {
           background: `
             radial-gradient(
               circle,
-              rgba(217,119,69,0.085) 0%,
-              rgba(217,119,69,0.035) 44%,
-              transparent 72%
+              rgba(217,119,69,0.115) 0%,
+              rgba(217,119,69,0.055) 30%,
+              rgba(217,119,69,0.018) 52%,
+              transparent 73%
             )
           `,
-          filter: 'blur(50px)',
+          filter: 'blur(60px)',
         }}
         animate={{
-          scale: [1.01, 0.985, 1.01],
+          x: [0, -20, 10, 0],
+          y: [0, -10, 12, 0],
+          scale: [1.01, 0.975, 1.025, 1.01],
         }}
         transition={{
-          duration: 28,
+          duration: 34,
           repeat: Infinity,
           ease: 'easeInOut',
         }}
       />
 
-      {/* Very subtle center separation */}
+      {/* Small warm glow */}
+      <motion.div
+        className="
+          absolute
+          top-[48%]
+          left-[34%]
+          w-[420px]
+          h-[420px]
+          sm:w-[560px]
+          sm:h-[560px]
+          rounded-full
+        "
+        style={{
+          y: warmY,
+          background: `
+            radial-gradient(
+              circle,
+              rgba(217,119,69,0.045) 0%,
+              rgba(252,250,246,0.025) 38%,
+              transparent 70%
+            )
+          `,
+          filter: 'blur(50px)',
+        }}
+        animate={{
+          scale: [1, 1.04, 1],
+          opacity: [0.65, 0.9, 0.65],
+        }}
+        transition={{
+          duration: 26,
+          repeat: Infinity,
+          ease: 'easeInOut',
+        }}
+      />
+
+      {/* Very subtle paper grain */}
+      <div
+        className="absolute inset-0 opacity-[0.16]"
+        style={{
+          backgroundImage: `
+            radial-gradient(
+              rgba(29,42,38,0.10) 0.45px,
+              transparent 0.55px
+            )
+          `,
+          backgroundSize: '5px 5px',
+        }}
+      />
+
+      {/* Extremely subtle data points */}
+      <div
+        className="absolute inset-0 opacity-[0.055]"
+        style={{
+          backgroundImage: `
+            radial-gradient(
+              circle at 20% 24%,
+              rgba(47,93,80,0.55) 0.8px,
+              transparent 1px
+            ),
+            radial-gradient(
+              circle at 74% 62%,
+              rgba(217,119,69,0.55) 0.7px,
+              transparent 0.95px
+            ),
+            radial-gradient(
+              circle at 46% 86%,
+              rgba(47,93,80,0.45) 0.65px,
+              transparent 0.9px
+            )
+          `,
+          backgroundSize: '180px 180px, 220px 220px, 260px 260px',
+        }}
+      />
+
+      {/* Soft central breathing space */}
       <div
         className="absolute inset-0"
         style={{
           background: `
             radial-gradient(
-              ellipse at center,
+              ellipse 58% 68% at 50% 48%,
               rgba(252,250,246,0.30) 0%,
-              rgba(252,250,246,0.08) 42%,
+              rgba(252,250,246,0.10) 38%,
               transparent 72%
             )
           `,
         }}
       />
 
-      {/* Barely visible edge depth */}
+      {/* Gentle edge depth */}
       <div
         className="absolute inset-0"
         style={{
           background: `
             radial-gradient(
               ellipse at center,
-              transparent 52%,
+              transparent 48%,
               rgba(29,42,38,0.025) 100%
             )
           `,
@@ -171,19 +223,19 @@ export default function BackgroundEffects() {
 
       {/* Soft top fade */}
       <div
-        className="absolute inset-x-0 top-0 h-36 sm:h-48"
+        className="absolute inset-x-0 top-0 h-40 sm:h-56"
         style={{
           background:
-            'linear-gradient(to bottom, rgba(245,241,232,0.65), transparent)',
+            'linear-gradient(to bottom, rgba(245,241,232,0.72), transparent)',
         }}
       />
 
       {/* Soft bottom fade */}
       <div
-        className="absolute inset-x-0 bottom-0 h-36 sm:h-48"
+        className="absolute inset-x-0 bottom-0 h-40 sm:h-56"
         style={{
           background:
-            'linear-gradient(to top, rgba(245,241,232,0.65), transparent)',
+            'linear-gradient(to top, rgba(245,241,232,0.72), transparent)',
         }}
       />
 
