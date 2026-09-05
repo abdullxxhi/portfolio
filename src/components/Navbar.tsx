@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Menu, X, ArrowUpRight } from 'lucide-react';
-import { personalInfo } from '../data/portfolioData';
 
 interface NavbarProps {
   activeSection: string;
@@ -60,6 +59,140 @@ function getTimeGreeting() {
   return 'Good night.';
 }
 
+/*
+ * Portfolio data-path mark.
+ *
+ * A compact visual representation of:
+ *
+ * DATA → ANALYZE → AUTOMATE → RESULT
+ *
+ * The main path is continuous, while the four
+ * nodes establish the visual identity.
+ */
+function DataPathLogo() {
+  return (
+    <div
+      className="relative flex h-10 w-10 shrink-0 items-center justify-center sm:h-11 sm:w-11"
+      aria-hidden="true"
+    >
+      <svg
+        viewBox="0 0 48 48"
+        width="48"
+        height="48"
+        fill="none"
+        className="h-full w-full overflow-visible"
+      >
+        {/* Subtle outer guide */}
+        <circle
+          cx="24"
+          cy="24"
+          r="20"
+          stroke="#DDD6C8"
+          strokeWidth="0.8"
+        />
+
+        {/* Main data path */}
+        <path
+          d="M8 31
+             C12 31 13 23 18 23
+             C22 23 22 15 28 15
+             C33 15 34 9 40 9"
+          stroke="#2F5D50"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+
+        {/* Secondary returning path */}
+        <path
+          d="M8 17
+             C12 17 14 21 18 21
+             C23 21 23 30 29 30
+             C34 30 36 26 40 26"
+          stroke="#B9B1A4"
+          strokeWidth="1"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+
+        {/* Directional continuation */}
+        <path
+          d="M38 7.5L40.5 9L38.5 11"
+          stroke="#2F5D50"
+          strokeWidth="1.4"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+
+        {/* Primary nodes */}
+        <circle
+          cx="8"
+          cy="31"
+          r="3"
+          fill="#FCFAF6"
+          stroke="#2F5D50"
+          strokeWidth="1.5"
+        />
+
+        <circle
+          cx="18"
+          cy="23"
+          r="3"
+          fill="#FCFAF6"
+          stroke="#2F5D50"
+          strokeWidth="1.5"
+        />
+
+        {/* Focal node */}
+        <circle
+          cx="28"
+          cy="15"
+          r="3.4"
+          fill="#D97745"
+        />
+
+        <circle
+          cx="28"
+          cy="15"
+          r="1.2"
+          fill="#FCFAF6"
+        />
+
+        <circle
+          cx="40"
+          cy="9"
+          r="3"
+          fill="#FCFAF6"
+          stroke="#2F5D50"
+          strokeWidth="1.5"
+        />
+
+        {/* Secondary nodes */}
+        <circle
+          cx="8"
+          cy="17"
+          r="1.5"
+          fill="#B9B1A4"
+        />
+
+        <circle
+          cx="29"
+          cy="30"
+          r="1.5"
+          fill="#B9B1A4"
+        />
+
+        <circle
+          cx="40"
+          cy="26"
+          r="1.5"
+          fill="#B9B1A4"
+        />
+      </svg>
+    </div>
+  );
+}
+
 function WelcomeVisual() {
   return (
     <div className="flex items-center gap-2">
@@ -88,7 +221,8 @@ function TimeVisual({ time }: { time: string }) {
   return (
     <div className="flex items-center gap-2">
       <span className="relative flex h-1.5 w-1.5 shrink-0">
-        <span className="absolute inset-0 rounded-full bg-[#4E8D66] animate-ping opacity-40" />
+        <span className="absolute inset-0 animate-ping rounded-full bg-[#4E8D66] opacity-40" />
+
         <span className="relative h-1.5 w-1.5 rounded-full bg-[#4E8D66]" />
       </span>
 
@@ -252,7 +386,10 @@ function RotatingNavbarVisual() {
 
     updateTimeState();
 
-    const timeTimer = window.setInterval(updateTimeState, 1000);
+    const timeTimer = window.setInterval(
+      updateTimeState,
+      1000
+    );
 
     return () => {
       window.clearInterval(timeTimer);
@@ -261,8 +398,14 @@ function RotatingNavbarVisual() {
 
   const visuals = [
     <WelcomeVisual key="welcome" />,
-    <GreetingVisual key="greeting" greeting={greeting} />,
-    <TimeVisual key="time" time={currentTime} />,
+    <GreetingVisual
+      key="greeting"
+      greeting={greeting}
+    />,
+    <TimeVisual
+      key="time"
+      time={currentTime}
+    />,
     <DataVisual key="data" />,
     <AIVisual key="ai" />,
   ];
@@ -316,7 +459,10 @@ function RotatingNavbarVisual() {
       </style>
 
       <div className="w-[100px] shrink-0 sm:w-[140px] lg:w-[150px]">
-        <AnimatePresence mode="wait" initial={false}>
+        <AnimatePresence
+          mode="wait"
+          initial={false}
+        >
           <motion.div
             key={visualIndex}
             initial={{
@@ -345,9 +491,12 @@ function RotatingNavbarVisual() {
   );
 }
 
-export default function Navbar({ activeSection }: NavbarProps) {
+export default function Navbar({
+  activeSection,
+}: NavbarProps) {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] =
+    useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -372,7 +521,8 @@ export default function Navbar({ activeSection }: NavbarProps) {
   ) => {
     event.preventDefault();
 
-    const target = document.getElementById(sectionId);
+    const target =
+      document.getElementById(sectionId);
 
     if (!target) {
       return;
@@ -421,20 +571,26 @@ export default function Navbar({ activeSection }: NavbarProps) {
       }`}
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        {/* Brand / Rotating Visual */}
+
+        {/* Brand / Data Path Mark + Rotating Visual */}
         <a
           href="/"
           onClick={goHome}
-          aria-label={`${personalInfo.name} — Go to homepage`}
-          className="group flex min-w-0 items-center"
+          aria-label="Go to homepage"
+          className="group flex min-w-0 items-center gap-3"
         >
+          <div className="transition-transform duration-300 group-hover:scale-[1.04]">
+            <DataPathLogo />
+          </div>
+
           <RotatingNavbarVisual />
         </a>
 
         {/* Desktop Navigation */}
         <nav className="hidden items-center gap-6 lg:flex">
           {navLinks.map((link) => {
-            const isActive = activeSection === link.id;
+            const isActive =
+              activeSection === link.id;
 
             return (
               <a
@@ -485,6 +641,7 @@ export default function Navbar({ activeSection }: NavbarProps) {
             className="inline-flex items-center gap-1.5 rounded-lg bg-[#2F5D50] px-4 py-2 text-xs font-semibold text-white transition-colors duration-200 hover:bg-[#244A40]"
           >
             <span>Hire Me</span>
+
             <ArrowUpRight className="h-3.5 w-3.5" />
           </a>
         </div>
@@ -503,6 +660,7 @@ export default function Navbar({ activeSection }: NavbarProps) {
             className="inline-flex items-center gap-1 rounded-lg bg-[#2F5D50] px-3 py-2 text-[11px] font-semibold text-white transition-colors duration-200 hover:bg-[#244A40] sm:px-3.5 sm:text-xs"
           >
             <span>Hire Me</span>
+
             <ArrowUpRight className="h-3.5 w-3.5" />
           </a>
 
