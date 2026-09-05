@@ -11,6 +11,8 @@ import {
   BarChart3,
   Workflow,
   CheckCircle2,
+  TrendingUp,
+  Sparkles,
 } from 'lucide-react';
 import { personalInfo } from '../data/portfolioData';
 
@@ -63,15 +65,6 @@ export default function Hero({ onCopyEmail }: HeroProps) {
     return () => clearTimeout(timer);
   }, [displayedText, isDeleting, currentRoleIndex]);
 
-  /*
-   * Scroll-reactive workflow
-   *
-   * The workflow becomes progressively more active as the user
-   * scrolls through the Hero area. The calculation is based on
-   * the workflow panel's position rather than global page progress,
-   * so the interaction remains tied to the actual "How I Work"
-   * visual.
-   */
   useEffect(() => {
     const updateActiveStep = () => {
       const element = workflowRef.current;
@@ -81,10 +74,6 @@ export default function Hero({ onCopyEmail }: HeroProps) {
       const rect = element.getBoundingClientRect();
       const viewportHeight = window.innerHeight;
 
-      /*
-       * Start activating the workflow when the panel approaches
-       * the center of the viewport.
-       */
       const activationStart = viewportHeight * 0.82;
       const activationEnd = viewportHeight * 0.18;
 
@@ -171,11 +160,13 @@ export default function Hero({ onCopyEmail }: HeroProps) {
   ];
 
   const dataPoints = [
-    { x: 10, y: 70 },
-    { x: 32, y: 35 },
-    { x: 54, y: 58 },
-    { x: 76, y: 24 },
-    { x: 91, y: 42 },
+    { x: 7, y: 72 },
+    { x: 22, y: 59 },
+    { x: 36, y: 38 },
+    { x: 51, y: 51 },
+    { x: 66, y: 30 },
+    { x: 80, y: 17 },
+    { x: 93, y: 27 },
   ];
 
   return (
@@ -186,9 +177,7 @@ export default function Hero({ onCopyEmail }: HeroProps) {
       <div className="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid items-center gap-14 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
 
-          {/* --------------------------------------------------
-              LEFT — INTRODUCTION
-          -------------------------------------------------- */}
+          {/* LEFT — INTRODUCTION */}
 
           <div className="space-y-7">
 
@@ -202,7 +191,18 @@ export default function Hero({ onCopyEmail }: HeroProps) {
               }}
               className="flex items-center gap-2"
             >
-              <span className="h-1.5 w-1.5 rounded-full bg-[#4E8D66]" />
+              <motion.span
+                animate={{
+                  scale: [1, 1.4, 1],
+                  opacity: [0.65, 1, 0.65],
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                  ease: 'easeInOut',
+                }}
+                className="h-1.5 w-1.5 rounded-full bg-[#4E8D66]"
+              />
 
               <span className="text-[11px] font-medium uppercase tracking-[0.16em] text-[#6B7280]">
                 Data Analysis & AI Automation
@@ -259,7 +259,15 @@ export default function Hero({ onCopyEmail }: HeroProps) {
                 {displayedText}
               </span>
 
-              <span
+              <motion.span
+                animate={{
+                  opacity: [1, 0, 1],
+                }}
+                transition={{
+                  duration: 0.9,
+                  repeat: Infinity,
+                  ease: 'linear',
+                }}
                 className="h-5 w-px bg-[#D97745]"
                 aria-hidden="true"
               />
@@ -302,6 +310,7 @@ export default function Hero({ onCopyEmail }: HeroProps) {
                   scrollToSection(event, '#projects')
                 }
                 className="
+                  group
                   inline-flex
                   items-center
                   gap-2
@@ -312,13 +321,15 @@ export default function Hero({ onCopyEmail }: HeroProps) {
                   text-sm
                   font-semibold
                   text-white
-                  transition-colors
+                  transition-all
                   duration-200
+                  hover:-translate-y-0.5
                   hover:bg-[#244A40]
                 "
               >
                 <span>View Projects</span>
-                <ArrowRight className="h-4 w-4" />
+
+                <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
               </a>
 
               <a
@@ -327,6 +338,7 @@ export default function Hero({ onCopyEmail }: HeroProps) {
                   scrollToSection(event, '#contact')
                 }
                 className="
+                  group
                   inline-flex
                   items-center
                   gap-2
@@ -339,13 +351,15 @@ export default function Hero({ onCopyEmail }: HeroProps) {
                   text-sm
                   font-semibold
                   text-[#1D2A26]
-                  transition-colors
+                  transition-all
                   duration-200
+                  hover:-translate-y-0.5
                   hover:border-[#2F5D50]
                   hover:text-[#2F5D50]
                 "
               >
                 <MessageSquare className="h-4 w-4 text-[#D97745]" />
+
                 <span>Let's Talk</span>
               </a>
             </motion.div>
@@ -427,9 +441,7 @@ export default function Hero({ onCopyEmail }: HeroProps) {
             </motion.div>
           </div>
 
-          {/* --------------------------------------------------
-              RIGHT — DATA PATH + WORKFLOW
-          -------------------------------------------------- */}
+          {/* RIGHT — HERO VISUAL */}
 
           <motion.div
             ref={workflowRef}
@@ -449,17 +461,29 @@ export default function Hero({ onCopyEmail }: HeroProps) {
                 border
                 border-[#DDD6C8]
                 bg-[#FCFAF6]
+                shadow-[0_24px_70px_-45px_rgba(29,42,38,0.45)]
               "
             >
-              {/* Data Path Visual */}
-              <div className="relative border-b border-[#DDD6C8] px-5 pb-5 pt-6 sm:px-6 sm:pb-6">
+              {/* DATA VISUAL */}
+
+              <div className="relative border-b border-[#DDD6C8] px-5 pb-6 pt-6 sm:px-6 sm:pb-7">
+
+                {/* Visual header */}
                 <div className="flex items-start justify-between">
                   <div>
-                    <p className="text-[10px] font-medium uppercase tracking-[0.16em] text-[#6B7280]">
-                      Data in motion
-                    </p>
+                    <div className="flex items-center gap-2">
+                      <p className="text-[10px] font-medium uppercase tracking-[0.16em] text-[#6B7280]">
+                        Data in motion
+                      </p>
 
-                    <p className="mt-2 max-w-[220px] font-display text-xl font-bold tracking-tight text-[#1D2A26] sm:text-2xl">
+                      <span className="h-px w-5 bg-[#DDD6C8]" />
+
+                      <span className="font-mono text-[8px] uppercase tracking-[0.12em] text-[#4E8D66]">
+                        Live
+                      </span>
+                    </div>
+
+                    <p className="mt-2 max-w-[250px] font-display text-xl font-bold tracking-tight text-[#1D2A26] sm:text-2xl">
                       From information
                       <br />
                       <span className="text-[#2F5D50]">
@@ -468,50 +492,158 @@ export default function Hero({ onCopyEmail }: HeroProps) {
                     </p>
                   </div>
 
-                  <motion.div
-                    initial={{
-                      opacity: 0,
-                      scale: 0.8,
-                    }}
-                    animate={{
-                      opacity: 1,
-                      scale: 1,
-                    }}
-                    transition={{
-                      duration: 0.5,
-                      delay: 0.8,
-                      ease: 'easeOut',
-                    }}
-                    className="flex h-8 w-8 items-center justify-center rounded-full border border-[#DDD6C8] bg-[#F5F1E8]"
-                  >
-                    <span className="h-2 w-2 rounded-full bg-[#4E8D66]" />
-                  </motion.div>
+                  {/* Live indicator */}
+                  <div className="relative flex h-10 w-10 items-center justify-center rounded-full border border-[#DDD6C8] bg-[#F5F1E8]">
+                    <motion.span
+                      animate={{
+                        scale: [1, 1.8, 1],
+                        opacity: [0.45, 0, 0.45],
+                      }}
+                      transition={{
+                        duration: 2.4,
+                        repeat: Infinity,
+                        ease: 'easeOut',
+                      }}
+                      className="absolute h-2 w-2 rounded-full bg-[#4E8D66]"
+                    />
+
+                    <span className="relative h-2 w-2 rounded-full bg-[#4E8D66]" />
+                  </div>
                 </div>
 
-                {/* Visualization */}
-                <div className="relative mt-5 h-32 w-full">
+                {/* Main visualization */}
+                <div className="relative mt-7 h-44 w-full">
+
+                  {/* Background field */}
+                  <div
+                    className="absolute inset-0 rounded-xl"
+                    style={{
+                      background: `
+                        radial-gradient(
+                          circle at 75% 25%,
+                          rgba(47,93,80,0.07),
+                          transparent 34%
+                        ),
+                        radial-gradient(
+                          circle at 20% 80%,
+                          rgba(217,119,69,0.055),
+                          transparent 32%
+                        )
+                      `,
+                    }}
+                  />
+
+                  {/* Reference lines */}
+                  <div className="absolute left-0 right-0 top-1/4 border-t border-dashed border-[#DDD6C8]/70" />
+                  <div className="absolute left-0 right-0 top-1/2 border-t border-dashed border-[#DDD6C8]/70" />
+                  <div className="absolute left-0 right-0 top-3/4 border-t border-dashed border-[#DDD6C8]/70" />
+
                   {/* Baseline */}
-                  <div className="absolute bottom-2 left-0 right-0 h-px bg-[#DDD6C8]" />
+                  <div className="absolute bottom-1 left-0 right-0 h-px bg-[#DDD6C8]" />
 
-                  {/* Subtle reference lines */}
-                  <div className="absolute left-0 right-0 top-1/4 border-t border-dashed border-[#DDD6C8]/60" />
+                  {/* Y-axis labels */}
+                  <div className="absolute right-0 top-0 flex flex-col items-end gap-[31px]">
+                    <span className="font-mono text-[7px] text-[#B0A99F]">
+                      HIGH
+                    </span>
+                    <span className="font-mono text-[7px] text-[#B0A99F]">
+                      MID
+                    </span>
+                    <span className="font-mono text-[7px] text-[#B0A99F]">
+                      LOW
+                    </span>
+                  </div>
 
-                  <div className="absolute left-0 right-0 top-1/2 border-t border-dashed border-[#DDD6C8]/60" />
-
-                  <div className="absolute left-0 right-0 top-3/4 border-t border-dashed border-[#DDD6C8]/60" />
-
-                  {/* Data path */}
+                  {/* Chart */}
                   <svg
                     viewBox="0 0 100 100"
                     preserveAspectRatio="none"
                     className="absolute inset-0 h-full w-full overflow-visible"
                     aria-hidden="true"
                   >
+                    <defs>
+                      <linearGradient
+                        id="heroChartLine"
+                        x1="0"
+                        y1="1"
+                        x2="1"
+                        y2="0"
+                      >
+                        <stop
+                          offset="0%"
+                          stopColor="#2F5D50"
+                        />
+                        <stop
+                          offset="72%"
+                          stopColor="#2F5D50"
+                        />
+                        <stop
+                          offset="100%"
+                          stopColor="#D97745"
+                        />
+                      </linearGradient>
+
+                      <linearGradient
+                        id="heroChartArea"
+                        x1="0"
+                        y1="0"
+                        x2="0"
+                        y2="1"
+                      >
+                        <stop
+                          offset="0%"
+                          stopColor="#2F5D50"
+                          stopOpacity="0.12"
+                        />
+                        <stop
+                          offset="100%"
+                          stopColor="#2F5D50"
+                          stopOpacity="0"
+                        />
+                      </linearGradient>
+                    </defs>
+
+                    {/* Filled area */}
                     <motion.path
-                      d="M 10 70 C 18 60, 24 43, 32 35 C 39 29, 47 51, 54 58 C 61 64, 69 36, 76 24 C 82 17, 87 36, 91 42"
+                      d="
+                        M 7 72
+                        C 14 68, 18 61, 22 59
+                        C 28 55, 31 43, 36 38
+                        C 41 34, 46 50, 51 51
+                        C 57 52, 61 35, 66 30
+                        C 72 25, 76 20, 80 17
+                        C 85 15, 89 26, 93 27
+                        L 93 100
+                        L 7 100
+                        Z
+                      "
+                      fill="url(#heroChartArea)"
+                      initial={{
+                        opacity: 0,
+                      }}
+                      animate={{
+                        opacity: 1,
+                      }}
+                      transition={{
+                        duration: 1.4,
+                        delay: 0.7,
+                      }}
+                    />
+
+                    {/* Main line */}
+                    <motion.path
+                      d="
+                        M 7 72
+                        C 14 68, 18 61, 22 59
+                        C 28 55, 31 43, 36 38
+                        C 41 34, 46 50, 51 51
+                        C 57 52, 61 35, 66 30
+                        C 72 25, 76 20, 80 17
+                        C 85 15, 89 26, 93 27
+                      "
                       fill="none"
-                      stroke="#2F5D50"
-                      strokeWidth="1.5"
+                      stroke="url(#heroChartLine)"
+                      strokeWidth="1.8"
                       strokeLinecap="round"
                       initial={{
                         pathLength: 0,
@@ -520,33 +652,60 @@ export default function Hero({ onCopyEmail }: HeroProps) {
                         pathLength: 1,
                       }}
                       transition={{
-                        duration: 2.2,
-                        delay: 0.45,
-                        ease: 'easeInOut',
+                        duration: 2.4,
+                        delay: 0.35,
+                        ease: [0.16, 1, 0.3, 1],
                       }}
                     />
 
+                    {/* Secondary analytical line */}
                     <motion.path
-                      d="M 10 70 C 25 63, 39 53, 54 58 C 68 61, 80 42, 91 42"
+                      d="
+                        M 7 72
+                        C 20 69, 29 61, 38 58
+                        C 48 55, 57 58, 66 50
+                        C 76 42, 84 34, 93 27
+                      "
                       fill="none"
                       stroke="#D97745"
                       strokeWidth="0.8"
-                      strokeLinecap="round"
                       strokeDasharray="2 3"
+                      strokeLinecap="round"
                       initial={{
                         pathLength: 0,
                         opacity: 0,
                       }}
                       animate={{
                         pathLength: 1,
-                        opacity: 0.65,
+                        opacity: 0.6,
                       }}
                       transition={{
                         duration: 1.8,
-                        delay: 1.1,
+                        delay: 1.2,
                         ease: 'easeOut',
                       }}
                     />
+
+                    {/* Moving signal */}
+                    <circle
+                      r="1.8"
+                      fill="#D97745"
+                    >
+                      <animateMotion
+                        dur="5s"
+                        begin="0s"
+                        repeatCount="indefinite"
+                        path="
+                          M 7 72
+                          C 14 68, 18 61, 22 59
+                          C 28 55, 31 43, 36 38
+                          C 41 34, 46 50, 51 51
+                          C 57 52, 61 35, 66 30
+                          C 72 25, 76 20, 80 17
+                          C 85 15, 89 26, 93 27
+                        "
+                      />
+                    </circle>
                   </svg>
 
                   {/* Data points */}
@@ -562,8 +721,8 @@ export default function Hero({ onCopyEmail }: HeroProps) {
                         scale: 1,
                       }}
                       transition={{
-                        duration: 0.35,
-                        delay: 0.65 + index * 0.3,
+                        duration: 0.4,
+                        delay: 0.65 + index * 0.16,
                         ease: 'easeOut',
                       }}
                       className={`absolute h-3 w-3 -translate-x-1/2 translate-y-1/2 rounded-full border-2 border-[#FCFAF6] ${
@@ -578,11 +737,11 @@ export default function Hero({ onCopyEmail }: HeroProps) {
                     />
                   ))}
 
-                  {/* Small insight label */}
+                  {/* Peak annotation */}
                   <motion.div
                     initial={{
                       opacity: 0,
-                      y: 5,
+                      y: 8,
                     }}
                     animate={{
                       opacity: 1,
@@ -590,24 +749,60 @@ export default function Hero({ onCopyEmail }: HeroProps) {
                     }}
                     transition={{
                       duration: 0.5,
-                      delay: 2.1,
-                      ease: 'easeOut',
+                      delay: 2,
                     }}
-                    className="absolute right-0 top-0 rounded-md border border-[#DDD6C8] bg-[#F5F1E8] px-2 py-1"
+                    className="absolute left-[70%] top-[3%]"
                   >
-                    <span className="font-mono text-[8px] font-semibold text-[#2F5D50]">
-                      INSIGHT
+                    <div className="flex items-center gap-1.5 rounded-md border border-[#DDD6C8] bg-[#FCFAF6] px-2 py-1 shadow-sm">
+                      <TrendingUp className="h-3 w-3 text-[#4E8D66]" />
+
+                      <span className="font-mono text-[8px] font-semibold text-[#2F5D50]">
+                        +24.8%
+                      </span>
+                    </div>
+                  </motion.div>
+
+                  {/* Insight marker */}
+                  <motion.div
+                    initial={{
+                      opacity: 0,
+                      scale: 0.9,
+                    }}
+                    animate={{
+                      opacity: 1,
+                      scale: 1,
+                    }}
+                    transition={{
+                      duration: 0.5,
+                      delay: 2.3,
+                    }}
+                    className="absolute right-[4%] top-[31%] flex items-center gap-1.5"
+                  >
+                    <Sparkles className="h-3 w-3 text-[#D97745]" />
+
+                    <span className="font-mono text-[8px] font-semibold uppercase tracking-[0.12em] text-[#2F5D50]">
+                      Insight
                     </span>
                   </motion.div>
                 </div>
 
                 {/* Visualization footer */}
-                <div className="mt-2 flex items-center justify-between">
-                  <span className="font-mono text-[9px] uppercase tracking-[0.12em] text-[#9A9388]">
-                    Raw data
-                  </span>
+                <div className="mt-3 flex items-center justify-between">
+                  <div>
+                    <span className="font-mono text-[8px] uppercase tracking-[0.14em] text-[#9A9388]">
+                      Raw data
+                    </span>
 
-                  <span className="font-mono text-[9px] uppercase tracking-[0.12em] text-[#D97745]">
+                    <span className="mx-2 text-[#DDD6C8]">
+                      →
+                    </span>
+
+                    <span className="font-mono text-[8px] uppercase tracking-[0.14em] text-[#2F5D50]">
+                      Pattern
+                    </span>
+                  </div>
+
+                  <span className="font-mono text-[8px] uppercase tracking-[0.14em] text-[#D97745]">
                     Useful outcome
                   </span>
                 </div>
@@ -615,9 +810,15 @@ export default function Hero({ onCopyEmail }: HeroProps) {
 
               {/* Workflow Header */}
               <div className="border-b border-[#DDD6C8] px-5 py-4 sm:px-6">
-                <p className="text-[10px] font-medium uppercase tracking-[0.16em] text-[#6B7280]">
-                  How I work
-                </p>
+                <div className="flex items-center justify-between">
+                  <p className="text-[10px] font-medium uppercase tracking-[0.16em] text-[#6B7280]">
+                    How I work
+                  </p>
+
+                  <span className="font-mono text-[8px] uppercase tracking-[0.14em] text-[#A8A095]">
+                    4 stages
+                  </span>
+                </div>
 
                 <h2 className="mt-2 font-display text-2xl font-bold tracking-tight text-[#1D2A26] sm:text-3xl">
                   From raw data
@@ -682,7 +883,7 @@ export default function Hero({ onCopyEmail }: HeroProps) {
                               transition={{
                                 duration: 0.25,
                               }}
-                              className="absolute left-0 top-2 bottom-2 w-0.5 origin-center rounded-full bg-[#D97745]"
+                              className="absolute bottom-2 left-0 top-2 w-0.5 origin-center rounded-full bg-[#D97745]"
                             />
 
                             {/* Number */}
