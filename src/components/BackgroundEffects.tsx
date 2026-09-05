@@ -1,119 +1,152 @@
 import { motion, useScroll, useTransform } from 'motion/react';
 
-const dataPaths = [
+const chartLines = [
   {
-    id: 'path-1',
-    d: 'M -80 190 C 120 70, 220 300, 410 180 S 680 80, 860 210 S 1120 330, 1320 150',
+    id: 'line-1',
+    d: 'M -40 250 C 90 210, 150 285, 260 245 S 430 150, 560 205 S 730 310, 870 220 S 1080 125, 1360 190',
+    color: '#2F5D50',
+    width: 1.5,
+  },
+  {
+    id: 'line-2',
+    d: 'M -40 500 C 110 445, 210 535, 340 480 S 510 385, 650 455 S 830 565, 970 490 S 1150 395, 1360 450',
+    color: '#D97745',
+    width: 1.1,
+  },
+  {
+    id: 'line-3',
+    d: 'M -40 790 C 120 720, 230 835, 390 770 S 600 655, 760 735 S 930 850, 1080 760 S 1230 665, 1360 720',
     color: '#2F5D50',
     width: 1.2,
   },
   {
-    id: 'path-2',
-    d: 'M -100 620 C 150 470, 280 720, 500 570 S 780 430, 980 600 S 1190 760, 1380 560',
-    color: '#2F5D50',
-    width: 0.9,
-  },
-  {
-    id: 'path-3',
-    d: 'M 80 1120 C 260 960, 390 1180, 580 1040 S 850 870, 1040 1040 S 1250 1190, 1400 1000',
+    id: 'line-4',
+    d: 'M -40 1060 C 130 1000, 250 1090, 400 1035 S 600 930, 760 1010 S 920 1125, 1090 1035 S 1240 950, 1360 1010',
     color: '#D97745',
     width: 0.9,
   },
-  {
-    id: 'path-4',
-    d: 'M 720 -80 C 610 160, 850 250, 730 470 S 580 720, 760 890 S 940 1120, 820 1320',
-    color: '#2F5D50',
-    width: 0.65,
-  },
 ];
 
-const nodes = [
-  { x: 120, y: 150, r: 3, color: '#2F5D50' },
-  { x: 410, y: 180, r: 4, color: '#D97745' },
-  { x: 680, y: 125, r: 2.5, color: '#2F5D50' },
-  { x: 860, y: 210, r: 3.5, color: '#D97745' },
-  { x: 1120, y: 300, r: 2.5, color: '#2F5D50' },
-
-  { x: 180, y: 550, r: 2.5, color: '#D97745' },
-  { x: 500, y: 570, r: 4, color: '#2F5D50' },
-  { x: 780, y: 450, r: 2.5, color: '#2F5D50' },
-  { x: 980, y: 600, r: 4, color: '#D97745' },
-  { x: 1210, y: 690, r: 2.5, color: '#2F5D50' },
-
-  { x: 260, y: 990, r: 3, color: '#2F5D50' },
-  { x: 580, y: 1040, r: 4, color: '#D97745' },
-  { x: 850, y: 900, r: 2.5, color: '#2F5D50' },
-  { x: 1040, y: 1040, r: 4, color: '#D97745' },
-  { x: 1250, y: 1130, r: 2.5, color: '#2F5D50' },
-
-  { x: 720, y: 250, r: 2.5, color: '#D97745' },
-  { x: 730, y: 470, r: 3, color: '#2F5D50' },
-  { x: 760, y: 890, r: 3.5, color: '#D97745' },
+const secondaryLines = [
+  'M -40 335 C 120 290, 210 365, 350 320 S 570 235, 720 305 S 920 400, 1080 325 S 1230 250, 1360 300',
+  'M -40 640 C 100 590, 240 680, 380 625 S 590 540, 740 610 S 930 710, 1100 630 S 1250 560, 1360 600',
+  'M -40 910 C 120 860, 260 945, 410 895 S 610 810, 780 875 S 960 970, 1110 900 S 1240 820, 1360 860',
 ];
 
-const labels = [
-  { x: 135, y: 135, text: '01' },
-  { x: 425, y: 165, text: 'DATA' },
-  { x: 690, y: 110, text: '%' },
-  { x: 875, y: 195, text: '→' },
-  { x: 1128, y: 285, text: '10' },
+const chartPoints = [
+  { x: 120, y: 226, color: '#2F5D50', label: '01' },
+  { x: 260, y: 245, color: '#D97745', label: '↑' },
+  { x: 560, y: 205, color: '#2F5D50', label: 'DATA' },
+  { x: 870, y: 220, color: '#D97745', label: '%' },
+  { x: 1080, y: 125, color: '#2F5D50', label: '02' },
 
-  { x: 195, y: 535, text: 'Σ' },
-  { x: 515, y: 555, text: '02' },
-  { x: 795, y: 435, text: '→' },
-  { x: 995, y: 585, text: '%' },
+  { x: 210, y: 535, color: '#2F5D50', label: 'Σ' },
+  { x: 340, y: 480, color: '#D97745', label: '↑' },
+  { x: 650, y: 455, color: '#2F5D50', label: '03' },
+  { x: 970, y: 490, color: '#D97745', label: '%' },
 
-  { x: 275, y: 975, text: '03' },
-  { x: 595, y: 1025, text: 'AI' },
-  { x: 865, y: 885, text: 'Σ' },
-  { x: 1055, y: 1025, text: '→' },
-  { x: 1265, y: 1115, text: '04' },
+  { x: 230, y: 835, color: '#D97745', label: '04' },
+  { x: 390, y: 770, color: '#2F5D50', label: 'Σ' },
+  { x: 760, y: 735, color: '#D97745', label: '↑' },
+  { x: 1080, y: 760, color: '#2F5D50', label: 'AI' },
+
+  { x: 250, y: 1090, color: '#2F5D50', label: '05' },
+  { x: 400, y: 1035, color: '#D97745', label: '%' },
+  { x: 760, y: 1010, color: '#2F5D50', label: 'Σ' },
+  { x: 1090, y: 1035, color: '#D97745', label: '→' },
 ];
 
-function FlowingDot({
-  pathId,
+function AnimatedPoint({
+  x,
+  y,
   color,
-  delay,
-  duration,
+  index,
 }: {
-  pathId: string;
+  x: number;
+  y: number;
   color: string;
-  delay: number;
-  duration: number;
+  index: number;
 }) {
   return (
-    <motion.circle
-      r="2.4"
+    <g>
+      <motion.circle
+        cx={x}
+        cy={y}
+        fill={color}
+        initial={{ opacity: 0.03, r: 7 }}
+        animate={{
+          opacity: [0.02, 0.10, 0.02],
+          r: [7, 13, 7],
+        }}
+        transition={{
+          duration: 4 + (index % 3),
+          delay: index * 0.22,
+          repeat: Infinity,
+          ease: 'easeInOut',
+        }}
+      />
+
+      <circle
+        cx={x}
+        cy={y}
+        r="3.2"
+        fill="#F5F1E8"
+        stroke={color}
+        strokeWidth="1.2"
+        opacity="0.72"
+      />
+
+      <circle
+        cx={x}
+        cy={y}
+        r="1.15"
+        fill={color}
+        opacity="0.9"
+      />
+    </g>
+  );
+}
+
+function MovingSignal({
+  path,
+  color,
+  duration,
+  delay,
+}: {
+  path: string;
+  color: string;
+  duration: number;
+  delay: number;
+}) {
+  return (
+    <circle
+      r="3"
       fill={color}
-      initial={{
-        opacity: 0,
-      }}
-      animate={{
-        opacity: [0, 0.85, 0.85, 0],
-      }}
-      transition={{
-        duration,
-        delay,
-        repeat: Infinity,
-        ease: 'linear',
-      }}
+      opacity="0.8"
     >
       <animateMotion
         dur={`${duration}s`}
         begin={`${delay}s`}
         repeatCount="indefinite"
-        path={dataPaths.find((item) => item.id === pathId)?.d}
+        path={path}
       />
-    </motion.circle>
+      <animate
+        attributeName="opacity"
+        values="0;0.9;0.9;0"
+        dur={`${duration}s`}
+        begin={`${delay}s`}
+        repeatCount="indefinite"
+      />
+    </circle>
   );
 }
 
 export default function BackgroundEffects() {
   const { scrollYProgress } = useScroll();
 
-  const networkY = useTransform(scrollYProgress, [0, 1], [0, -90]);
-  const labelsY = useTransform(scrollYProgress, [0, 1], [0, -45]);
-  const atmosphereY = useTransform(scrollYProgress, [0, 1], [0, 100]);
+  const landscapeY = useTransform(scrollYProgress, [0, 1], [0, -110]);
+  const labelsY = useTransform(scrollYProgress, [0, 1], [0, -55]);
+  const glowY = useTransform(scrollYProgress, [0, 1], [0, 80]);
 
   return (
     <div
@@ -123,33 +156,31 @@ export default function BackgroundEffects() {
       {/* Base */}
       <div className="absolute inset-0 bg-[#F5F1E8]" />
 
-      {/* Soft light behind the network */}
+      {/* Warm editorial lighting */}
       <motion.div
-        className="absolute -top-[300px] left-[5%] h-[900px] w-[900px] rounded-full"
+        className="absolute -top-[320px] left-[8%] h-[850px] w-[850px] rounded-full"
         style={{
-          y: atmosphereY,
+          y: glowY,
           background:
-            'radial-gradient(circle, rgba(47,93,80,0.12) 0%, rgba(47,93,80,0.045) 42%, transparent 72%)',
-          filter: 'blur(55px)',
-        }}
-      />
-
-      <motion.div
-        className="absolute top-[28%] -right-[300px] h-[900px] w-[900px] rounded-full"
-        style={{
-          y: atmosphereY,
-          background:
-            'radial-gradient(circle, rgba(217,119,69,0.10) 0%, rgba(217,119,69,0.035) 44%, transparent 72%)',
+            'radial-gradient(circle, rgba(47,93,80,0.14) 0%, rgba(47,93,80,0.055) 38%, transparent 70%)',
           filter: 'blur(60px)',
         }}
       />
 
-      {/* Main data landscape */}
+      <motion.div
+        className="absolute top-[35%] -right-[280px] h-[820px] w-[820px] rounded-full"
+        style={{
+          y: glowY,
+          background:
+            'radial-gradient(circle, rgba(217,119,69,0.12) 0%, rgba(217,119,69,0.045) 40%, transparent 70%)',
+          filter: 'blur(65px)',
+        }}
+      />
+
+      {/* Main abstract data landscape */}
       <motion.div
         className="absolute inset-0"
-        style={{
-          y: networkY,
-        }}
+        style={{ y: landscapeY }}
       >
         <svg
           viewBox="0 0 1320 1320"
@@ -157,65 +188,82 @@ export default function BackgroundEffects() {
           className="absolute inset-0 h-full w-full"
         >
           <defs>
-            <filter id="softGlow">
-              <feGaussianBlur stdDeviation="5" result="blur" />
-              <feMerge>
-                <feMergeNode in="blur" />
-                <feMergeNode in="SourceGraphic" />
-              </feMerge>
+            <linearGradient
+              id="mainSageLine"
+              x1="0"
+              y1="0"
+              x2="1"
+              y2="0"
+            >
+              <stop offset="0%" stopColor="#2F5D50" stopOpacity="0.03" />
+              <stop offset="20%" stopColor="#2F5D50" stopOpacity="0.20" />
+              <stop offset="50%" stopColor="#2F5D50" stopOpacity="0.52" />
+              <stop offset="80%" stopColor="#2F5D50" stopOpacity="0.18" />
+              <stop offset="100%" stopColor="#2F5D50" stopOpacity="0.03" />
+            </linearGradient>
+
+            <linearGradient
+              id="mainOrangeLine"
+              x1="0"
+              y1="0"
+              x2="1"
+              y2="0"
+            >
+              <stop offset="0%" stopColor="#D97745" stopOpacity="0.025" />
+              <stop offset="20%" stopColor="#D97745" stopOpacity="0.15" />
+              <stop offset="50%" stopColor="#D97745" stopOpacity="0.46" />
+              <stop offset="80%" stopColor="#D97745" stopOpacity="0.15" />
+              <stop offset="100%" stopColor="#D97745" stopOpacity="0.025" />
+            </linearGradient>
+
+            <filter id="pointGlow">
+              <feGaussianBlur stdDeviation="4" />
             </filter>
-
-            <linearGradient
-              id="sageFlow"
-              x1="0"
-              y1="0"
-              x2="1"
-              y2="0"
-            >
-              <stop offset="0%" stopColor="#2F5D50" stopOpacity="0.05" />
-              <stop offset="50%" stopColor="#2F5D50" stopOpacity="0.42" />
-              <stop offset="100%" stopColor="#2F5D50" stopOpacity="0.06" />
-            </linearGradient>
-
-            <linearGradient
-              id="orangeFlow"
-              x1="0"
-              y1="0"
-              x2="1"
-              y2="0"
-            >
-              <stop offset="0%" stopColor="#D97745" stopOpacity="0.04" />
-              <stop offset="50%" stopColor="#D97745" stopOpacity="0.35" />
-              <stop offset="100%" stopColor="#D97745" stopOpacity="0.05" />
-            </linearGradient>
           </defs>
 
-          {/* Data paths */}
-          {dataPaths.map((path) => (
+          {/* Fine secondary curves */}
+          {secondaryLines.map((path, index) => (
+            <path
+              key={`secondary-${index}`}
+              d={path}
+              fill="none"
+              stroke={index % 2 === 0 ? '#2F5D50' : '#D97745'}
+              strokeWidth="0.7"
+              strokeOpacity="0.08"
+              strokeDasharray="1 15"
+              strokeLinecap="round"
+            />
+          ))}
+
+          {/* Main flowing chart curves */}
+          {chartLines.map((line, index) => (
             <motion.path
-              key={path.id}
-              d={path.d}
+              key={line.id}
+              d={line.d}
               fill="none"
               stroke={
-                path.color === '#D97745'
-                  ? 'url(#orangeFlow)'
-                  : 'url(#sageFlow)'
+                line.color === '#D97745'
+                  ? 'url(#mainOrangeLine)'
+                  : 'url(#mainSageLine)'
               }
-              strokeWidth={path.width}
+              strokeWidth={line.width}
               strokeLinecap="round"
-              strokeDasharray="2 10"
-              initial={{ pathLength: 0, opacity: 0 }}
+              strokeDasharray="1 8"
+              initial={{
+                pathLength: 0,
+                opacity: 0,
+              }}
               animate={{
                 pathLength: 1,
-                opacity: [0.18, 0.48, 0.18],
+                opacity: [0.35, 0.72, 0.35],
               }}
               transition={{
                 pathLength: {
-                  duration: 3,
+                  duration: 2.8 + index * 0.35,
                   ease: 'easeOut',
                 },
                 opacity: {
-                  duration: 8,
+                  duration: 7 + index,
                   repeat: Infinity,
                   ease: 'easeInOut',
                 },
@@ -223,181 +271,119 @@ export default function BackgroundEffects() {
             />
           ))}
 
-          {/* Secondary solid traces */}
-          <path
-            d="M 0 350 C 180 280 270 390 440 330 S 720 240 900 350 S 1140 420 1320 300"
-            fill="none"
-            stroke="#2F5D50"
-            strokeOpacity="0.09"
-            strokeWidth="1"
-            strokeDasharray="1 14"
-          />
-
-          <path
-            d="M 0 820 C 180 730 320 860 490 790 S 760 680 930 790 S 1160 890 1320 760"
-            fill="none"
-            stroke="#D97745"
-            strokeOpacity="0.075"
-            strokeWidth="1"
-            strokeDasharray="1 16"
-          />
-
-          {/* Nodes */}
-          {nodes.map((node, index) => (
-            <g key={`${node.x}-${node.y}`}>
-              <motion.circle
-                cx={node.x}
-                cy={node.y}
-                r={node.r * 3.5}
-                fill={node.color}
-                opacity="0.04"
-                animate={{
-                  opacity: [0.02, 0.09, 0.02],
-                  r: [node.r * 2.5, node.r * 4, node.r * 2.5],
-                }}
-                transition={{
-                  duration: 3 + (index % 4),
-                  delay: index * 0.25,
-                  repeat: Infinity,
-                  ease: 'easeInOut',
-                }}
-              />
-
-              <circle
-                cx={node.x}
-                cy={node.y}
-                r={node.r}
-                fill="#F5F1E8"
-                stroke={node.color}
-                strokeWidth="1"
-                opacity="0.48"
-              />
-
-              <circle
-                cx={node.x}
-                cy={node.y}
-                r={Math.max(node.r * 0.38, 0.8)}
-                fill={node.color}
-                opacity="0.7"
-              />
-            </g>
+          {/* Soft underlying versions of the curves */}
+          {chartLines.map((line) => (
+            <path
+              key={`${line.id}-soft`}
+              d={line.d}
+              fill="none"
+              stroke={line.color}
+              strokeWidth="9"
+              strokeOpacity="0.018"
+              filter="url(#pointGlow)"
+            />
           ))}
 
-          {/* Moving data */}
-          <FlowingDot
-            pathId="path-1"
-            color="#2F5D50"
-            delay={0}
-            duration={12}
-          />
+          {/* Data points */}
+          {chartPoints.map((point, index) => (
+            <AnimatedPoint
+              key={`${point.x}-${point.y}`}
+              x={point.x}
+              y={point.y}
+              color={point.color}
+              index={index}
+            />
+          ))}
 
-          <FlowingDot
-            pathId="path-1"
-            color="#D97745"
-            delay={5}
-            duration={15}
-          />
-
-          <FlowingDot
-            pathId="path-2"
+          {/* Moving signals */}
+          <MovingSignal
+            path={chartLines[0].d}
             color="#2F5D50"
-            delay={2}
             duration={14}
+            delay={0}
           />
 
-          <FlowingDot
-            pathId="path-3"
+          <MovingSignal
+            path={chartLines[0].d}
             color="#D97745"
-            delay={4}
-            duration={13}
+            duration={18}
+            delay={7}
           />
 
-          <FlowingDot
-            pathId="path-4"
+          <MovingSignal
+            path={chartLines[1].d}
+            color="#D97745"
+            duration={16}
+            delay={3}
+          />
+
+          <MovingSignal
+            path={chartLines[2].d}
             color="#2F5D50"
-            delay={1}
-            duration={11}
+            duration={17}
+            delay={5}
+          />
+
+          <MovingSignal
+            path={chartLines[3].d}
+            color="#D97745"
+            duration={19}
+            delay={2}
           />
         </svg>
       </motion.div>
 
-      {/* Data labels */}
+      {/* Tiny analytical labels */}
       <motion.div
         className="absolute inset-0"
-        style={{
-          y: labelsY,
-        }}
+        style={{ y: labelsY }}
       >
-        {labels.map((label, index) => (
+        {chartPoints.map((point, index) => (
           <motion.span
-            key={`${label.text}-${index}`}
-            className="absolute font-mono text-[8px] tracking-[0.18em] text-[#2F5D50]"
+            key={`${point.label}-${index}`}
+            className="absolute font-mono text-[8px] tracking-[0.18em]"
             style={{
-              left: `${(label.x / 1320) * 100}%`,
-              top: `${(label.y / 1320) * 100}%`,
+              left: `${(point.x / 1320) * 100}%`,
+              top: `${(point.y / 1320) * 100}%`,
+              color: point.color,
+              transform: 'translate(8px, -14px)',
             }}
             animate={{
-              opacity: [0.08, 0.22, 0.08],
+              opacity: [0.08, 0.3, 0.08],
             }}
             transition={{
-              duration: 5 + (index % 3),
-              delay: index * 0.4,
+              duration: 5 + (index % 4),
+              delay: index * 0.3,
               repeat: Infinity,
               ease: 'easeInOut',
             }}
           >
-            {label.text}
+            {point.label}
           </motion.span>
         ))}
       </motion.div>
 
-      {/* A few highlighted signal points */}
-      <div className="absolute inset-0">
-        <motion.div
-          className="absolute left-[31%] top-[13%] h-2 w-2 rounded-full bg-[#D97745]"
-          animate={{
-            scale: [1, 1.8, 1],
-            opacity: [0.35, 0.7, 0.35],
-          }}
-          transition={{
-            duration: 4,
-            repeat: Infinity,
-            ease: 'easeInOut',
-          }}
-        />
-
-        <motion.div
-          className="absolute right-[27%] top-[47%] h-1.5 w-1.5 rounded-full bg-[#2F5D50]"
-          animate={{
-            scale: [1, 1.7, 1],
-            opacity: [0.25, 0.6, 0.25],
-          }}
-          transition={{
-            duration: 5,
-            delay: 1,
-            repeat: Infinity,
-            ease: 'easeInOut',
-          }}
-        />
-
-        <motion.div
-          className="absolute left-[43%] top-[78%] h-2 w-2 rounded-full bg-[#D97745]"
-          animate={{
-            scale: [1, 1.8, 1],
-            opacity: [0.3, 0.65, 0.3],
-          }}
-          transition={{
-            duration: 4.5,
-            delay: 2,
-            repeat: Infinity,
-            ease: 'easeInOut',
-          }}
-        />
-      </div>
-
-      {/* Very light paper grain */}
+      {/* A subtle statistical axis */}
       <div
-        className="absolute inset-0 opacity-[0.12]"
+        className="absolute left-[7%] right-[7%] top-1/2 h-px"
+        style={{
+          background:
+            'linear-gradient(90deg, transparent, rgba(47,93,80,0.08) 18%, rgba(47,93,80,0.12) 50%, rgba(217,119,69,0.07) 82%, transparent)',
+        }}
+      />
+
+      {/* Central readability veil */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            'radial-gradient(ellipse 48% 68% at center, rgba(245,241,232,0.72) 0%, rgba(245,241,232,0.42) 45%, rgba(245,241,232,0.08) 75%, transparent 100%)',
+        }}
+      />
+
+      {/* Soft paper grain */}
+      <div
+        className="absolute inset-0 opacity-[0.10]"
         style={{
           backgroundImage:
             'radial-gradient(rgba(29,42,38,0.18) 0.45px, transparent 0.65px)',
@@ -405,16 +391,7 @@ export default function BackgroundEffects() {
         }}
       />
 
-      {/* Keep the center readable */}
-      <div
-        className="absolute inset-0"
-        style={{
-          background:
-            'radial-gradient(ellipse 55% 70% at center, rgba(245,241,232,0.58) 0%, rgba(245,241,232,0.22) 48%, transparent 78%)',
-        }}
-      />
-
-      {/* Gentle edge depth */}
+      {/* Edge depth */}
       <div
         className="absolute inset-0"
         style={{
@@ -423,20 +400,21 @@ export default function BackgroundEffects() {
         }}
       />
 
-      {/* Top and bottom fades */}
+      {/* Top fade */}
       <div
-        className="absolute inset-x-0 top-0 h-40 sm:h-56"
+        className="absolute inset-x-0 top-0 h-44 sm:h-60"
         style={{
           background:
-            'linear-gradient(to bottom, rgba(245,241,232,0.72), transparent)',
+            'linear-gradient(to bottom, rgba(245,241,232,0.78), transparent)',
         }}
       />
 
+      {/* Bottom fade */}
       <div
-        className="absolute inset-x-0 bottom-0 h-40 sm:h-56"
+        className="absolute inset-x-0 bottom-0 h-44 sm:h-60"
         style={{
           background:
-            'linear-gradient(to top, rgba(245,241,232,0.72), transparent)',
+            'linear-gradient(to top, rgba(245,241,232,0.78), transparent)',
         }}
       />
 
