@@ -27,13 +27,19 @@ export default function Skills() {
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
-        {/* Editorial Header */}
+        {/* --------------------------------------------------
+            EDITORIAL HEADER
+        -------------------------------------------------- */}
+
         <motion.div
           initial={{ opacity: 0, y: 18 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.55 }}
-          className="mb-14 max-w-3xl"
+          transition={{
+            duration: 0.55,
+            ease: [0.16, 1, 0.3, 1],
+          }}
+          className="mb-16 max-w-3xl"
         >
           <div className="mb-4 flex items-center gap-3">
             <span className="font-mono text-[10px] font-semibold tracking-[0.16em] text-[#D97745]">
@@ -60,58 +66,135 @@ export default function Skills() {
           </p>
         </motion.div>
 
-        {/* Skills */}
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {skillCategories.map((cat, idx) => {
-            const Icon = iconMap[cat.icon] || Bot;
+        {/* --------------------------------------------------
+            SKILLS INDEX
+        -------------------------------------------------- */}
+
+        <div className="border-t border-[#DDD6C8]">
+          {skillCategories.map((category, index) => {
+            const Icon = iconMap[category.icon] || Bot;
 
             return (
-              <motion.div
-                key={cat.title}
-                initial={{ opacity: 0, y: 22 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{
-                  duration: 0.45,
-                  delay: idx * 0.08,
+              <motion.article
+                key={category.title}
+                initial={{
+                  opacity: 0,
+                  y: 18,
                 }}
-                whileHover={{ y: -4 }}
-                className="group rounded-2xl border border-[#DDD6C8] bg-[#FCFAF6] p-6 transition-all duration-300 hover:border-[#2F5D50]/35 hover:shadow-[0_18px_45px_-22px_rgba(47,93,80,0.18)]"
+                whileInView={{
+                  opacity: 1,
+                  y: 0,
+                }}
+                viewport={{
+                  once: true,
+                  margin: '-50px',
+                }}
+                transition={{
+                  duration: 0.5,
+                  delay: index * 0.06,
+                  ease: [0.16, 1, 0.3, 1],
+                }}
+                className="group border-b border-[#DDD6C8]"
               >
-                {/* Icon */}
-                <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-xl bg-[#2F5D50]/8 text-[#2F5D50] transition-colors group-hover:bg-[#2F5D50] group-hover:text-white">
-                  <Icon className="h-5 w-5" />
-                </div>
+                <div className="grid gap-8 py-9 md:grid-cols-[80px_minmax(220px,0.8fr)_minmax(0,1.5fr)] md:items-start md:gap-10 lg:gap-16">
 
-                {/* Title */}
-                <h3 className="font-display text-xl font-bold tracking-[-0.02em] text-[#1D2A26]">
-                  {cat.title}
-                </h3>
+                  {/* Number */}
+                  <div className="flex items-center gap-3 md:block">
+                    <span className="font-mono text-xs font-medium text-[#A8A095]">
+                      {String(index + 1).padStart(2, '0')}
+                    </span>
 
-                {/* Description */}
-                <p className="mt-3 text-sm leading-6 text-[#6B7280]">
-                  {cat.description}
-                </p>
+                    <div className="h-px w-8 bg-[#DDD6C8] md:mt-4 md:w-6" />
+                  </div>
 
-                {/* Divider */}
-                <div className="my-5 h-px bg-[#ECE6DA]" />
+                  {/* Category */}
+                  <div>
+                    <div className="mb-3 flex items-center gap-3">
+                      <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-[#DDD6C8] bg-[#FCFAF6] text-[#2F5D50] transition-colors duration-200 group-hover:border-[#2F5D50]/30 group-hover:bg-[#2F5D50] group-hover:text-white">
+                        <Icon className="h-4 w-4" />
+                      </div>
 
-                {/* Skills */}
-                <div className="space-y-3">
-                  {cat.skills.map((skill) => (
-                    <div
-                      key={skill}
-                      className="flex items-center gap-3 text-sm text-[#1D2A26]"
-                    >
-                      <Check className="h-3.5 w-3.5 shrink-0 text-[#4E8D66]" />
-                      <span>{skill}</span>
+                      <span className="text-[10px] uppercase tracking-[0.14em] text-[#9A9388]">
+                        {String(index + 1).padStart(2, '0')} / Expertise
+                      </span>
                     </div>
-                  ))}
+
+                    <h3 className="font-display text-xl font-bold tracking-[-0.02em] text-[#1D2A26] sm:text-2xl">
+                      {category.title}
+                    </h3>
+
+                    <p className="mt-3 max-w-md text-sm leading-6 text-[#6B7280]">
+                      {category.description}
+                    </p>
+                  </div>
+
+                  {/* Skills */}
+                  <div className="grid grid-cols-1 gap-x-8 gap-y-2 sm:grid-cols-2">
+                    {category.skills.map((skill, skillIndex) => (
+                      <motion.div
+                        key={skill}
+                        initial={{
+                          opacity: 0,
+                          x: -6,
+                        }}
+                        whileInView={{
+                          opacity: 1,
+                          x: 0,
+                        }}
+                        viewport={{
+                          once: true,
+                        }}
+                        transition={{
+                          duration: 0.35,
+                          delay: 0.08 + skillIndex * 0.025,
+                          ease: 'easeOut',
+                        }}
+                        className="group/skill flex min-h-9 items-center gap-3 border-b border-[#ECE6DA] py-2 text-sm text-[#1D2A26] transition-colors duration-200 hover:text-[#2F5D50]"
+                      >
+                        <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#2F5D50]/[0.07] transition-colors duration-200 group-hover/skill:bg-[#2F5D50]">
+                          <Check className="h-3 w-3 text-[#2F5D50] transition-colors duration-200 group-hover/skill:text-white" />
+                        </span>
+
+                        <span className="leading-5">
+                          {skill}
+                        </span>
+                      </motion.div>
+                    ))}
+                  </div>
                 </div>
-              </motion.div>
+              </motion.article>
             );
           })}
         </div>
+
+        {/* --------------------------------------------------
+            FOOTER NOTE
+        -------------------------------------------------- */}
+
+        <motion.div
+          initial={{
+            opacity: 0,
+          }}
+          whileInView={{
+            opacity: 1,
+          }}
+          viewport={{
+            once: true,
+          }}
+          transition={{
+            duration: 0.5,
+            delay: 0.2,
+          }}
+          className="flex flex-col gap-3 pt-6 sm:flex-row sm:items-center sm:justify-between"
+        >
+          <span className="text-[10px] uppercase tracking-[0.14em] text-[#9A9388]">
+            Technical toolkit
+          </span>
+
+          <span className="text-xs text-[#6B7280]">
+            Data analysis at the core, automation where it adds value.
+          </span>
+        </motion.div>
       </div>
     </section>
   );
