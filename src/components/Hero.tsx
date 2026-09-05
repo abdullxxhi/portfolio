@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'motion/react';
 import {
   ArrowRight,
@@ -30,6 +30,9 @@ export default function Hero({ onCopyEmail }: HeroProps) {
   const [displayedText, setDisplayedText] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
 
+  const [activeStep, setActiveStep] = useState(0);
+  const workflowRef = useRef<HTMLDivElement | null>(null);
+
   useEffect(() => {
     const currentRole = roles[currentRoleIndex];
     const typingSpeed = isDeleting ? 40 : 80;
@@ -59,6 +62,64 @@ export default function Hero({ onCopyEmail }: HeroProps) {
 
     return () => clearTimeout(timer);
   }, [displayedText, isDeleting, currentRoleIndex]);
+
+  /*
+   * Scroll-reactive workflow
+   *
+   * The workflow becomes progressively more active as the user
+   * scrolls through the Hero area. The calculation is based on
+   * the workflow panel's position rather than global page progress,
+   * so the interaction remains tied to the actual "How I Work"
+   * visual.
+   */
+  useEffect(() => {
+    const updateActiveStep = () => {
+      const element = workflowRef.current;
+
+      if (!element) return;
+
+      const rect = element.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+
+      /*
+       * Start activating the workflow when the panel approaches
+       * the center of the viewport.
+       */
+      const activationStart = viewportHeight * 0.82;
+      const activationEnd = viewportHeight * 0.18;
+
+      const distance = activationStart - activationEnd;
+      const progress =
+        distance > 0
+          ? (activationStart - rect.top) / distance
+          : 0;
+
+      const clampedProgress = Math.min(
+        1,
+        Math.max(0, progress)
+      );
+
+      const nextStep = Math.min(
+        3,
+        Math.floor(clampedProgress * 4)
+      );
+
+      setActiveStep(nextStep);
+    };
+
+    updateActiveStep();
+
+    window.addEventListener('scroll', updateActiveStep, {
+      passive: true,
+    });
+
+    window.addEventListener('resize', updateActiveStep);
+
+    return () => {
+      window.removeEventListener('scroll', updateActiveStep);
+      window.removeEventListener('resize', updateActiveStep);
+    };
+  }, []);
 
   const scrollToSection = (
     event: React.MouseEvent<HTMLAnchorElement>,
@@ -211,7 +272,7 @@ export default function Hero({ onCopyEmail }: HeroProps) {
               transition={{
                 duration: 0.55,
                 delay: 0.25,
-                ease: [0.16, 1, 0.3, 1],
+                ease: [0.16, 1, 1, 1],
               }}
               className="
                 max-w-xl
@@ -371,6 +432,7 @@ export default function Hero({ onCopyEmail }: HeroProps) {
           -------------------------------------------------- */}
 
           <motion.div
+            ref={workflowRef}
             initial={{ opacity: 0, x: 24 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{
@@ -445,7 +507,6 @@ export default function Hero({ onCopyEmail }: HeroProps) {
                     className="absolute inset-0 h-full w-full overflow-visible"
                     aria-hidden="true"
                   >
-                    {/* Main rising path */}
                     <motion.path
                       d="M 10 70 C 18 60, 24 43, 32 35 C 39 29, 47 51, 54 58 C 61 64, 69 36, 76 24 C 82 17, 87 36, 91 42"
                       fill="none"
@@ -465,7 +526,6 @@ export default function Hero({ onCopyEmail }: HeroProps) {
                       }}
                     />
 
-                    {/* Secondary analytical path */}
                     <motion.path
                       d="M 10 70 C 25 63, 39 53, 54 58 C 68 61, 80 42, 91 42"
                       fill="none"
@@ -580,45 +640,156 @@ export default function Hero({ onCopyEmail }: HeroProps) {
                         icon: Icon,
                       },
                       index
-                    ) => (
-                      <motion.div
-                        key={label}
-                        initial={{ opacity: 0, y: 8 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{
-                          duration: 0.4,
-                          delay: 0.5 + index * 0.08,
-                          ease: [0.16, 1, 0.3, 1],
-                        }}
-                      >
-                        <div className="flex items-center gap-3 rounded-lg px-2 py-3 transition-colors duration-200 hover:bg-[#F5F1E8] sm:gap-4">
-                          {/* Number */}
-                          <span className="w-6 shrink-0 font-mono text-[10px] text-[#A8A095]">
-                            {number}
-                          </span>
+                    ) => {
+                      const isActive = index === activeStep;
+                      const isCompleted = index < activeStep;
 
-                          {/* Icon */}
-                          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[#DDD6C8] bg-[#F5F1E8] text-[#2F5D50]">
-                            <Icon className="h-4 w-4" />
-                          </div>
+                      return (
+                        <motion.div
+                          key={label}
+                          initial={{
+                            opacity: 0,
+                            y: 8,
+                          }}
+                          animate={{
+                            opacity: 1,
+                            y: 0,
+                          }}
+                          transition={{
+                            duration: 0.4,
+                            delay: 0.5 + index * 0.08,
+                            ease: [0.16, 1, 0.3, 1],
+                          }}
+                        >
+                          <motion.div
+                            animate={{
+                              backgroundColor: isActive
+                                ? '#F5F1E8'
+                                : 'rgba(0,0,0,0)',
+                            }}
+                            transition={{
+                              duration: 0.3,
+                              ease: 'easeOut',
+                            }}
+                            className="relative flex items-center gap-3 rounded-lg px-2 py-3 sm:gap-4"
+                          >
+                            {/* Active indicator */}
+                            <motion.span
+                              animate={{
+                                opacity: isActive ? 1 : 0,
+                                scaleY: isActive ? 1 : 0.5,
+                              }}
+                              transition={{
+                                duration: 0.25,
+                              }}
+                              className="absolute left-0 top-2 bottom-2 w-0.5 origin-center rounded-full bg-[#D97745]"
+                            />
 
-                          {/* Text */}
-                          <div className="min-w-0">
-                            <p className="text-sm font-semibold text-[#1D2A26]">
-                              {label}
-                            </p>
+                            {/* Number */}
+                            <motion.span
+                              animate={{
+                                color: isActive
+                                  ? '#D97745'
+                                  : isCompleted
+                                    ? '#2F5D50'
+                                    : '#A8A095',
+                              }}
+                              transition={{
+                                duration: 0.25,
+                              }}
+                              className="w-6 shrink-0 font-mono text-[10px] font-medium"
+                            >
+                              {number}
+                            </motion.span>
 
-                            <p className="mt-0.5 text-xs text-[#6B7280]">
-                              {description}
-                            </p>
-                          </div>
-                        </div>
+                            {/* Icon */}
+                            <motion.div
+                              animate={{
+                                backgroundColor: isActive
+                                  ? '#2F5D50'
+                                  : '#F5F1E8',
+                                color: isActive
+                                  ? '#FFFFFF'
+                                  : '#2F5D50',
+                                borderColor: isActive
+                                  ? '#2F5D50'
+                                  : '#DDD6C8',
+                                scale: isActive ? 1.04 : 1,
+                              }}
+                              transition={{
+                                duration: 0.3,
+                                ease: 'easeOut',
+                              }}
+                              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border"
+                            >
+                              <Icon className="h-4 w-4" />
+                            </motion.div>
 
-                        {index < workflowSteps.length - 1 && (
-                          <div className="ml-[21px] h-1 border-l border-dashed border-[#DDD6C8]" />
-                        )}
-                      </motion.div>
-                    )
+                            {/* Text */}
+                            <div className="min-w-0">
+                              <motion.p
+                                animate={{
+                                  color: isActive
+                                    ? '#1D2A26'
+                                    : '#4B5563',
+                                }}
+                                transition={{
+                                  duration: 0.25,
+                                }}
+                                className="text-sm font-semibold"
+                              >
+                                {label}
+                              </motion.p>
+
+                              <motion.p
+                                animate={{
+                                  color: isActive
+                                    ? '#4B5563'
+                                    : '#6B7280',
+                                }}
+                                transition={{
+                                  duration: 0.25,
+                                }}
+                                className="mt-0.5 text-xs"
+                              >
+                                {description}
+                              </motion.p>
+                            </div>
+
+                            {/* Active status */}
+                            <motion.span
+                              initial={false}
+                              animate={{
+                                opacity: isActive ? 1 : 0,
+                                x: isActive ? 0 : 4,
+                              }}
+                              transition={{
+                                duration: 0.25,
+                              }}
+                              className="ml-auto hidden shrink-0 font-mono text-[8px] font-semibold uppercase tracking-[0.12em] text-[#D97745] sm:block"
+                            >
+                              Active
+                            </motion.span>
+                          </motion.div>
+
+                          {/* Connector */}
+                          {index < workflowSteps.length - 1 && (
+                            <div className="relative ml-[21px] h-1 border-l border-dashed border-[#DDD6C8]">
+                              <motion.div
+                                animate={{
+                                  opacity:
+                                    index < activeStep ? 1 : 0,
+                                }}
+                                transition={{
+                                  duration: 0.25,
+                                }}
+                                className="absolute inset-y-0 left-[-1px] border-l border-solid border-[#2F5D50]"
+                              />
+                            </div>
+                          )}
+                        </motion.div>
+                      );
+                    }
                   )}
                 </div>
 
@@ -628,9 +799,26 @@ export default function Hero({ onCopyEmail }: HeroProps) {
                     Data Analysis + Automation
                   </span>
 
-                  <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#2F5D50]">
-                    Ready
-                  </span>
+                  <motion.span
+                    key={activeStep}
+                    initial={{
+                      opacity: 0,
+                      y: 3,
+                    }}
+                    animate={{
+                      opacity: 1,
+                      y: 0,
+                    }}
+                    transition={{
+                      duration: 0.25,
+                    }}
+                    className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#2F5D50]"
+                  >
+                    {activeStep === 0 && 'Collecting'}
+                    {activeStep === 1 && 'Analyzing'}
+                    {activeStep === 2 && 'Automating'}
+                    {activeStep === 3 && 'Ready'}
+                  </motion.span>
                 </div>
               </div>
             </div>
