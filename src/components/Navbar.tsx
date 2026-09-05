@@ -11,11 +11,7 @@ const navLinks = [
   { name: 'About', path: '/about', id: 'about' },
   { name: 'Skills', path: '/skills', id: 'skills' },
   { name: 'Projects', path: '/projects', id: 'projects' },
-  {
-    name: 'Certifications',
-    path: '/certifications',
-    id: 'certifications',
-  },
+  { name: 'Certifications', path: '/certifications', id: 'certifications' },
   { name: 'Education', path: '/education', id: 'education' },
   { name: 'Experience', path: '/experience', id: 'experience' },
   { name: 'Contact', path: '/contact', id: 'contact' },
@@ -64,105 +60,6 @@ function getTimeGreeting() {
   return 'Good night.';
 }
 
-/*
- * Permanent portfolio identity mark.
- *
- * The path represents the user's visual language:
- * DATA → ANALYZE → AUTOMATE → RESULT
- */
-function DataPathLogo() {
-  return (
-    <div
-      className="relative flex h-9 w-9 shrink-0 items-center justify-center sm:h-10 sm:w-10"
-      aria-hidden="true"
-    >
-      <svg
-        viewBox="0 0 40 40"
-        width="40"
-        height="40"
-        fill="none"
-        className="h-full w-full"
-      >
-        {/* Main path */}
-        <path
-          d="M7 28C11 28 12 21 17 21C21 21 22 13 27 13C30 13 32 10 34 7"
-          stroke="#2F5D50"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-
-        {/* Secondary path */}
-        <path
-          d="M7 13C10 13 12 18 16 18C20 18 21 27 26 27C30 27 32 24 34 22"
-          stroke="#DDD6C8"
-          strokeWidth="1"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-
-        {/* Data nodes */}
-        <circle
-          cx="7"
-          cy="28"
-          r="2.5"
-          fill="#2F5D50"
-        />
-
-        <circle
-          cx="17"
-          cy="21"
-          r="2.5"
-          fill="#2F5D50"
-        />
-
-        <circle
-          cx="27"
-          cy="13"
-          r="2.5"
-          fill="#D97745"
-        />
-
-        <circle
-          cx="34"
-          cy="7"
-          r="2.5"
-          fill="#2F5D50"
-        />
-
-        {/* Supporting nodes */}
-        <circle
-          cx="7"
-          cy="13"
-          r="1.5"
-          fill="#DDD6C8"
-        />
-
-        <circle
-          cx="16"
-          cy="18"
-          r="1.5"
-          fill="#DDD6C8"
-        />
-
-        <circle
-          cx="26"
-          cy="27"
-          r="1.5"
-          fill="#DDD6C8"
-        />
-
-        <circle
-          cx="34"
-          cy="22"
-          r="1.5"
-          fill="#DDD6C8"
-        />
-      </svg>
-    </div>
-  );
-}
-
 function WelcomeVisual() {
   return (
     <div className="flex items-center gap-2">
@@ -191,8 +88,7 @@ function TimeVisual({ time }: { time: string }) {
   return (
     <div className="flex items-center gap-2">
       <span className="relative flex h-1.5 w-1.5 shrink-0">
-        <span className="absolute inset-0 animate-ping rounded-full bg-[#4E8D66] opacity-40" />
-
+        <span className="absolute inset-0 rounded-full bg-[#4E8D66] animate-ping opacity-40" />
         <span className="relative h-1.5 w-1.5 rounded-full bg-[#4E8D66]" />
       </span>
 
@@ -356,10 +252,7 @@ function RotatingNavbarVisual() {
 
     updateTimeState();
 
-    const timeTimer = window.setInterval(
-      updateTimeState,
-      1000
-    );
+    const timeTimer = window.setInterval(updateTimeState, 1000);
 
     return () => {
       window.clearInterval(timeTimer);
@@ -368,14 +261,8 @@ function RotatingNavbarVisual() {
 
   const visuals = [
     <WelcomeVisual key="welcome" />,
-    <GreetingVisual
-      key="greeting"
-      greeting={greeting}
-    />,
-    <TimeVisual
-      key="time"
-      time={currentTime}
-    />,
+    <GreetingVisual key="greeting" greeting={greeting} />,
+    <TimeVisual key="time" time={currentTime} />,
     <DataVisual key="data" />,
     <AIVisual key="ai" />,
   ];
@@ -428,11 +315,8 @@ function RotatingNavbarVisual() {
         `}
       </style>
 
-      <div className="w-[86px] shrink-0 sm:w-[126px] lg:w-[140px]">
-        <AnimatePresence
-          mode="wait"
-          initial={false}
-        >
+      <div className="w-[100px] shrink-0 sm:w-[140px] lg:w-[150px]">
+        <AnimatePresence mode="wait" initial={false}>
           <motion.div
             key={visualIndex}
             initial={{
@@ -461,12 +345,9 @@ function RotatingNavbarVisual() {
   );
 }
 
-export default function Navbar({
-  activeSection,
-}: NavbarProps) {
+export default function Navbar({ activeSection }: NavbarProps) {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] =
-    useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -491,8 +372,7 @@ export default function Navbar({
   ) => {
     event.preventDefault();
 
-    const target =
-      document.getElementById(sectionId);
+    const target = document.getElementById(sectionId);
 
     if (!target) {
       return;
@@ -541,38 +421,20 @@ export default function Navbar({
       }`}
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-
-        {/* Brand */}
+        {/* Brand / Rotating Visual */}
         <a
           href="/"
           onClick={goHome}
           aria-label={`${personalInfo.name} — Go to homepage`}
-          className="group flex min-w-0 items-center gap-2.5 sm:gap-3"
+          className="group flex min-w-0 items-center"
         >
-          {/* Permanent data-path identity */}
-          <div className="relative flex shrink-0 items-center justify-center transition-transform duration-300 group-hover:scale-[1.04]">
-            <DataPathLogo />
-          </div>
-
-          {/* Name + rotating visual */}
-          <div className="flex min-w-0 items-center gap-3">
-            <div className="hidden h-5 w-px bg-[#DDD6C8] sm:block" />
-
-            <div className="hidden sm:block">
-              <span className="font-display text-[11px] font-bold tracking-[-0.01em] text-[#1D2A26] lg:text-xs">
-                Abdullahi
-              </span>
-            </div>
-
-            <RotatingNavbarVisual />
-          </div>
+          <RotatingNavbarVisual />
         </a>
 
         {/* Desktop Navigation */}
         <nav className="hidden items-center gap-6 lg:flex">
           {navLinks.map((link) => {
-            const isActive =
-              activeSection === link.id;
+            const isActive = activeSection === link.id;
 
             return (
               <a
@@ -623,7 +485,6 @@ export default function Navbar({
             className="inline-flex items-center gap-1.5 rounded-lg bg-[#2F5D50] px-4 py-2 text-xs font-semibold text-white transition-colors duration-200 hover:bg-[#244A40]"
           >
             <span>Hire Me</span>
-
             <ArrowUpRight className="h-3.5 w-3.5" />
           </a>
         </div>
@@ -642,7 +503,6 @@ export default function Navbar({
             className="inline-flex items-center gap-1 rounded-lg bg-[#2F5D50] px-3 py-2 text-[11px] font-semibold text-white transition-colors duration-200 hover:bg-[#244A40] sm:px-3.5 sm:text-xs"
           >
             <span>Hire Me</span>
-
             <ArrowUpRight className="h-3.5 w-3.5" />
           </a>
 
