@@ -29,6 +29,12 @@ interface ProjectsProps {
 const PROJECTS_PER_LOAD = 4;
 const SWIPE_THRESHOLD = 60;
 
+/*
+ * EXACT PORTFOLIO PROJECT ORDER
+ *
+ * Only these 12 projects are allowed to appear
+ * in the Projects section.
+ */
 const PROJECT_ORDER = [
   'Customer Churn Analysis',
   'Sales Forecasting & Predictive Analysis',
@@ -44,6 +50,12 @@ const PROJECT_ORDER = [
   'A.M. BIBIRE NIG LIMITED Website',
 ];
 
+/*
+ * Project complexity indicator.
+ *
+ * Displays a subtle 1–5 visual scale without making
+ * the project list feel like a dashboard.
+ */
 function ComplexityIndicator({
   value,
 }: {
@@ -92,6 +104,19 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
   const touchStartX = useRef<number | null>(null);
   const touchStartY = useRef<number | null>(null);
 
+  /*
+   * Build the portfolio from the exact approved project list.
+   *
+   * This prevents old projects such as:
+   * - Sales Performance Analysis
+   * - Sales Performance Dashboard
+   * - Company Performance Dashboard
+   * - UFC Fighter Data Analysis
+   * - Transportation Cost Analysis in Nigeria
+   *
+   * from appearing even if they are accidentally present
+   * somewhere else in portfolioData.ts.
+   */
   const orderedProjects = useMemo(() => {
     return PROJECT_ORDER.map((title) =>
       projectsData.find((project) => project.title === title)
@@ -181,6 +206,10 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
     setSelectedProject(filteredProjects[nextIndex]);
   };
 
+  /*
+   * When navigating with Previous / Next, make sure the
+   * destination project is loaded into the visible list.
+   */
   useEffect(() => {
     if (!selectedProject) {
       return;
@@ -203,6 +232,9 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
     filteredProjects.length,
   ]);
 
+  /*
+   * Keyboard navigation for the project popup.
+   */
   useEffect(() => {
     if (!selectedProject) {
       return;
@@ -233,6 +265,9 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
     };
   }, [selectedProject, filteredProjects]);
 
+  /*
+   * Observe project rows as they enter the viewport.
+   */
   useEffect(() => {
     const elements = Array.from(projectRefs.current.values());
 
@@ -276,6 +311,9 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
     projectRefs.current.set(projectId, element);
   };
 
+  /*
+   * Mobile swipe navigation.
+   */
   const handleTouchStart = (
     event: TouchEvent<HTMLDivElement>
   ) => {
@@ -332,16 +370,7 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
           {/* Section header */}
-          <motion.div
-            initial={{ opacity: 0, y: 18 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-80px' }}
-            transition={{
-              duration: 0.55,
-              ease: [0.16, 1, 0.3, 1],
-            }}
-            className="mb-12 max-w-3xl"
-          >
+          <div className="mb-12 max-w-3xl">
             <div className="mb-4 flex items-center gap-3">
               <span className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-[#2F5D50]">
                 03 / Projects
@@ -350,7 +379,7 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
               <span className="h-px w-10 bg-[#DDD6C8]" />
             </div>
 
-            <h2 className="font-display text-3xl font-bold tracking-[-0.025em] text-[#1D2A26] sm:text-4xl lg:text-5xl">
+            <h2 className="font-display text-3xl font-bold tracking-tight text-[#1D2A26] sm:text-4xl">
               Selected work.
             </h2>
 
@@ -359,7 +388,7 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
               automation, and web development projects built to solve
               practical problems.
             </p>
-          </motion.div>
+          </div>
 
           {/* Filters */}
           <div className="mb-10 flex flex-wrap items-center gap-2">
@@ -378,7 +407,7 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
                   onClick={() =>
                     handleFilterChange(category)
                   }
-                  className={`rounded-lg border px-3.5 py-2 text-sm font-medium transition-all duration-200 ${
+                  className={`rounded-lg border px-3.5 py-2 text-sm font-medium transition-colors ${
                     isActive
                       ? 'border-[#2F5D50] bg-[#2F5D50] text-white'
                       : 'border-[#DDD6C8] bg-[#FCFAF6] text-[#4B5563] hover:border-[#2F5D50]/40 hover:text-[#2F5D50]'
@@ -416,8 +445,6 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
                 project.tags.length -
                 visibleTags.length;
 
-              const isFeatured = project.featured;
-
               return (
                 <motion.article
                   key={project.id}
@@ -449,17 +476,8 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
                       1,
                     ],
                   }}
-                  className={`group relative border-b border-[#DDD6C8] last:border-b-0 ${
-                    isFeatured
-                      ? 'bg-[#FCFAF6]/60'
-                      : ''
-                  }`}
+                  className="group border-b border-[#DDD6C8] last:border-b-0"
                 >
-                  {/* Selected work marker */}
-                  {isFeatured && (
-                    <div className="absolute bottom-0 left-0 top-0 w-1 bg-[#D97745]" />
-                  )}
-
                   <button
                     type="button"
                     onClick={() =>
@@ -467,23 +485,11 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
                     }
                     className="block w-full text-left"
                   >
-                    <div
-                      className={`grid gap-7 lg:grid-cols-[80px_minmax(0,1fr)_280px] lg:gap-10 ${
-                        isFeatured
-                          ? 'py-10 sm:py-12'
-                          : 'py-9 sm:py-11'
-                      }`}
-                    >
+                    <div className="grid gap-7 py-9 lg:grid-cols-[80px_minmax(0,1fr)_280px] lg:gap-10 lg:py-11">
 
                       {/* Project number */}
                       <div className="flex items-start">
-                        <span
-                          className={`font-mono font-semibold tracking-wide transition-colors ${
-                            isFeatured
-                              ? 'text-base text-[#D97745]'
-                              : 'text-sm text-[#6B7280] group-hover:text-[#2F5D50]'
-                          }`}
-                        >
+                        <span className="font-mono text-sm font-semibold tracking-wide text-[#6B7280] transition-colors group-hover:text-[#2F5D50]">
                           {projectNumber}
                         </span>
                       </div>
@@ -491,54 +497,26 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
                       {/* Main project information */}
                       <div>
                         <div className="mb-3 flex flex-wrap items-center gap-3">
-                          <span
-                            className={`font-mono font-semibold uppercase tracking-[0.16em] ${
-                              isFeatured
-                                ? 'text-[11px] text-[#D97745]'
-                                : 'text-[11px] text-[#2F5D50]'
-                            }`}
-                          >
+                          <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-[#2F5D50]">
                             {project.category}
                           </span>
 
-                          {isFeatured && (
-                            <>
-                              <span className="h-1 w-1 rounded-full bg-[#D97745]" />
-
-                              <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-[#6B7280]">
-                                Selected work
-                              </span>
-                            </>
+                          {project.featured && (
+                            <span className="rounded-full border border-[#D97745]/30 bg-[#D97745]/5 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-[#D97745]">
+                              Featured
+                            </span>
                           )}
                         </div>
 
                         <div className="flex items-start gap-3">
-                          <h3
-                            className={`font-display font-bold leading-tight tracking-[-0.025em] text-[#1D2A26] transition-colors duration-200 group-hover:text-[#2F5D50] ${
-                              isFeatured
-                                ? 'text-3xl sm:text-4xl'
-                                : 'text-2xl sm:text-3xl'
-                            }`}
-                          >
+                          <h3 className="font-display text-2xl font-bold tracking-tight text-[#1D2A26] transition-colors group-hover:text-[#2F5D50] sm:text-3xl">
                             {project.title}
                           </h3>
 
-                          <ArrowUpRight
-                            className={`shrink-0 text-[#A8A095] transition-all duration-300 group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:text-[#D97745] ${
-                              isFeatured
-                                ? 'mt-1.5 h-5 w-5'
-                                : 'mt-1 h-5 w-5'
-                            }`}
-                          />
+                          <ArrowUpRight className="mt-1 h-5 w-5 shrink-0 text-[#6B7280] transition-all duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-[#2F5D50]" />
                         </div>
 
-                        <p
-                          className={`max-w-3xl text-[#4B5563] ${
-                            isFeatured
-                              ? 'mt-5 text-base leading-7'
-                              : 'mt-4 text-sm leading-7 sm:text-base'
-                          }`}
-                        >
+                        <p className="mt-4 max-w-3xl text-sm leading-7 text-[#4B5563] sm:text-base">
                           {description}
                         </p>
 
@@ -546,11 +524,7 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
                           {visibleTags.map((tag) => (
                             <span
                               key={tag}
-                              className={`rounded-full border px-2.5 py-1 text-xs font-medium ${
-                                isFeatured
-                                  ? 'border-[#2F5D50]/20 bg-[#FCFAF6] text-[#4B5563]'
-                                  : 'border-[#DDD6C8] bg-[#FCFAF6] text-[#6B7280]'
-                              }`}
+                              className="rounded-full border border-[#DDD6C8] bg-[#FCFAF6] px-2.5 py-1 text-xs font-medium text-[#6B7280]"
                             >
                               {tag}
                             </span>
@@ -563,19 +537,14 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
                           )}
                         </div>
 
+                        {/* Complexity */}
                         <div className="mt-5">
                           <ComplexityIndicator
                             value={project.complexity}
                           />
                         </div>
 
-                        <div
-                          className={`flex items-center gap-2 font-semibold text-[#2F5D50] ${
-                            isFeatured
-                              ? 'mt-7 text-sm'
-                              : 'mt-6 text-sm'
-                          }`}
-                        >
+                        <div className="mt-6 flex items-center gap-2 text-sm font-semibold text-[#2F5D50]">
                           <span>
                             View case study
                           </span>
@@ -586,59 +555,25 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
 
                       {/* Project media */}
                       <div className="hidden lg:block">
-                        <div
-                          className={`overflow-hidden rounded-xl border bg-[#FCFAF6] transition-all duration-300 ${
-                            isFeatured
-                              ? 'border-[#D97745]/30 shadow-[0_14px_35px_-25px_rgba(217,119,69,0.3)] group-hover:-translate-y-1 group-hover:border-[#D97745]/50 group-hover:shadow-[0_20px_40px_-24px_rgba(29,42,38,0.3)]'
-                              : 'border-[#DDD6C8] group-hover:-translate-y-1 group-hover:border-[#2F5D50]/30 group-hover:shadow-[0_16px_35px_-24px_rgba(29,42,38,0.25)]'
-                          }`}
-                        >
-                          <div
-                            className={`relative overflow-hidden ${
-                              isFeatured
-                                ? 'aspect-[16/10]'
-                                : 'aspect-[16/10]'
-                            }`}
-                          >
+                        <div className="overflow-hidden rounded-xl border border-[#DDD6C8] bg-[#FCFAF6]">
+                          <div className="relative aspect-[16/10] overflow-hidden">
                             {project.isVideo ? (
                               <video
                                 src={project.videoUrl}
                                 muted
                                 playsInline
                                 preload="metadata"
-                                className={`h-full w-full object-cover transition-transform duration-700 ease-out ${
-                                  isFeatured
-                                    ? 'group-hover:scale-[1.04]'
-                                    : 'group-hover:scale-[1.025]'
-                                }`}
+                                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
                               />
                             ) : (
                               <img
                                 src={project.mediaUrl}
                                 alt={project.title}
-                                className={`h-full w-full object-cover transition-transform duration-700 ease-out ${
-                                  isFeatured
-                                    ? 'group-hover:scale-[1.04]'
-                                    : 'group-hover:scale-[1.025]'
-                                }`}
+                                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
                               />
                             )}
 
-                            <div
-                              className={`pointer-events-none absolute inset-0 transition-opacity duration-300 ${
-                                isFeatured
-                                  ? 'bg-gradient-to-t from-[#1D2A26]/20 via-transparent to-transparent opacity-20 group-hover:opacity-100'
-                                  : 'bg-gradient-to-t from-[#1D2A26]/10 to-transparent opacity-0 group-hover:opacity-100'
-                              }`}
-                            />
-
-                            {isFeatured && (
-                              <div className="pointer-events-none absolute left-3 top-3 rounded-md border border-white/60 bg-[#FCFAF6]/90 px-2 py-1 backdrop-blur-sm">
-                                <span className="font-mono text-[8px] font-semibold uppercase tracking-[0.12em] text-[#D97745]">
-                                  Selected
-                                </span>
-                              </div>
-                            )}
+                            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#1D2A26]/10 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                           </div>
                         </div>
                       </div>
@@ -664,7 +599,7 @@ export default function Projects({ onOpenLightbox }: ProjectsProps) {
               <button
                 type="button"
                 onClick={handleLoadMore}
-                className="group inline-flex items-center gap-2 rounded-lg border border-[#DDD6C8] bg-[#FCFAF6] px-5 py-3 text-sm font-semibold text-[#1D2A26] transition-all duration-200 hover:-translate-y-0.5 hover:border-[#2F5D50]/40 hover:text-[#2F5D50]"
+                className="group inline-flex items-center gap-2 rounded-lg border border-[#DDD6C8] bg-[#FCFAF6] px-5 py-3 text-sm font-semibold text-[#1D2A26] transition-all duration-200 hover:border-[#2F5D50]/40 hover:text-[#2F5D50]"
               >
                 <span>
                   Load more
